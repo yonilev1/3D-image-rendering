@@ -4,7 +4,7 @@ import primitives.Vector;
 
 public interface Geometry {
 	Vector getNormal(Point po) {
-		return 
+		return a;
 		
 	}
 	
