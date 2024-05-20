@@ -46,8 +46,6 @@ public class Plane implements Geometry {
      */
     @Override
     public Vector getNormal(Point pointOnSurface) {
-        // Since the plane is flat, the normal vector is constant and independent of the point.
-        // Therefore, the point parameter is not used, and the normal vector is returned directly.
         return normalVector;
     }
     
