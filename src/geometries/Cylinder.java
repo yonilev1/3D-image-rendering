@@ -11,7 +11,7 @@ import primitives.Vector;
 public class Cylinder extends Tube {
     
     /** The height of the cylinder. */
-    private final double height;
+    private final double hight;
     
     /**
      * Constructs a new cylinder with the specified height and axis ray.
@@ -19,9 +19,9 @@ public class Cylinder extends Tube {
      * @param height The height of the cylinder.
      * @param axisRay The ray that defines the axis of the cylinder.
      */
-    public Cylinder(double height, Ray axisRay) {
-        super(height, axisRay);
-        this.height = height;
+    public Cylinder(double hight, Ray axisRay) {
+        super(hight, axisRay);
+        this.hight = hight;
     }
 
     /**
