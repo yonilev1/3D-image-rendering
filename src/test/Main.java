@@ -1,4 +1,4 @@
-/*yoni leventhal 214101446 yonilev2021@gmail.com.
+/*yoni leventhal 214101446 yonilev2021@gmail.com
  * adiel yekutiel 208749978 yekutadiel@gmail.com
  */
 package test;
