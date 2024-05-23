@@ -35,7 +35,7 @@ public class Plane implements Geometry {
      */
     public Plane(Point pointOnPlane, Vector normalVector) {
         this.pointOnPlane = pointOnPlane;
-        this.normalVector = normalVector;
+        this.normalVector = normalVector.normalize();
     }
     
     /**

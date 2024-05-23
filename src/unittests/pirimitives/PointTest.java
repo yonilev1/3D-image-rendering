@@ -5,6 +5,7 @@ package unittests.pirimitives;
 
 import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
+import static primitives.Util.isZero;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,7 @@ import primitives.Vector;
  *  @author Yoni leventhal, adiel yekutiel
  */
 class PointTest {
+    Point  p3 = new Point(2, 4, 5);
 	Point p2 = new Point(2,3,4);
 	Point p1 = new Point(1,2,3);
 	Vector v1 = new Vector(1,1,1);
@@ -58,9 +60,11 @@ class PointTest {
 	    // Test that subtracting a point from itself throws an exception.
 	    // assertThrows is used to verify that p1.subtract(p1) throws an exception of any type.
 	    // The assertion fails if no exception is thrown or if a different exception type is thrown.
-	    /*assertThrows(Exception.class, () -> {
+	    
+		//not correct
+	    assertThrows(Exception.class, () -> {
 	        p1.subtract(p1);
-	    }, "ERROR: (point - itself) throws wrong exception");*/
+	    }, "ERROR: (point - itself) throws wrong exception");
 	}
 
 
@@ -69,15 +73,28 @@ class PointTest {
 	 */
 	@Test
 	void testDistance() {
-		fail("Not yet implemented");
-	}
+			
+		assertEquals(p1.distance(p1),Point.ZERO,"ERROR: point distance to itself is not zero");
+		
+		assertEquals(p1.distance(p3)-3,Point.ZERO,"ERROR: distance between points is wrong");
+		
+		assertEquals(p3.distance(p1)-3,Point.ZERO,"ERROR: distance between points is wrong");
 
+
+	}
+	
 	/**
 	 * Test method for {@link primitives.Point#distanceSquared(primitives.Point)}.
 	 */
 	@Test
 	void testDistanceSquared() {
-		fail("Not yet implemented");
+		
+		assertEquals(p1.distanceSquared(p1),Point.ZERO,"ERROR: point squared distance to itself is not zero");
+		
+		assertEquals(p1.distanceSquared(p3)-9,Point.ZERO,"ERROR: squared distance between points is wrong");
+
+		assertEquals(p3.distanceSquared(p1)-9,Point.ZERO,"ERROR: squared distance between points is wrong");
+
 	}
 
 }
