@@ -23,8 +23,10 @@ public class Plane implements Geometry {
      */
     public Plane(Point x, Point y, Point z) {
         // To be implemented
+    	Vector v1 = y.subtract(x);
+    	Vector v2 = z.subtract(x);
         this.pointOnPlane = null; // Temporary implementation
-        this.normalVector = null; // Temporary implementation
+        this.normalVector = v1.crossProduct(v2).normalize();
     }
     
     /**
@@ -35,7 +37,7 @@ public class Plane implements Geometry {
      */
     public Plane(Point pointOnPlane, Vector normalVector) {
         this.pointOnPlane = pointOnPlane;
-        this.normalVector = normalVector.normalize();
+        this.normalVector = normalVector.normalize();  
     }
     
     /**

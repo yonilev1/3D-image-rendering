@@ -5,7 +5,7 @@ package primitives;
  */
 public class Point {
     /** The coordinates of the point. */
-    final Double3 xyz;
+    final protected Double3 xyz;
 
     /** The zero point, representing the origin of the coordinate system. */
     public static Point ZERO = new Point(Double3.ZERO);
@@ -55,46 +55,43 @@ public class Point {
     /**
      * Adds a vector to this point, returning a new point.
      *
-     * @param vec The vector to add.
+     * @param v The vector to add.
      * @return The resulting point after adding the vector.
      */
-    public Point add(Vector vec) {
-        return new Point(xyz.add(vec.xyz));
+    public Point add(Vector v) {
+        return new Point(xyz.add(v.xyz));
     }
 
     /**
      * Subtracts another point from this point, returning a vector.
      *
-     * @param po The point to subtract.
+     * @param p The point to subtract.
      * @return The resulting vector after subtracting the other point.
      */
-    public Vector subtract(Point po) {
-        return new Vector(xyz.subtract(po.xyz));
+    public Vector subtract(Point p) {
+        return new Vector(xyz.subtract(p.xyz));
     }
 
     /**
      * Calculates the Euclidean distance between this point and another point.
      *
-     * @param po The other point.
+     * @param p The other point.
      * @return The Euclidean distance between this point and the other point.
      */
-    public double distance(Point po) {
-        return Math.sqrt(distanceSquared(po));
+    public double distance(Point p) {
+        return Math.sqrt(distanceSquared(p));
     }
 
     /**
      * Calculates the square of the Euclidean distance between this point and another point.
      *
-     * @param po The other point.
+     * @param p The other point.
      * @return The square of the Euclidean distance between this point and the other point.
      */
-    public double distanceSquared(Point po) {
-        if (this == po) {
-            return 0;
-        }
-        double newX = this.xyz.d1 - po.xyz.d1;
-        double newY = this.xyz.d2 - po.xyz.d2;
-        double newZ = this.xyz.d3 - po.xyz.d3;
-        return newX * newX + newY * newY + newZ * newZ;
+    public double distanceSquared(Point p) {
+        double deltaX = this.xyz.d1 - p.xyz.d1;
+        double deltaY = this.xyz.d2 - p.xyz.d2;
+        double deltaZ = this.xyz.d3 - p.xyz.d3;
+        return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
     }
 }
