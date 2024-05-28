@@ -46,13 +46,23 @@ public class Ray {
 	public String toString() {
 		return "Ray:" + head + direction;
 	}
-	
+	F
+	/**
+	 * Returns the head point of the vector.
+	 * 
+	 * @return the head point of the vector
+	 */
 	public Point getHead() {
-		return this.head;
+	    return this.head;
 	}
-	
+
+	/**
+	 * Returns the direction of the vector.
+	 * 
+	 * @return the direction of the vector
+	 */
 	public Vector getDirection() {
-		return this.direction;
+	    return this.direction;
 	}
 
 }
