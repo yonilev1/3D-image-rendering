@@ -36,7 +36,7 @@ public class Cylinder extends Tube {
 	@Override
 	public Vector getNormal(Point pointOnSurface) {
 		Point pHead = axis.getHead(); // Base point of the axis
-		Vector vecDir = axis.getDirection(); // Direction of the axis
+		Vector vecDir = axis.getDirection(); // direction of the axis
 
 		// Project pointOnSurface onto the axis to get the parameter t
 		double t = vecDir.dotProduct(pointOnSurface.subtract(pHead));
