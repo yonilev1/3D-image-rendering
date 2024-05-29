@@ -46,7 +46,7 @@ public class Ray {
 	public String toString() {
 		return "Ray:" + head + direction;
 	}
-	F
+	
 	/**
 	 * Returns the head point of the vector.
 	 * 
