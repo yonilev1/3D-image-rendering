@@ -1,9 +1,7 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import primitives.*;
+import static primitives.Util.*;
 
 /**
  * Represents a cylinder in three-dimensional space. A cylinder is defined by
@@ -35,19 +33,26 @@ public class Cylinder extends Tube {
 	 */
 	@Override
 	public Vector getNormal(Point pointOnSurface) {
+
 		Point pHead = axis.getHead(); // Base point of the axis
 		Vector vecDir = axis.getDirection(); // direction of the axis
+
+		// if pointOnSurface is equal to point in axis, then normal is opposite of
+		// direction vector
+		if (pointOnSurface.equals(pHead)) {
+			return vecDir.scale(-1); // Normal pointing inward
+		}
 
 		// Project pointOnSurface onto the axis to get the parameter t
 		double t = vecDir.dotProduct(pointOnSurface.subtract(pHead));
 
 		// Check if the point is on the bottom base
-		if (Util.isZero(t)) {
+		if (isZero(t)) {
 			return vecDir.scale(-1); // Normal pointing inward
 		}
 
 		// Check if the point is on the top base
-		if (t >= height) {
+		if (isZero(t - height)) {
 			return vecDir; // Normal pointing outward
 		}
 

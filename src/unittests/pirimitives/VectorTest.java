@@ -3,7 +3,6 @@
  */
 package unittests.pirimitives;
 
-import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -50,7 +49,7 @@ class VectorTest {
 	void testLengthSquared() {
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Test that lengthSquared returns the correct value
-		assertEquals(0, v4.lengthSquared() - 9, DELTA, "ERROR: lengthSquared() wrong value");
+		assertEquals(9, v4.lengthSquared(), DELTA, "ERROR: lengthSquared() wrong value");
 	}
 
 	/**
@@ -60,7 +59,7 @@ class VectorTest {
 	void testLength() {
 		// TC01: ============ Equivalence Partitions Tests ==============
 		// Test that length returns the correct value
-		assertEquals(0, v4.length() - 3, DELTA, "ERROR: length() wrong value");
+		assertEquals(3, v4.length(), DELTA, "ERROR: length() wrong value");
 	}
 
 	/**
@@ -100,7 +99,7 @@ class VectorTest {
 	void testScale() {
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Test that scaling a vector works correctly
-		assertEquals(new Vector(5, 0, 0), v1.scale(5), "ERROR: scale() wrong Vector");
+		assertEquals(new Vector(5, 0, 0), v5.scale(5), "ERROR: scale() wrong Vector");
 
 		// =============== Boundary Values Tests ==================
 		// TC11: Test that scaling a vector by zero throws an exception
@@ -115,20 +114,20 @@ class VectorTest {
 	void testDotProduct() {
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Test that dotProduct returns the correct value for general case
-		assertEquals(0, v1.dotProduct(v2) + 28, DELTA, "ERROR: dotProduct() wrong value");
+		assertEquals(-28, v1.dotProduct(v2), DELTA, "ERROR: dotProduct() wrong value");
 
-		// TC02: Test that dotProduct returns the correct value for acute angle
-		assertEquals(0, v1.dotProduct(v4) - 11, DELTA, "dotProduct wrong value for acute angle");
+		// Test that dotProduct returns the correct value for acute angle
+		assertEquals(11, v1.dotProduct(v4) , DELTA, "dotProduct wrong value for acute angle");
 
-		// TC03:Test that dotProduct returns the correct value for obtuse angle
+		// Test that dotProduct returns the correct value for obtuse angle
 		assertEquals(0, v1.dotProduct(v6) + 3, DELTA, "dotProduct wrong value for obtuse angle");
 
 		// =============== Boundary Values Tests ==================
 		// TC11: Test that dotProduct returns zero for orthogonal vectors
 		assertEquals(0, v1.dotProduct(v3), DELTA, "ERROR: dotProduct() for orthogonal vectors is not zero");
 
-		// TC12: Test that dotProduct returns the correct value for unit vector
-		assertEquals(0, v1.dotProduct(v5) - 1, DELTA, "ERROR: dotProduct() wrong for unit size vector");
+		//  Test that dotProduct returns the correct value for unit vector
+		assertEquals(1, v1.dotProduct(v5), DELTA, "ERROR: dotProduct() wrong for unit size vector");
 	}
 
 	/**
@@ -143,11 +142,11 @@ class VectorTest {
 		// TC01: Test that the result length of cross product is correct
 		assertEquals(vr.length(), v1.length() * v3.length(), DELTA, "ERROR: crossProduct() wrong result length");
 
-		// TC02: Test that the result of cross product is orthogonal to the first
+		//  Test that the result of cross product is orthogonal to the first
 		// operand
 		assertEquals(0, vr.dotProduct(v1), "ERROR: crossProduct() result is not orthogonal to its 1st operand");
 
-		// TC03: Test that the result of cross product is orthogonal to the second
+		//  Test that the result of cross product is orthogonal to the second
 		// operand
 		assertEquals(0, vr.dotProduct(v3), "ERROR: crossProduct() result is not orthogonal to its 2nd operand");
 
@@ -171,7 +170,7 @@ class VectorTest {
 
 		// ============ Equivalence Partitions Tests ==============
 		// TC01: Test that the normalized vector is a unit vector
-		assertEquals(0, u.length() - 1, DELTA, "ERROR: the normalized vector is not a unit vector");
+		assertEquals(1, u.length(), DELTA, "ERROR: the normalized vector is not a unit vector");
 
 		// =============== Boundary Values Tests ==================
 		// TC11: Test that the normalized vector is parallel to the original one

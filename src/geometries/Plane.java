@@ -21,11 +21,10 @@ public class Plane implements Geometry {
 	 * @param y The second point.
 	 * @param z The third point.
 	 */
-	public Plane(Point x, Point y, Point z) {
-		// To be implemented
-		Vector v1 = y.subtract(x);
-		Vector v2 = z.subtract(x);
-		this.pointOnPlane = null; // Temporary implementation
+	public Plane(Point p1, Point p2, Point p3) {
+		Vector v1 = p2.subtract(p1);
+		Vector v2 = p3.subtract(p1);
+		this.pointOnPlane = p1; 
 		this.normalVector = v1.crossProduct(v2).normalize();
 	}
 
