@@ -50,5 +50,7 @@ public class PlaneTest {
 		assertEquals(0,result.dotProduct(new Vector(0, -1, 1)), "Plane's normal is not orthogonal");
 
 	}
+	
+	
 
 }

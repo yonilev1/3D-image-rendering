@@ -2,3 +2,4 @@ yoni
 leventhal
 adiel
 yekutiel
+intersectable

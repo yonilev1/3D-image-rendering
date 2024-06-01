@@ -3,6 +3,8 @@ package geometries;
 import primitives.*;
 import static primitives.Util.*;
 
+import java.util.List;
+
 /**
  * Represents a cylinder in three-dimensional space. A cylinder is defined by
  * its height and a ray that defines its axis.
@@ -60,4 +62,15 @@ public class Cylinder extends Tube {
 		Point o = pHead.add(vecDir.scale(t)); // Projection of the point onto the axis
 		return pointOnSurface.subtract(o).normalize();
 	}
+	
+	 /**
+     * Finds the intersection points between a given ray and the Cylinder.
+     * 
+     * @param ray the ray to intersect with the Cylinder
+     * @return a list of intersection points, or null if there are no intersections
+     */
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        // Implementation goes here
+        return null; // Returning null for now as a placeholder
 }

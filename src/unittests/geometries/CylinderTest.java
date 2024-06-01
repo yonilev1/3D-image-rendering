@@ -66,5 +66,15 @@ class CylinderTest {
 				"getNormal() not working properly for a point on the edge of the second base");
 
 	}
+	
+	/**
+	 * Test method for {@link geometries.Cylinder#findIntersections()}.
+	 */
+	@Test
+	void testFindIntersections() {
+		
+		
+		
+	}
 
 }
