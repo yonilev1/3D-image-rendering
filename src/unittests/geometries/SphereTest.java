@@ -86,6 +86,7 @@ class SphereTest {
 			assertEquals(List.of(p1), result, "Incorrect intersection point");
 	      
 	      // TC12: Ray starts at sphere and goes outside (0 points) 
+			
 	 
 	      // **** Group: Ray's line goes through the center 
 	      // TC13: Ray starts before the sphere (2 points) 
