@@ -46,11 +46,8 @@ public class Ray {
 	public String toString() {
 		return "Ray:" + head + direction;
 	}
-<<<<<<< HEAD
 
-=======
 	
->>>>>>> branch 'master' of https://github.com/yonilev1/ISE5784_1446_9978.git
 	/**
 	 * Returns the head point of the vector.
 	 * 

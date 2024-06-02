@@ -30,11 +30,7 @@ class CylinderTest {
 
 		// ============ Equivalence Partitions Tests ==============
 
-<<<<<<< HEAD
 		Vector v1 = c.getNormal(new Point(7, -1, 0));
-=======
-		Vector v1 = c.getNormal(new Point(7,-1,0));
->>>>>>> branch 'master' of https://github.com/yonilev1/ISE5784_1446_9978.git
 		Vector v2 = c.getNormal(new Point(4, 0, 1));
 		Vector v3 = c.getNormal(new Point(10, 0, 1));
 
@@ -42,18 +38,12 @@ class CylinderTest {
 		assertEquals(new Vector(0, -1, 0), v1, "getNormal() wrong result");
 
 		// TC02: Test that getNormal works for the ray base
-<<<<<<< HEAD
 		assertEquals(new Vector(-1, 0, 0), v2, "getNormal() not working properly for the ray base");
-=======
 	    assertEquals(new Vector(-1, 0, 0), v2, "getNormal() not working properly for the ray base");
->>>>>>> branch 'master' of https://github.com/yonilev1/ISE5784_1446_9978.git
 
 		// TC03: Test that getNormal works for the second base
 		assertEquals(new Vector(1, 0, 0), v3, "getNormal() not working properly for the second base");
-<<<<<<< HEAD
-=======
 
->>>>>>> branch 'master' of https://github.com/yonilev1/ISE5784_1446_9978.git
 
 		// =============== Boundary Values Tests ==================
 
@@ -66,10 +56,8 @@ class CylinderTest {
 		assertEquals(new Vector(-1, 0, 0), v4, "getNormal() not working properly for the center point of the ray base");
 
 		// TC05: Test that getNormal works for the center point of the top base
-<<<<<<< HEAD
 		assertEquals(new Vector(1, 0, 0), v5,//
 				"getNormal() not working properly for the center point of the second base");
-=======
 		assertEquals(new Vector(1, 0, 0), v5, "getNormal() not working properly for the center point of the second base");
 
 		// TC06: Test that getNormal works for the point on the edge of the ray base
@@ -77,7 +65,6 @@ class CylinderTest {
 
 		// TC07: Test that getNormal works for the point on the edge of the second base
 		assertEquals(new Vector(1, 0, 0), v7, "getNormal() not working properly for a point on the edge of the second base");
->>>>>>> branch 'master' of https://github.com/yonilev1/ISE5784_1446_9978.git
 
 		// TC06: Test that getNormal works for the point on the edge of the ray base
 		assertEquals(new Vector(-1, 0, 0), v6,//
@@ -100,7 +87,4 @@ class CylinderTest {
 	}
 
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> branch 'master' of https://github.com/yonilev1/ISE5784_1446_9978.git
