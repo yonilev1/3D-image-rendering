@@ -65,5 +65,18 @@ public class Ray {
 	public Vector getDirection() {
 		return this.direction;
 	}
-
+	
+	/**
+	 * Calculates a point on the ray at a distance t from the ray's head.
+	 *
+	 * @param t the distance from the head of the ray
+	 * @return the point on the ray at distance t, or the head if t is zero
+	 */
+	public Point getPoint(double t) {
+	    if (Util.isZero(t)) {
+	        return head;
+	    }
+	  
+	    return head.add(direction.scale(t));
+	}
 }

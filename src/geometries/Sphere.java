@@ -1,6 +1,5 @@
 package geometries;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import primitives.Point;
@@ -74,15 +73,13 @@ public class Sphere extends RadialGeometry {
 	    if (t1 >= 0 && t2 >= 0) {
 	        // Two intersection points
 	        return List.of(
-	            ray.getHead().add(ray.getDirection().scale(t1)),
-	            ray.getHead().add(ray.getDirection().scale(t2))
-	        );
+	            ray.getPoint(t1), ray.getPoint(t2));
 	    } else if (t1 >= 0) {
 	        // One intersection point (t1)
-	        return List.of(ray.getHead().add(ray.getDirection().scale(t1)));
+	        return List.of(ray.getPoint(t1));
 	    } else if (t2 >= 0) {
 	        // One intersection point (t2)
-	        return List.of(ray.getHead().add(ray.getDirection().scale(t2)));
+	        return List.of(ray.getPoint(t2));
 	    } else {
 	        // No intersection
 	        return null;

@@ -8,7 +8,7 @@ import primitives.Ray;
  * The abstract class Geometries represents a collection of intersectable geometries.
  * It implements the Intersectable interface.
  */
-public abstract class Geometries implements Intersectable {
+public class Geometries implements Intersectable {
 
     /** The list of intersectable geometries. */
     final private List<Intersectable> intersectables = new LinkedList<>();
@@ -46,6 +46,22 @@ public abstract class Geometries implements Intersectable {
      * @return a list of intersection points, or null if there are no intersections
      */
     public List<Point> findIntersections(Ray ray) {
-        return null; // Placeholder implementation, actual implementation needed
+    	
+    	List<Point> intersections = null;
+
+        for (Intersectable geometry : intersectables) {
+        	//get all intersections
+            List<Point> tempIntersections = geometry.findIntersections(ray);
+            //if any intersections
+            if (tempIntersections != null) {
+            	//for first add
+                if (intersections == null) {
+                    intersections = new LinkedList<>();
+                }
+                intersections.addAll(tempIntersections);
+            }
+        }
+
+        return intersections;
     }
 }
