@@ -1,9 +1,9 @@
 package geometries;
 
-import java.util.List;
+import java.util.*;
 
-import primitives.Point;
-import primitives.Ray;
+import primitives.*;
+import primitives.Vector;
 
 /**
  * Represents a triangle in three-dimensional space.
@@ -24,15 +24,50 @@ public class Triangle extends Polygon {
     }
     
     /**
-     * Finds the intersection points between a given ray and the Triangle.
+     * Finds the intersection points between the given ray and the triangle.
      * 
-     * @param ray the ray to intersect with the Triangle
+     * @param ray the ray to intersect with the triangle
      * @return a list of intersection points, or null if there are no intersections
      */
-    @Override
     public List<Point> findIntersections(Ray ray) {
-        // Implementation goes here
-        return null; // Returning null for now as a placeholder
+        // Retrieve the vertices of the triangle
+        Point p0 = vertices.getFirst();
+        Point p1 = vertices.get(1);
+        Point p2 = vertices.getLast();
+        
+        // Retrieve the direction vector and head point of the ray
+        Vector rayDirection = ray.getDirection();
+        Point rayPoint = ray.getHead();
+        
+        // Check if the ray intersects the plane of the triangle
+        if (plane.findIntersections(ray) == null) {
+            return null;
+        }
+        
+        // Calculate vectors representing edges of the triangle
+        Vector v1 = p0.subtract(rayPoint);
+        Vector v2 = p1.subtract(rayPoint);
+        Vector v3 = p2.subtract(rayPoint);
+        
+        // Calculate normal vectors to the triangle's edges
+        Vector n1 = v1.crossProduct(v2).normalize();
+        Vector n2 = v2.crossProduct(v3).normalize();
+        Vector n3 = v3.crossProduct(v1).normalize();
+        
+        // Calculate dot products between the normal vectors and the ray direction
+        double d1 = Util.alignZero(n1.dotProduct(rayDirection));
+        double d2 = Util.alignZero(n2.dotProduct(rayDirection));
+        double d3 = Util.alignZero(n3.dotProduct(rayDirection));
+        
+        // Check if the ray intersects the triangle
+        if (!Util.isZero(d1) && !Util.isZero(d2) && !Util.isZero(d3)) {
+            // Return the intersection points with the plane of the triangle
+            return plane.findIntersections(ray);
+        }
+        
+        // No intersection with the triangle
+        return null;
     }
+
 
 }
