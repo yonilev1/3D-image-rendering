@@ -21,9 +21,9 @@ public class Plane implements Geometry {
 	/**
 	 * Constructs a plane passing through three points.
 	 *
-	 * @param x The first point.
-	 * @param y The second point.
-	 * @param z The third point.
+	 * @param p1 The first point.
+	 * @param p2 The second point.
+	 * @param p3 The third point.
 	 */
 	public Plane(Point p1, Point p2, Point p3) {
 		Vector v1 = p2.subtract(p1);
@@ -79,7 +79,7 @@ public class Plane implements Geometry {
 	    // If t is positive, the intersection point is in the ray's direction
 	    if (t > 0) {
 	        // Calculate and return the intersection point
-	        return List.of(rayHead.add(rayDir.scale(t)));
+	        return List.of(ray.getPoint(t));
 	    }
 	    
 	    // If t is not positive, there is no intersection

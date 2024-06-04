@@ -22,9 +22,7 @@ import primitives.Vector;
  */
 class SphereTest {
 	
-	 private final Point  p001 = new Point(0, 0, 1); 
 	 private final Point  p100 = new Point(1, 0, 0); 
-	 private final Vector v001 = new Vector(0, 0, 1); 
 
 	/**
 	 * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
@@ -56,7 +54,6 @@ class SphereTest {
 	      final Vector      v110        = new Vector(1, 1, 0); 
 	 
 	      final Point       p01         = new Point(-1, 0, 0); 
-	      final Point       p1          = new Point(1, 1, 0);
 
 	 
 	      // ============ Equivalence Partitions Tests ============== 
