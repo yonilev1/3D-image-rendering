@@ -104,9 +104,6 @@ public class PlaneTest {
 		//TC17:Ray is neither orthogonal nor parallel to and begins at any point in the plane
 		final var result9 = plane.findIntersections(new Ray(new Point(-4,3,2), new Vector(2, 4, 1)));
 		assertNull(result9, "ERROR: findIntersections() sould retutn null");
-		
 	}
-	
-	
 
 }
