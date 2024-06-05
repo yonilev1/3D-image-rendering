@@ -132,7 +132,7 @@ public final class Main {
 		} catch (Exception e) {
 		}
 		if (v.dotProduct(u) < 0)
-			out.println("ERROR: the normalized vector is opposite to the original one");
+			out.println("ERROR: the normalized vector is opposite to 1 the original one");
 
 		out.println("If there were no any other outputs - all tests succeeded!");
 	}
