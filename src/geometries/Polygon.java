@@ -114,8 +114,6 @@ public class Polygon implements Geometry {
             return null;
         }
 
-        Point intersectionPoint = planeIntersections.get(0);
-
         // Loop through all vertices and edges of the polygon
         int numVertices = vertices.size();
         Boolean positive = null;

@@ -54,16 +54,9 @@ public class Triangle extends Polygon {
         // Calculate dot products between the normal vectors and the ray direction
         double d1 = Util.alignZero(n1.dotProduct(rayDirection));
         
-<<<<<<< HEAD
-        // Check if the ray intersects the triangle
-        if (!Util.isZero(d1) && !Util.isZero(d2) && !Util.isZero(d3)) {
-            // Return the intersection points with the plane of the triangle
-            return plane.findIntersections(ray); 
-=======
         // Check if the ray does not intersects the triangle
         if ( d1 == 0) {
             return null;
->>>>>>> branch 'master' of https://github.com/yonilev1/ISE5784_1446_9978.git
         }
         
         Vector v3 = p2.subtract(rayPoint);
