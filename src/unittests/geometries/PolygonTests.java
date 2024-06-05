@@ -114,11 +114,11 @@ public class PolygonTests {
 		assertNull(polygon.findIntersections(new Ray(new Point(0, 0, 1), new Vector(1, 0, 0))),
 				"There shouldn't be any intersections");
 
-		// TC12: Ray on vertex
+		// TC12: Ray after edge
 		assertNull(polygon.findIntersections(new Ray(new Point(0, -2, 0), new Vector(1.7, 1.41, 0))),
 				"There shouldn't be any intersections");
 
-		// TC13: Ray after edge
+		// TC13: Ray on vertex
 		assertNull(polygon.findIntersections(new Ray(new Point(0, 0, 1), new Vector(-1, 0, 2))),
 				"There shouldn't be any intersections");
 	}

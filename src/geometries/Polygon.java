@@ -95,7 +95,7 @@ public class Polygon implements Geometry {
 	public List<Point> findIntersections(Ray ray) {
 
 		// Check if the ray intersects the plane of the polygon
-		List<Point> planeIntersections = plane.findIntersections(ray);
+		var planeIntersections = plane.findIntersections(ray);
 		if (planeIntersections == null)
 			return null;
 
