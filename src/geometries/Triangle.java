@@ -54,7 +54,7 @@ public class Triangle extends Polygon {
         // Calculate dot products between the normal vectors and the ray direction
         double d1 = Util.alignZero(n1.dotProduct(rayDirection));
         
-        // Check if the ray does not intersects the triangle
+        // Check if the ray does not intersects the triangle.
         if ( d1 == 0) {
             return null;
         }
