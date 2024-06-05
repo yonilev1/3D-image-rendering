@@ -92,16 +92,16 @@ public class PolygonTests {
 	@Test
 	void testFindIntersections() {
 		
-		Polygon polygon = new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1));
+		Polygon polygon = new Polygon(new Point(0, 0, 2), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 2));
 		// ============ Equivalence Partitions Tests ==============
 		
 				// TC01: Ray intersects the Polygon
-				final var result = polygon.findIntersections(new Ray(new Point(-0.5, 1, 0.5), new Vector(-0.5, -1, -1)));
+				final var result = polygon.findIntersections(new Ray(new Point(1,1,1), new Vector(-0.5,-0.5,0)));
 				assertEquals(1, result.size(), "ERROR: findIntersections() did not return the right number of points");
-				assertEquals(List.of(new Point(-0.5,0.5,0.5)), result, "Incorrect intersection points");
+				assertEquals(List.of(new Point(0.25,0.25,1)), result, "Incorrect intersection points");
 
 				// TC02: Ray outside against edge
-				assertNull(polygon.findIntersections(new Ray(new Point(0,0,2), new Vector(2,0,0))),
+				assertNull(polygon.findIntersections(new Ray(new Point(0,0,3), new Vector(2,0,0))),
 						"There shouldn't be any intersections");
 
 				// TC03: Ray outside against vertex
@@ -122,6 +122,5 @@ public class PolygonTests {
 				assertNull(polygon.findIntersections(new Ray(new Point(0,0,1), new Vector(-1,0,2))),
 						"There shouldn't be any intersections");	
 	}
-
 
 }

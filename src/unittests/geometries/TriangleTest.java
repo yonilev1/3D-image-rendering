@@ -77,7 +77,7 @@ class TriangleTest {
 		
 		// TC13: Ray after edge
 		assertNull(triangle.findIntersections(new Ray(new Point(0,0,1), new Vector(-1,0,2))),
-				"There shouldn't be any intersections");	
+				"There shouldn't be any intersections");
 		}
 		
 

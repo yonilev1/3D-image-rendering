@@ -62,7 +62,7 @@ public class Triangle extends Polygon {
         // Check if the ray intersects the triangle
         if (!Util.isZero(d1) && !Util.isZero(d2) && !Util.isZero(d3)) {
             // Return the intersection points with the plane of the triangle
-            return plane.findIntersections(ray);
+            return plane.findIntersections(ray); 
         }
         
         // No intersection with the triangle

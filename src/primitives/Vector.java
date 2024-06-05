@@ -16,7 +16,7 @@ public class Vector extends Point {
 	public Vector(double x, double y, double z) {
 		super(x, y, z);
 		if (xyz.equals(Double3.ZERO)) {
-			throw new IllegalArgumentException("Invalid parameter: Vector cannot have zero length");
+			throw new IllegalArgumentException("Invalid parameter: Vector cannot have zero length3");
 		}
 	}
 
@@ -29,7 +29,7 @@ public class Vector extends Point {
 	public Vector(Double3 xyz) {
 		super(xyz);
 		if (xyz.equals(Double3.ZERO)) {
-			throw new IllegalArgumentException("Invalid parameter: Vector cannot have zero length");
+			throw new IllegalArgumentException("Invalid parameter: Vector cannot have zero length1");
 		}
 	}
 
