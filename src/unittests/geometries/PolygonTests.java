@@ -70,7 +70,7 @@ public class PolygonTests {
 	@Test
 	public void testGetNormal() {
 		// ============ Equivalence Partitions Tests ==============
-		
+
 		// TC01: There is a simple single test here - using a quad
 		Point[] pts = { new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 1) };
 		Polygon pol = new Polygon(pts);
@@ -85,42 +85,42 @@ public class PolygonTests {
 			assertEquals(0d, result.dotProduct(pts[i].subtract(pts[i == 0 ? 3 : i - 1])), DELTA,
 					"Polygon's normal is not orthogonal to one of the edges");
 	}
-	
+
 	/**
-	 * Test method for {@link geometries.Polygon#findIntersections()}.
+	 * Test method for {@link geometries.Polygon#findIntersections(primitives.Ray)}.
 	 */
 	@Test
 	void testFindIntersections() {
-		
+
 		Polygon polygon = new Polygon(new Point(0, 0, 2), new Point(1, 0, 0), new Point(0, 1, 0), new Point(-1, 1, 2));
 		// ============ Equivalence Partitions Tests ==============
-		
-				// TC01: Ray intersects the Polygon
-				final var result = polygon.findIntersections(new Ray(new Point(1,1,1), new Vector(-0.5,-0.5,0)));
-				assertEquals(1, result.size(), "ERROR: findIntersections() did not return the right number of points");
-				assertEquals(List.of(new Point(0.25,0.25,1)), result, "Incorrect intersection points");
 
-				// TC02: Ray outside against edge
-				assertNull(polygon.findIntersections(new Ray(new Point(0,0,3), new Vector(2,0,0))),
-						"There shouldn't be any intersections");
+		// TC01: Ray intersects the Polygon
+		final var result = polygon.findIntersections(new Ray(new Point(1, 1, 1), new Vector(-0.5, -0.5, 0)));
+		assertEquals(1, result.size(), "ERROR: findIntersections() did not return the right number of points");
+		assertEquals(List.of(new Point(0.25, 0.25, 1)), result, "Incorrect intersection points");
 
-				// TC03: Ray outside against vertex
-				assertNull(polygon.findIntersections(new Ray(new Point(0.5, 1.5, 1), new Vector(-0.5, 1.5, -1))),
-						"There shouldn't be any intersections");		
-		
+		// TC02: Ray outside against edge
+		assertNull(polygon.findIntersections(new Ray(new Point(0, 0, 3), new Vector(2, 0, 0))),
+				"There shouldn't be any intersections");
+
+		// TC03: Ray outside against vertex
+		assertNull(polygon.findIntersections(new Ray(new Point(0.5, 1.5, 1), new Vector(-0.5, 1.5, -1))),
+				"There shouldn't be any intersections");
+
 		// =============== Boundary Values Tests ==================
 
-				// TC11: Ray on edge
-				assertNull(polygon.findIntersections(new Ray(new Point(0,0,1), new Vector(1,0,0))),
-						"There shouldn't be any intersections");
+		// TC11: Ray on edge
+		assertNull(polygon.findIntersections(new Ray(new Point(0, 0, 1), new Vector(1, 0, 0))),
+				"There shouldn't be any intersections");
 
-				// TC12: Ray on vertex
-				assertNull(polygon.findIntersections(new Ray(new Point(0,-2,0), new Vector(1.7,1.41,0))),
-						"There shouldn't be any intersections");	
-				
-				// TC13: Ray after edge
-				assertNull(polygon.findIntersections(new Ray(new Point(0,0,1), new Vector(-1,0,2))),
-						"There shouldn't be any intersections");	
+		// TC12: Ray on vertex
+		assertNull(polygon.findIntersections(new Ray(new Point(0, -2, 0), new Vector(1.7, 1.41, 0))),
+				"There shouldn't be any intersections");
+
+		// TC13: Ray after edge
+		assertNull(polygon.findIntersections(new Ray(new Point(0, 0, 1), new Vector(-1, 0, 2))),
+				"There shouldn't be any intersections");
 	}
 
 }

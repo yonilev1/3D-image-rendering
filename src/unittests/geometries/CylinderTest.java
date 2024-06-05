@@ -39,11 +39,10 @@ class CylinderTest {
 
 		// TC02: Test that getNormal works for the ray base
 		assertEquals(new Vector(-1, 0, 0), v2, "getNormal() not working properly for the ray base");
-	    assertEquals(new Vector(-1, 0, 0), v2, "getNormal() not working properly for the ray base");
+		assertEquals(new Vector(-1, 0, 0), v2, "getNormal() not working properly for the ray base");
 
 		// TC03: Test that getNormal works for the second base
 		assertEquals(new Vector(1, 0, 0), v3, "getNormal() not working properly for the second base");
-
 
 		// =============== Boundary Values Tests ==================
 
@@ -56,35 +55,27 @@ class CylinderTest {
 		assertEquals(new Vector(-1, 0, 0), v4, "getNormal() not working properly for the center point of the ray base");
 
 		// TC05: Test that getNormal works for the center point of the top base
-		assertEquals(new Vector(1, 0, 0), v5,//
+		assertEquals(new Vector(1, 0, 0), v5, //
 				"getNormal() not working properly for the center point of the second base");
-		assertEquals(new Vector(1, 0, 0), v5, "getNormal() not working properly for the center point of the second base");
+		assertEquals(new Vector(1, 0, 0), v5,
+				"getNormal() not working properly for the center point of the second base");
 
 		// TC06: Test that getNormal works for the point on the edge of the ray base
-		assertEquals(new Vector(-1, 0, 0), v6, "getNormal() not working properly for a point on the edge of the ray base");
-
-		// TC07: Test that getNormal works for the point on the edge of the second base
-		assertEquals(new Vector(1, 0, 0), v7, "getNormal() not working properly for a point on the edge of the second base");
-
-		// TC06: Test that getNormal works for the point on the edge of the ray base
-		assertEquals(new Vector(-1, 0, 0), v6,//
+		assertEquals(new Vector(-1, 0, 0), v6,
 				"getNormal() not working properly for a point on the edge of the ray base");
 
 		// TC07: Test that getNormal works for the point on the edge of the second base
-		assertEquals(new Vector(1, 0, 0), v7,//
+		assertEquals(new Vector(1, 0, 0), v7,
+				"getNormal() not working properly for a point on the edge of the second base");
+
+		// TC06: Test that getNormal works for the point on the edge of the ray base
+		assertEquals(new Vector(-1, 0, 0), v6, //
+				"getNormal() not working properly for a point on the edge of the ray base");
+
+		// TC07: Test that getNormal works for the point on the edge of the second base
+		assertEquals(new Vector(1, 0, 0), v7, //
 				"getNormal() not working properly for a point on the edge of the second base");
 
 	}
-	
-	/**
-	 * Test method for {@link geometries.Cylinder#findIntersections()}.
-	 */
-	@Test
-	void testFindIntersections() {
-		
-		
-		
-	}
 
 }
-

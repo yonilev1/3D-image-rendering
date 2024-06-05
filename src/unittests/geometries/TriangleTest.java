@@ -42,51 +42,43 @@ class TriangleTest {
 					"Triangle's normal is not orthogonal to one of the edges");
 
 	}
-	
+
 	/**
-	 * Test method for {@link geometries.Triangle#findIntersections()}.
+	 * Test method for
+	 * {@link geometries.Triangle#findIntersections(primitives.Ray)}.
 	 */
 	@Test
 	void testFindIntersections() {
-		
-		Triangle triangle = new Triangle(new Point(0,0,1),new Point(1,0,0), new Point(0,1,0));
+
+		Triangle triangle = new Triangle(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0));
 		// ============ Equivalence Partitions Tests ==============
-		
+
 		// TC01: Ray intersects the Polygon
-		final var result = triangle.findIntersections(new Ray(new Point(0,0,0), new Vector(1,1,1)));
+		final var result = triangle.findIntersections(new Ray(new Point(0, 0, 0), new Vector(1, 1, 1)));
 		assertEquals(1, result.size(), "ERROR: findIntersections() did not return the right number of points");
-		assertEquals(List.of(new Point(1d/3, 1d/3, 1d/3)), result, "Incorrect intersection points");
+		assertEquals(List.of(new Point(1d / 3, 1d / 3, 1d / 3)), result, "Incorrect intersection points");
 
 		// TC02: Ray outside against edge
-		assertNull(triangle.findIntersections(new Ray(new Point(0,0,2), new Vector(2,0,0))),
+		assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 2), new Vector(2, 0, 0))),
 				"There shouldn't be any intersections");
 
 		// TC03: Ray outside against vertex
 		assertNull(triangle.findIntersections(new Ray(new Point(0.5, 1.5, 1), new Vector(-0.5, 1.5, -1))),
-				"There shouldn't be any intersections");		
+				"There shouldn't be any intersections");
 
 		// =============== Boundary Values Tests ==================
 
 		// TC11: Ray on edge
-		assertNull(triangle.findIntersections(new Ray(new Point(0,0,1), new Vector(1,0,0))),
+		assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 1), new Vector(1, 0, 0))),
 				"There shouldn't be any intersections");
 
 		// TC12: Ray on vertex
-		assertNull(triangle.findIntersections(new Ray(new Point(0,-2,0), new Vector(1.7,1.41,0))),
-				"There shouldn't be any intersections");	
-		
-		// TC13: Ray after edge
-		assertNull(triangle.findIntersections(new Ray(new Point(0,0,1), new Vector(-1,0,2))),
+		assertNull(triangle.findIntersections(new Ray(new Point(0, -2, 0), new Vector(1.7, 1.41, 0))),
 				"There shouldn't be any intersections");
-				}
-	
-	
-	
-	
-    
-		
 
-		
-		
+		// TC13: Ray after edge
+		assertNull(triangle.findIntersections(new Ray(new Point(0, 0, 1), new Vector(-1, 0, 2))),
+				"There shouldn't be any intersections");
+	}
+
 }
-	

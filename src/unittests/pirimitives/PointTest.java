@@ -74,7 +74,7 @@ class PointTest {
 		// TC01: Test that the squared distance between p1 and p3 is correct
 		assertEquals(9, p1.distanceSquared(p3), DELTA, "ERROR: distanceSquared() between points is wrong");
 
-		//  Test that the squared distance between p3 and p1 is correct
+		// Test that the squared distance between p3 and p1 is correct
 		assertEquals(9, p3.distanceSquared(p1), DELTA, "ERROR: distanceSquared() between points is wrong");
 
 		// =============== Boundary Values Tests ==================

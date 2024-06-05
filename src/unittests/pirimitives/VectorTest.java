@@ -27,7 +27,7 @@ class VectorTest {
 	private Vector v6 = new Vector(0, -3, 1);
 
 	/**
-	 * Test method for {@link primitives.Vector#Vector()}.
+	 * Test method for {@link primitives.Vector#Vector(double,double,double)}.
 	 */
 	@Test
 	void testVector() {
@@ -117,7 +117,7 @@ class VectorTest {
 		assertEquals(-28, v1.dotProduct(v2), DELTA, "ERROR: dotProduct() wrong value");
 
 		// Test that dotProduct returns the correct value for acute angle
-		assertEquals(11, v1.dotProduct(v4) , DELTA, "dotProduct wrong value for acute angle");
+		assertEquals(11, v1.dotProduct(v4), DELTA, "dotProduct wrong value for acute angle");
 
 		// Test that dotProduct returns the correct value for obtuse angle
 		assertEquals(0, v1.dotProduct(v6) + 3, DELTA, "dotProduct wrong value for obtuse angle");
@@ -126,7 +126,7 @@ class VectorTest {
 		// TC11: Test that dotProduct returns zero for orthogonal vectors
 		assertEquals(0, v1.dotProduct(v3), DELTA, "ERROR: dotProduct() for orthogonal vectors is not zero");
 
-		//  Test that dotProduct returns the correct value for unit vector
+		// Test that dotProduct returns the correct value for unit vector
 		assertEquals(1, v1.dotProduct(v5), DELTA, "ERROR: dotProduct() wrong for unit size vector");
 	}
 
@@ -142,11 +142,11 @@ class VectorTest {
 		// TC01: Test that the result length of cross product is correct
 		assertEquals(vr.length(), v1.length() * v3.length(), DELTA, "ERROR: crossProduct() wrong result length");
 
-		//  Test that the result of cross product is orthogonal to the first
+		// Test that the result of cross product is orthogonal to the first
 		// operand
 		assertEquals(0, vr.dotProduct(v1), "ERROR: crossProduct() result is not orthogonal to its 1st operand");
 
-		//  Test that the result of cross product is orthogonal to the second
+		// Test that the result of cross product is orthogonal to the second
 		// operand
 		assertEquals(0, vr.dotProduct(v3), "ERROR: crossProduct() result is not orthogonal to its 2nd operand");
 

@@ -2,10 +2,8 @@ package geometries;
 
 import java.util.List;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import primitives.*;
+import static primitives.Util.*;
 
 /**
  * Represents a plane in three-dimensional space.
@@ -28,7 +26,7 @@ public class Plane implements Geometry {
 	public Plane(Point p1, Point p2, Point p3) {
 		Vector v1 = p2.subtract(p1);
 		Vector v2 = p3.subtract(p1);
-		this.pointOnPlane = p1; 
+		this.pointOnPlane = p1;
 		this.normalVector = v1.crossProduct(v2).normalize();
 	}
 
@@ -62,7 +60,7 @@ public class Plane implements Geometry {
 	public Vector getNormal() {
 		return normalVector;
 	}
-	
+
 	/**
 	 * Finds the intersection points between the given ray and the plane.
 	 * 
@@ -70,28 +68,22 @@ public class Plane implements Geometry {
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
 	public List<Point> findIntersections(Ray ray) {
-	
-	    Point rayHead = ray.getHead();  // Origin of the ray
-	    Vector rayDir = ray.getDirection();  // Direction of the ray
-	    
-	    if(rayHead.equals(pointOnPlane)) {return null;}
-	    
-	    
-	    double s = Util.alignZero(normalVector.dotProduct(rayDir));
-	    if(Util.isZero(s)) {return null;}
-	    
-	    // Calculate the parameter t for the ray-plane intersection
-	    double t = Util.alignZero(normalVector.dotProduct(pointOnPlane.subtract(rayHead)) / s);
-	    
-	    // If t is positive, the intersection point is in the ray's direction
-	    if (t > 0) {
-	        // Calculate and return the intersection point
-	        return List.of(ray.getPoint(t));
-	    }
-	    
-	    // If t is not positive, there is no intersection
-	    return null;
-	}
 
+		Point rayHead = ray.getHead(); // Origin of the ray
+		if (rayHead.equals(pointOnPlane))
+			return null;
+
+		Vector rayDir = ray.getDirection(); // Direction of the ray
+
+		double s = normalVector.dotProduct(rayDir);
+		if (isZero(s))
+			return null;
+
+		// Calculate the parameter t for the ray-plane intersection
+		double t = alignZero(normalVector.dotProduct(pointOnPlane.subtract(rayHead)) / s);
+		// If t is not positive, there is no intersection
+		// If t is positive, the intersection point is in the ray's direction
+		return t <= 0 ? null : List.of(ray.getPoint(t));
+	}
 
 }

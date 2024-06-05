@@ -35,43 +35,36 @@ public class Cylinder extends Tube {
 	 */
 	@Override
 	public Vector getNormal(Point pointOnSurface) {
-
 		Point pHead = axis.getHead(); // Base point of the axis
 		Vector vecDir = axis.getDirection(); // direction of the axis
 
 		// if pointOnSurface is equal to point in axis, then normal is opposite of
 		// direction vector
-		if (pointOnSurface.equals(pHead)) {
+		if (pointOnSurface.equals(pHead))
 			return vecDir.scale(-1); // Normal pointing inward
-		}
 
 		// Project pointOnSurface onto the axis to get the parameter t
 		double t = vecDir.dotProduct(pointOnSurface.subtract(pHead));
-
 		// Check if the point is on the bottom base
-		if (isZero(t)) {
+		if (isZero(t))
 			return vecDir.scale(-1); // Normal pointing inward
-		}
-
 		// Check if the point is on the top base
-		if (isZero(t - height)) {
+		if (isZero(t - height))
 			return vecDir; // Normal pointing outward
-		}
 
 		// If the point is on the curved surface
-		Point o = pHead.add(vecDir.scale(t)); // Projection of the point onto the axis
-		return pointOnSurface.subtract(o).normalize();
+		return pointOnSurface.subtract(axis.getPoint(t)).normalize();
 	}
-	
-	 /**
-     * Finds the intersection points between a given ray and the Cylinder.
-     * 
-     * @param ray the ray to intersect with the Cylinder
-     * @return a list of intersection points, or null if there are no intersections
-     */
-    @Override
-    public List<Point> findIntersections(Ray ray) {
-        // Implementation goes here
-        return null; // Returning null for now as a placeholder
-}
+
+	/**
+	 * Finds the intersection points between a given ray and the Cylinder.
+	 * 
+	 * @param ray the ray to intersect with the Cylinder
+	 * @return a list of intersection points, or null if there are no intersections
+	 */
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		// Implementation goes here
+		return null; // Returning null for now as a placeholder
+	}
 }

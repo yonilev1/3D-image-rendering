@@ -2,10 +2,7 @@ package geometries;
 
 import java.util.List;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Util;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Represents a tube in three-dimensional space.
@@ -34,22 +31,19 @@ public class Tube extends RadialGeometry {
 	 */
 	@Override
 	public Vector getNormal(Point pointOnSurface) {
-		Point pHead = this.axis.getHead();
-		Vector vecDIr = this.axis.getDirection();
-		double t = vecDIr.dotProduct((pointOnSurface.subtract(pHead)));
-		Point o = Util.isZero(t) ? pHead : pHead.add(vecDIr.scale(t));
-		return pointOnSurface.subtract(o).normalize();
+		double t = this.axis.getDirection().dotProduct((pointOnSurface.subtract(this.axis.getHead())));
+		return pointOnSurface.subtract(axis.getPoint(t)).normalize();
 	}
-	
-	 /**
-     * Finds the intersection points between a given ray and the Tube.
-     * 
-     * @param ray the ray to intersect with the Tube
-     * @return a list of intersection points, or null if there are no intersections
-     */
-    @Override
-    public List<Point> findIntersections(Ray ray) {
-        // Implementation goes here
-        return null; // Returning null for now as a placeholder
-        }
+
+	/**
+	 * Finds the intersection points between a given ray and the Tube.
+	 * 
+	 * @param ray the ray to intersect with the Tube
+	 * @return a list of intersection points, or null if there are no intersections
+	 */
+	@Override
+	public List<Point> findIntersections(Ray ray) {
+		// Implementation goes here
+		return null; // Returning null for now as a placeholder
+	}
 }

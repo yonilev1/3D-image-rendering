@@ -4,11 +4,12 @@ import primitives.Point;
 import primitives.Vector;
 
 /**
- * The Geometry interface extends Intersectable and represents a geometric shape in three-dimensional
- * space. Classes that implement this interface must provide a method to
- * calculate the normal vector at a specified point on the surface of the shape.
+ * The Geometry interface extends Intersectable and represents a geometric shape
+ * in three-dimensional space. Classes that implement this interface must
+ * provide a method to calculate the normal vector at a specified point on the
+ * surface of the shape.
  */
-public interface Geometry extends Intersectable{
+public interface Geometry extends Intersectable {
 
 	/**
 	 * Calculates the normal vector at the specified point on the surface of the
