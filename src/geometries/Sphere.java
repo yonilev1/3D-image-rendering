@@ -45,45 +45,41 @@ public class Sphere extends RadialGeometry {
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
 	public List<Point> findIntersections(Ray ray) {
+		
+		if(ray.getHead().equals(centerPoint)) {
+			return List.of(ray.getPoint(radius));
+		}
+		
 	    // Calculate vector from ray's head to the center of the sphere
 	    Vector u = centerPoint.subtract(ray.getHead());
-	    
+	    	    
 	    // Calculate projection of u onto ray's direction
-	    double tm = u.dotProduct(ray.getDirection());
+	    double tm = Util.alignZero(u.dotProduct(ray.getDirection()));
 	    
 	    // Calculate distance squared between ray's head and sphere's center
-	    double d = u.dotProduct(u) - tm * tm;
-	    
-	    // Calculate squared radius of the sphere
-	    double r2 = radius * radius;
+	    double d = u.lengthSquared() - tm * tm;
 
+	    // Calculate distance from projection point to intersection points
+	    double thSquared = Util.alignZero(radiusSquared - d);
+	    
 	    // Check for no intersection (ray misses the sphere)
-	    if (d > r2) {
+	    if (thSquared <= 0) {
 	        return null; // No intersection
 	    }
 	    
-	    // Calculate distance from projection point to intersection points
-	    double th = Math.sqrt(r2 - d);
 	    
+	    double th = Math.sqrt(thSquared);
 	    // Calculate parametric distances along the ray to intersection points
 	    double t1 = Util.alignZero(tm - th);
 	    double t2 = Util.alignZero(tm + th);
-
-	    // Return intersection points (if any)
-	    if (t1 >= 0 && t2 >= 0) {
-	        // Two intersection points
-	        return List.of(
-	            ray.getPoint(t1), ray.getPoint(t2));
-	    } else if (t1 >= 0) {
-	        // One intersection point (t1)
-	        return List.of(ray.getPoint(t1));
-	    } else if (t2 >= 0) {
-	        // One intersection point (t2)
-	        return List.of(ray.getPoint(t2));
-	    } else {
-	        // No intersection
-	        return null;
-	    }
-	}
-
+	    
+	    if(t2 <=0) {return null;}
+	    
+	    if(t1<=0)
+	    	return List.of(ray.getPoint(t2));
+	    else
+	    	return List.of(ray.getPoint(t1),ray.getPoint(t2));
+	    
+	
+}
 }
