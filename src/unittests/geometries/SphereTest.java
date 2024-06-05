@@ -78,9 +78,9 @@ class SphereTest {
 	 
 	      // **** Group: Ray's line crosses the sphere (but not the center) 
 	      // TC11: Ray starts at sphere and goes inside (1 points) 
-	      	result1 = sphere.findIntersections(new Ray(gp1,v310));
+	      	result1 = sphere.findIntersections(new Ray(new Point(0,0,0),new Vector(1,1,0)));
 			assertEquals(1, result1.size(), "There should be one intersection");
-			assertEquals(List.of(gp2), result1, "Incorrect intersection point");
+			assertEquals(List.of(new Point(1,1,0)), result1, "Incorrect intersection point");
 	      
 	      // TC12: Ray starts at sphere and goes outside (0 points) 
 			assertNull(sphere.findIntersections(new Ray(new Point(1, 0, 1), new Vector(1, 0, 3))),"There shouldn't be any intersections");
@@ -132,7 +132,7 @@ class SphereTest {
 	      // TC22: Ray's line is outside, ray is orthogonal to ray start to sphere's center line
 	        assertNull(sphere.findIntersections(new Ray(new Point(-1,0,0), new Vector(-1,1,0))),
 	                   "There shouldn't be any intersections");
-	 
+	          
 	    }
 
 }

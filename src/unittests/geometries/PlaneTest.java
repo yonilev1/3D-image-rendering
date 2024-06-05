@@ -87,7 +87,7 @@ public class PlaneTest {
 		//TC13: The ray is orthogonal and starts before the plane
 		final var result5 = plane.findIntersections(new Ray(new Point(-5, -4, 3), new Vector(1, 1, 1)));
 		assertEquals(1,result5.size(),"ERROR: findIntersections() did not return the right number of points");
-		assertEquals(List.of(new Point(-2.67,-1.67,5.33)), result5, "ERROR: Incorrect intersection points");
+		assertEquals(List.of(new Point(-2.666666666666667,-1.666666666666667,5.333333333333333)), result5, "ERROR: Incorrect intersection points");
 
 		//TC14: The ray is orthogonal and starts in the plane
 		final var result6 = plane.findIntersections(new Ray(new Point(0, 0, 1), new Vector(1, 1, 1)));
@@ -104,6 +104,8 @@ public class PlaneTest {
 		//TC17:Ray is neither orthogonal nor parallel to and begins at any point in the plane
 		final var result9 = plane.findIntersections(new Ray(new Point(-4,3,2), new Vector(2, 4, 1)));
 		assertNull(result9, "ERROR: findIntersections() sould retutn null");
+		
+		
 	}
 
 }

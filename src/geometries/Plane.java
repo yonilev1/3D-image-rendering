@@ -70,11 +70,18 @@ public class Plane implements Geometry {
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
 	public List<Point> findIntersections(Ray ray) {
+	
 	    Point rayHead = ray.getHead();  // Origin of the ray
 	    Vector rayDir = ray.getDirection();  // Direction of the ray
 	    
+	    if(rayHead.equals(pointOnPlane)) {return null;}
+	    
+	    
+	    double s = Util.alignZero(normalVector.dotProduct(rayDir));
+	    if(Util.isZero(s)) {return null;}
+	    
 	    // Calculate the parameter t for the ray-plane intersection
-	    double t = Util.alignZero(normalVector.dotProduct(pointOnPlane.subtract(rayHead)) / normalVector.dotProduct(rayDir));
+	    double t = Util.alignZero(normalVector.dotProduct(pointOnPlane.subtract(rayHead)) / s);
 	    
 	    // If t is positive, the intersection point is in the ray's direction
 	    if (t > 0) {
