@@ -22,19 +22,22 @@ public class PlaneTest {
 
 	private final double DELTA = 0.000001;
 
+	/**
+	 * Test method for {@link Plane#Plane(Point, Point, Point)} constructor.
+	 */
 	@Test
 	void testCtorThreePoints() {
-		// =============== Boundary Values Tests ==================
+	    // =============== Boundary Values Tests ==================
 
-		// TC01: not throws exception from ctor
-		assertThrows(IllegalArgumentException.class,
-				() -> new Plane(new Point(0, 0, 1), new Point(0, 0, 1), new Point(1, 0, 0)), //
-				"two point the same dose not throws exception");
+	    // TC01: Check if constructor throws an exception for two identical points
+	    assertThrows(IllegalArgumentException.class,
+	            () -> new Plane(new Point(0, 0, 1), new Point(0, 0, 1), new Point(1, 0, 0)), //
+	            "Two identical points did not throw an exception");
 
-		assertThrows(IllegalArgumentException.class,
-				() -> new Plane(new Point(1, 1, 1), new Point(2, 2, 2), new Point(3, 3, 3)), //
-				"three point are on the same line dose not throw exception");
-
+	    // TC02: Check if constructor throws an exception for three collinear points
+	    assertThrows(IllegalArgumentException.class,
+	            () -> new Plane(new Point(1, 1, 1), new Point(2, 2, 2), new Point(3, 3, 3)), //
+	            "Three collinear points did not throw an exception");
 	}
 
 	/**

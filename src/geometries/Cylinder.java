@@ -55,16 +55,4 @@ public class Cylinder extends Tube {
 		// If the point is on the curved surface
 		return pointOnSurface.subtract(axis.getPoint(t)).normalize();
 	}
-
-	/**
-	 * Finds the intersection points between a given ray and the Cylinder.
-	 * 
-	 * @param ray the ray to intersect with the Cylinder
-	 * @return a list of intersection points, or null if there are no intersections
-	 */
-	@Override
-	public List<Point> findIntersections(Ray ray) {
-		// Implementation goes here
-		return null; // Returning null for now as a placeholder
-	}
 }

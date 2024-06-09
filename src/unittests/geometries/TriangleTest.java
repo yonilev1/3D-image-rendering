@@ -23,25 +23,33 @@ import primitives.Vector;
  */
 class TriangleTest {
 
+	/**
+	 * Test method for {@link Triangle#getNormal(Point)}.
+	 */
 	@Test
 	void testGetNormal() {
-		// ============ Equivalence Partitions Tests ==============
-		Point[] pts = { new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0) };
-		Triangle tr = new Triangle(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0));
+	    // ============ Equivalence Partitions Tests ==============
 
-		// TC01: ensure there are no exceptions
+	    // Define the vertices of the triangle
+	    Point[] pts = { new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0) };
+	    Triangle tr = new Triangle(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0));
 
-		assertDoesNotThrow(() -> tr.getNormal(new Point(0, 0, 1)), "");
-		// generate the test result
-		Vector result = tr.getNormal(new Point(0, 0, 1));
-		// ensure |result| = 1
-		assertEquals(1, result.length(), 0.000001, "Polygon's normal is not a unit vector");
-		// ensure the result is orthogonal to all the edges
-		for (int i = 0; i < 2; i++)
-			assertEquals(0d, result.dotProduct(pts[i].subtract(pts[i == 0 ? 2 : i - 1])), 0.000001,
-					"Triangle's normal is not orthogonal to one of the edges");
+	    // TC01: Ensure there are no exceptions
+	    assertDoesNotThrow(() -> tr.getNormal(new Point(0, 0, 1)), "getNormal threw an unexpected exception");
 
+	    // Generate the test result
+	    Vector result = tr.getNormal(new Point(0, 0, 1));
+
+	    // Ensure |result| = 1 (the normal is a unit vector)
+	    assertEquals(1, result.length(), 0.000001, "Polygon's normal is not a unit vector");
+
+	    // Ensure the result is orthogonal to all the edges
+	    for (int i = 0; i < 2; i++) {
+	        assertEquals(0d, result.dotProduct(pts[i].subtract(pts[i == 0 ? 2 : i - 1])), 0.000001,
+	                "Triangle's normal is not orthogonal to one of the edges");
+	    }
 	}
+
 
 	/**
 	 * Test method for

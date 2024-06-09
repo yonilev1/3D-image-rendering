@@ -12,7 +12,8 @@ import primitives.Ray;
 import primitives.Vector;
 
 /**
- * 
+ * Ray test
+ * @author Yoni leventhal adiel yekutiel
  */
 class RayTest {
 

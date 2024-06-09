@@ -35,15 +35,10 @@ public class Tube extends RadialGeometry {
 		return pointOnSurface.subtract(axis.getPoint(t)).normalize();
 	}
 
-	/**
-	 * Finds the intersection points between a given ray and the Tube.
-	 * 
-	 * @param ray the ray to intersect with the Tube
-	 * @return a list of intersection points, or null if there are no intersections
-	 */
 	@Override
 	public List<Point> findIntersections(Ray ray) {
-		// Implementation goes here
-		return null; // Returning null for now as a placeholder
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }

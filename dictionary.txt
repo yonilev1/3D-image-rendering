@@ -4,3 +4,4 @@ adiel
 yekutiel
 intersectable
 barycentric
+quadrangular
