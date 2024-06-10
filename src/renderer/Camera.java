@@ -38,17 +38,17 @@ public class Camera implements Cloneable {
 	/**
 	 * The height of the view plane.
 	 */
-	protected double height = 0;
+	private double height = 0;
 
 	/**
 	 * The width of the view plane.
 	 */
-	protected double width = 0;
+	private double width = 0;
 
 	/**
 	 * The distance from the camera to the view plane.
 	 */
-	protected double distanceFromCamera = 0;
+	private double distanceFromCamera = 0;
 
 	/**
 	 * Private constructor to enforce the use of the builder.
@@ -102,27 +102,23 @@ public class Camera implements Cloneable {
 	 * @return the constructed ray.
 	 */
 	public Ray constructRay(int nX, int nY, int j, int i) {
-		 // Calculate the image center
-        Point pc = p0.add(vTo.scale(distanceFromCamera));
+		// Calculate the pixel's center point on the view plane
+		Point pij = p0.add(vTo.scale(distanceFromCamera));
 
-        // Calculate the x and y offsets of the pixel
-        double xj = (j - (nX - 1) / 2.0) * (width / nX);
-        double yi = -(i - (nY - 1) / 2.0) * ( height / nY);
+		// Calculate the x and y offsets of the pixel
+		double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
+		double yi = (((nY - 1) / 2.0) - i) * (height / nY);
 
-        // Calculate the pixel's center point on the view plane
-        Point pij = pc;
+		if (!isZero(xj)) {
+			pij = pij.add(vRight.scale(xj));
+		}
 
-        if (!isZero(xj)) {
-            pij = pij.add(vRight.scale(xj));
-        }
+		if (!isZero(yi)) {
+			pij = pij.add(vUp.scale(yi));
+		}
+		// Return the constructed ray
+		return new Ray(p0, pij.subtract(p0));
 
-        if (!isZero(yi)) {
-            pij = pij.add(vUp.scale(yi));
-        }
-
-        // Return the constructed ray
-        return new Ray(p0, pij.subtract(p0).normalize());
-    
 	}
 
 	/**
@@ -155,33 +151,33 @@ public class Camera implements Cloneable {
 		 * @return the builder instance.
 		 * @throws IllegalArgumentException if the vectors are not orthogonal.
 		 */
-		public Builder setDirection(Vector vUp, Vector vTo) {
+		public Builder setDirection(Vector vTo, Vector vUp) {
 			// Check if vectors are orthogonal
 			if (!isZero(vUp.dotProduct(vTo))) {
 				throw new IllegalArgumentException("vUp and vTo must be orthogonal");
 			}
 			// Normalize the vectors
-			camera.vUp = vUp.normalize();
 			camera.vTo = vTo.normalize();
+			camera.vUp = vUp.normalize();
 			// Calculate vRight as the cross product of vTo and vUp
-			camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+			camera.vRight = camera.vTo.crossProduct(camera.vUp);
 			return this;
 		}
 
 		/**
 		 * Sets the size of the view plane.
 		 * 
-		 * @param length the length of the view plane.
+		 * @param width  the width of the view plane.
 		 * @param height the height of the view plane.
 		 * @return the builder instance.
 		 * @throws IllegalArgumentException if the length or height are not greater than
 		 *                                  0.
 		 */
-		public Builder setVpSize(double length, double height) {
-			if (length < 0 || height < 0) {
-				throw new IllegalArgumentException("length and height must be greater than 0");
+		public Builder setVpSize(double width, double height) {
+			if (width < 0 || height < 0) {
+				throw new IllegalArgumentException("width and height must be greater than 0");
 			}
-			camera.width = length;
+			camera.width = width;
 			camera.height = height;
 			return this;
 		}
@@ -210,11 +206,11 @@ public class Camera implements Cloneable {
 		 */
 		public Camera build() {
 
-			String MISSING_RENDERING_DATA = "Missing rendering data";
-			String CAMERA_CLASS_NAME = "Camera";
+			final String MISSING_RENDERING_DATA = "Missing rendering data";
 
 			if (camera.p0 == null) {
-				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "Location (Point p)");
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"Location (Point p)");
 			}
 			if (camera.vTo == null) {
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vTo vector");
@@ -227,18 +223,18 @@ public class Camera implements Cloneable {
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vRight vector");
 			}
 			if (camera.width == 0) {
-				throw new MissingResourceException(Camera.class.getName(), CAMERA_CLASS_NAME, "View plane length");
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane width");
 			}
 			if (camera.height == 0) {
-				throw new MissingResourceException(Camera.class.getName(), CAMERA_CLASS_NAME, "View plane height");
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane height");
 			}
 			if (camera.distanceFromCamera == 0) {
-				throw new MissingResourceException(Camera.class.getName(), CAMERA_CLASS_NAME, "Distance from camera");
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"Distance from camera");
 			}
 			// Validate the view plane size
 			if (camera.width < 0 || camera.height < 0) {
-				throw new IllegalStateException(
-						"Invalid view plane size. Length and height must be greater than zero.");
+				throw new IllegalStateException("Invalid view plane size. Width and height must be greater than zero.");
 			}
 
 			// Validate the distance from the camera to the view plane

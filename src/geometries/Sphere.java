@@ -55,7 +55,8 @@ public class Sphere extends RadialGeometry {
 		double dSquared = u.lengthSquared() - tm * tm;
 		// Calculate distance from projection point to intersection points
 		double thSquared = alignZero(radiusSquared - dSquared);
-		// Check for no intersection (ray misses the sphere) - when d is equal or greater than the radius
+		// Check for no intersection (ray misses the sphere) - when d is equal or
+		// greater than the radius
 		if (thSquared <= 0)
 			return null; // No intersection
 
@@ -64,7 +65,7 @@ public class Sphere extends RadialGeometry {
 		double t2 = alignZero(tm + th);
 		if (t2 <= 0)
 			return null;
-		
+
 		double t1 = alignZero(tm - th);
 		return t1 <= 0 ? List.of(ray.getPoint(t2)) : List.of(ray.getPoint(t1), ray.getPoint(t2));
 	}

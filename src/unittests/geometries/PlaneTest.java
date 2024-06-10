@@ -27,17 +27,17 @@ public class PlaneTest {
 	 */
 	@Test
 	void testCtorThreePoints() {
-	    // =============== Boundary Values Tests ==================
+		// =============== Boundary Values Tests ==================
 
-	    // TC01: Check if constructor throws an exception for two identical points
-	    assertThrows(IllegalArgumentException.class,
-	            () -> new Plane(new Point(0, 0, 1), new Point(0, 0, 1), new Point(1, 0, 0)), //
-	            "Two identical points did not throw an exception");
+		// TC01: Check if constructor throws an exception for two identical points
+		assertThrows(IllegalArgumentException.class,
+				() -> new Plane(new Point(0, 0, 1), new Point(0, 0, 1), new Point(1, 0, 0)), //
+				"Two identical points did not throw an exception");
 
-	    // TC02: Check if constructor throws an exception for three collinear points
-	    assertThrows(IllegalArgumentException.class,
-	            () -> new Plane(new Point(1, 1, 1), new Point(2, 2, 2), new Point(3, 3, 3)), //
-	            "Three collinear points did not throw an exception");
+		// TC02: Check if constructor throws an exception for three collinear points
+		assertThrows(IllegalArgumentException.class,
+				() -> new Plane(new Point(1, 1, 1), new Point(2, 2, 2), new Point(3, 3, 3)), //
+				"Three collinear points did not throw an exception");
 	}
 
 	/**
