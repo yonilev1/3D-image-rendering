@@ -2,6 +2,8 @@ package primitives;
 
 import static primitives.Util.*;
 
+import java.util.List;
+
 /**
  * Represents a ray in three-dimensional space.
  */
@@ -50,18 +52,18 @@ public class Ray {
 	}
 
 	/**
-	 * Returns the head point of the vector.
-	 * 
-	 * @return the head point of the vector
+	 * Returns the starting point (head) of the ray.
+	 *
+	 * @return The starting point (head) of the ray.
 	 */
 	public Point getHead() {
 		return this.head;
 	}
 
 	/**
-	 * Returns the direction of the vector.
-	 * 
-	 * @return the direction of the vector
+	 * Returns the direction vector of the ray.
+	 *
+	 * @return The direction vector of the ray.
 	 */
 	public Vector getDirection() {
 		return this.direction;
@@ -70,10 +72,39 @@ public class Ray {
 	/**
 	 * Calculates a point on the ray at a distance t from the ray's head.
 	 *
-	 * @param t the distance from the head of the ray
-	 * @return the point on the ray at distance t, or the head if t is zero
+	 * @param t the distance from the head of the ray.
+	 * @return The point on the ray at distance t, or the head if t is zero.
 	 */
 	public Point getPoint(double t) {
 		return isZero(t) ? head : head.add(direction.scale(t));
+	}
+
+	/**
+	 * Finds the closest point to the ray's head from a list of points. This method
+	 * is currently a placeholder and returns null.
+	 *
+	 * @param listOfPoints The list of points to search from.
+	 * @return The closest point to the ray's head from the list, or null if the
+	 *         list is empty.
+	 */
+	public Point findClosestPoint(List<Point> listOfPoints) {
+		if (listOfPoints.isEmpty()) {
+			return null;
+		}
+
+		Point closestPoint = listOfPoints.get(0); // Start by assuming the first point is closest
+		double minDistance = head.distance(closestPoint); // Calculate distance to the first point
+
+		for (int i = 1; i < listOfPoints.size(); i++) {
+			Point currentPoint = listOfPoints.get(i);
+			double distance = head.distance(currentPoint);
+
+			if (distance < minDistance) {
+				minDistance = distance;
+				closestPoint = currentPoint;
+			}
+		}
+
+		return closestPoint;
 	}
 }
