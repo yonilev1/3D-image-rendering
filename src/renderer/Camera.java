@@ -51,6 +51,16 @@ public class Camera implements Cloneable {
 	private double distanceFromCamera = 0;
 
 	/**
+	 * The image writer responsible for writing pixels to an image.
+	 */
+	private ImageWriter imageWriter;
+
+	/**
+	 * The ray tracer responsible for tracing rays and computing colors.
+	 */
+	private RayTracerBase rayTracer;
+
+	/**
 	 * Private constructor to enforce the use of the builder.
 	 */
 	private Camera() {
@@ -119,6 +129,101 @@ public class Camera implements Cloneable {
 		// Return the constructed ray
 		return new Ray(p0, pij.subtract(p0));
 
+	}
+
+	/**
+	 * Renders the image by tracing rays through each pixel and computing the color.
+	 * This method is currently not implemented and will throw an
+	 * UnsupportedOperationException if called.
+	 *
+	 * @return this
+	 * @throws UnsupportedOperationException when the method is called, indicating
+	 *                                       that it is not yet implemented.
+	 */
+	public Camera renderImage() {
+		int nX = imageWriter.getNx();
+		int nY = imageWriter.getNy();
+		for (int i = 0; i < nX; ++i)
+			for (int j = 0; j < nY; ++j)
+				castRay(nX, nY, j, i);
+
+		return this;
+	}
+
+	/**
+	 * Private method to cast a ray through the center of a pixel, trace its color,
+	 * and write the color to the image.
+	 *
+	 * @param nX     The number of pixels in the X direction.
+	 * @param nY     The number of pixels in the Y direction.
+	 * @param column The pixel index in the X direction.
+	 * @param row    The pixel index in the Y direction.
+	 */
+	private void castRay(int nX, int nY, int column, int row) {
+
+		// Construct a ray from the camera through the center of the pixel
+		Ray ray = constructRay(nX, nY, column, row);
+
+		// Trace the ray to determine its color
+		Color pixelColor = rayTracer.traceRay(ray);
+
+		// Write the color to the image at pixel (row, column)
+		imageWriter.writePixel(row, column, pixelColor);
+	}
+
+	/**
+	 * Draws a grid over the image with the specified interval and color. This
+	 * method overlays horizontal and vertical lines at specified intervals across
+	 * the entire image to help in visualizing the alignment and distribution of
+	 * elements.
+	 *
+	 * @param interval The spacing between the grid lines in pixels.
+	 * @param color    The color of the grid lines.
+	 * @return The current Camera instance, allowing for method chaining.
+	 * @throws MissingResourceException if the imageWriter is null.
+	 */
+	public Camera printGrid(int interval, Color color) {
+		// Check if the imageWriter is null and throw an exception if it is
+		if (imageWriter == null) {
+			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
+		}
+
+		// Get the number of pixels in the Y (vertical) and X (horizontal) dimensions
+		int nY = imageWriter.getNy();
+		int nX = imageWriter.getNx();
+
+		// Draw horizontal grid lines at every 'interval' pixels
+		for (int i = 0; i < nY; i += interval) {
+			for (int j = 0; j < nX; j += 1) {
+				imageWriter.writePixel(i, j, color);
+			}
+		}
+
+		// Draw vertical grid lines at every 'interval' pixels
+		for (int i = 0; i < nY; i += 1) {
+			for (int j = 0; j < nX; j += interval) {
+				imageWriter.writePixel(i, j, color);
+			}
+		}
+
+		// Return the current Camera instance
+		return this;
+	}
+
+	/**
+	 * Writes the image to a file using the imageWriter. This method delegates the
+	 * call to the imageWriter's writeToImage method.
+	 *
+	 * @throws MissingResourceException if the imageWriter is null.
+	 */
+	public void writeToImage() {
+		// Check if the imageWriter is null and throw an exception if it is
+		if (imageWriter == null) {
+			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
+		}
+
+		// Delegate the call to the imageWriter's writeToImage method
+		imageWriter.writeToImage();
 	}
 
 	/**
@@ -198,6 +303,16 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		public Builder setImageWriter(ImageWriter imageWriter) {
+			camera.imageWriter = imageWriter;
+			return this;
+		}
+
+		public Builder setRayTracer(RayTracerBase rayTracer) {
+			camera.rayTracer = rayTracer;
+			return this;
+		}
+
 		/**
 		 * Builds the Camera instance.
 		 * 
@@ -232,6 +347,14 @@ public class Camera implements Cloneable {
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"Distance from camera");
 			}
+			/*
+			 * if (!(camera.imageWriter instanceof ImageWriter)) { throw new
+			 * MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+			 * "View plane imageWriter"); } if (!(camera.rayTracer instanceof
+			 * RayTracerBase)) { throw new MissingResourceException(MISSING_RENDERING_DATA,
+			 * Camera.class.getName(), "View plane rayTracer"); }
+			 */
+
 			// Validate the view plane size
 			if (camera.width < 0 || camera.height < 0) {
 				throw new IllegalStateException("Invalid view plane size. Width and height must be greater than zero.");
