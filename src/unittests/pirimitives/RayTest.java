@@ -34,7 +34,7 @@ class RayTest {
 		Point expectedPositivePoint = new Point(3, 1, 1);
 		assertEquals(expectedPositivePoint, ray.getPoint(2), "ERROR: getPoint() for positive distance is incorrect");
 
-		// t is negative
+		// TC02: t is negative
 		Point expectedNegativePoint = new Point(0, 1, 1);
 		assertEquals(expectedNegativePoint, ray.getPoint(-1), "ERROR: getPoint() for negative distance is incorrect");
 

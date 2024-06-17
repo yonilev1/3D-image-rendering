@@ -234,7 +234,7 @@ public class Camera implements Cloneable {
 		/**
 		 * A new Camera instance being built.
 		 */
-		final Camera camera = new Camera();
+		final private Camera camera = new Camera();
 
 		/**
 		 * Sets the location of the camera.
@@ -303,11 +303,23 @@ public class Camera implements Cloneable {
 			return this;
 		}
 
+		/**
+		 * Sets the image writer for the camera configuration.
+		 * 
+		 * @param imageWriter The image writer to be set.
+		 * @return This Builder object.
+		 */
 		public Builder setImageWriter(ImageWriter imageWriter) {
 			camera.imageWriter = imageWriter;
 			return this;
 		}
 
+		/**
+		 * Sets the ray tracer for the camera configuration.
+		 * 
+		 * @param rayTracer The ray tracer to be set.
+		 * @return This Builder object.
+		 */
 		public Builder setRayTracer(RayTracerBase rayTracer) {
 			camera.rayTracer = rayTracer;
 			return this;

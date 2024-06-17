@@ -25,8 +25,8 @@ class ImageWriterTest {
      */
     @Test
     void testImageWriter() {
-        // Create a new ImageWriter instance with dimensions 801x501 pixels
-        ImageWriter imageWriter = new ImageWriter("testMyImage", 801, 501);
+        // Create a new ImageWriter instance with dimensions 800x500 pixels
+        ImageWriter imageWriter = new ImageWriter("testMyImage", 800, 500);
 
         // Define colors for background and grid lines
         Color background = new Color(255, 255, 0); // Yellow background

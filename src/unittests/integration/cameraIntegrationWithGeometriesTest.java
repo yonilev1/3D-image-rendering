@@ -65,7 +65,7 @@ public class cameraIntegrationWithGeometriesTest {
 		.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))//
 		.setVpSize(3, 3).setVpDistance(1).build();*/
 
-		// TC02:18 intersection points
+		// TC02: 18 intersection points
 		assertEquals(18, countIntersections(camera1, new Sphere(new Point(0, 0, -2.5), 2.5), 3, 3), //
 				wrongNumberOfIntersections);
 
