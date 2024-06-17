@@ -183,11 +183,6 @@ public class Camera implements Cloneable {
 	 * @throws MissingResourceException if the imageWriter is null.
 	 */
 	public Camera printGrid(int interval, Color color) {
-		// Check if the imageWriter is null and throw an exception if it is
-		if (imageWriter == null) {
-			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
-		}
-
 		// Get the number of pixels in the Y (vertical) and X (horizontal) dimensions
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
@@ -217,11 +212,6 @@ public class Camera implements Cloneable {
 	 * @throws MissingResourceException if the imageWriter is null.
 	 */
 	public void writeToImage() {
-		// Check if the imageWriter is null and throw an exception if it is
-		if (imageWriter == null) {
-			throw new MissingResourceException("Image writer was null", getClass().getName(), "");
-		}
-
 		// Delegate the call to the imageWriter's writeToImage method
 		imageWriter.writeToImage();
 	}
@@ -279,7 +269,7 @@ public class Camera implements Cloneable {
 		 *                                  0.
 		 */
 		public Builder setVpSize(double width, double height) {
-			if (width < 0 || height < 0) {
+			if (width <= 0 || height <= 0) {
 				throw new IllegalArgumentException("width and height must be greater than 0");
 			}
 			camera.width = width;
@@ -335,6 +325,10 @@ public class Camera implements Cloneable {
 
 			final String MISSING_RENDERING_DATA = "Missing rendering data";
 
+			if (isZero(camera.vTo.dotProduct(camera.vTo))) {
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"vTo vector and vUp vectore");
+			}
 			if (camera.p0 == null) {
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"Location (Point p)");
@@ -349,23 +343,25 @@ public class Camera implements Cloneable {
 				camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vRight vector");
 			}
-			if (camera.width == 0) {
+			if (isZero(camera.width)) {
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane width");
 			}
-			if (camera.height == 0) {
+			if (isZero(camera.height)) {
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane height");
 			}
-			if (camera.distanceFromCamera == 0) {
+			if (isZero(camera.distanceFromCamera)) {
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"Distance from camera");
 			}
-			/*
-			 * if (!(camera.imageWriter instanceof ImageWriter)) { throw new
-			 * MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
-			 * "View plane imageWriter"); } if (!(camera.rayTracer instanceof
-			 * RayTracerBase)) { throw new MissingResourceException(MISSING_RENDERING_DATA,
-			 * Camera.class.getName(), "View plane rayTracer"); }
-			 */
+
+			if (!(camera.imageWriter instanceof ImageWriter)) {
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"View plane imageWriter");
+			}
+			if (!(camera.rayTracer instanceof RayTracerBase)) {
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"View plane rayTracer");
+			}
 
 			// Validate the view plane size
 			if (camera.width < 0 || camera.height < 0) {

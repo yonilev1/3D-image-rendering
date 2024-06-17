@@ -16,7 +16,9 @@ public class Ray {
 	private final Vector direction;
 
 	/**
-	 * Constructs a new ray with the specified starting point and direction.
+	 * Constructs a new ray with the specified starting point and direction. The
+	 * direction vector is normalized for the ray (no need to transfer a normalized
+	 * argument)
 	 *
 	 * @param head      The starting point (head) of the ray.
 	 * @param direction The direction vector of the ray.
@@ -95,16 +97,15 @@ public class Ray {
 		Point closestPoint = listOfPoints.get(0); // Start by assuming the first point is closest
 		double minDistance = head.distance(closestPoint); // Calculate distance to the first point
 
-		for (int i = 1; i < listOfPoints.size(); i++) {
-			Point currentPoint = listOfPoints.get(i);
-			double distance = head.distance(currentPoint);
+		for (Point point : listOfPoints) {
+			double distance = head.distance(point);
 
 			if (distance < minDistance) {
 				minDistance = distance;
-				closestPoint = currentPoint;
+				closestPoint = point;
 			}
-		}
 
+		}
 		return closestPoint;
 	}
 }

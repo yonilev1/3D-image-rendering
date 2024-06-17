@@ -44,7 +44,7 @@ class RayTest {
 		Point expectedZeroPoint = new Point(1, 1, 1);
 		assertEquals(expectedZeroPoint, ray.getPoint(0), "ERROR: getPoint() for distance 0 is incorrect");
 	}
-	
+
 	/**
 	 * Test method for {@link primitives.Ray#findClosestPoint(List<Point>)}.
 	 */
@@ -73,6 +73,5 @@ class RayTest {
 		points = List.of(b, c, a);
 		assertEquals(a, ray.findClosestPoint(points), "wrong result");
 	}
-	
 
 }

@@ -4,51 +4,54 @@ import primitives.*;
 import scene.Scene;
 
 /**
- * A simple implementation of the RayTracerBase class.
- * This class provides basic ray tracing functionality for a 3D scene.
+ * A simple implementation of the RayTracerBase class. This class provides basic
+ * ray tracing functionality for a 3D scene.
  */
 public class SimpleRayTracer extends RayTracerBase {
 
-    /**
-     * Constructs a new SimpleRayTracer with the specified scene.
-     *
-     * @param scene The scene to be rendered.
-     */
-    public SimpleRayTracer(Scene scene) {
-        super(scene);
-    }
+	/**
+	 * Constructs a new SimpleRayTracer with the specified scene.
+	 *
+	 * @param scene The scene to be rendered.
+	 */
+	public SimpleRayTracer(Scene scene) {
+		super(scene);
+	}
 
-    /**
-     * Traces a ray through the scene, computes the color at the intersection point (if any),
-     * and returns the background color of the scene if no intersection is found.
-     *
-     * @param ray The ray to trace through the scene.
-     * @return The color at the intersection point or the background color if no intersection is found.
-     */
-    @Override
-    public Color traceRay(Ray ray) {
-        // Find intersections of the ray with the scene geometries
-        var intersections = scene.geometries.findIntersections(ray);
+	/**
+	 * Traces a ray through the scene, computes the color at the intersection point
+	 * (if any), and returns the background color of the scene if no intersection is
+	 * found.
+	 *
+	 * @param ray The ray to trace through the scene.
+	 * @return The color at the intersection point or the background color if no
+	 *         intersection is found.
+	 */
+	@Override
+	public Color traceRay(Ray ray) {
+		// Find intersections of the ray with the scene geometries
+		var intersections = scene.geometries.findIntersections(ray);
 
-        // If no intersections found, return the background color of the scene
-        if (intersections == null) {
-            return scene.background;
-        }
+		// If no intersections found, return the background color of the scene
+		if (intersections == null) {
+			return scene.background;
+		}
 
-        // Find the closest intersection point
-        Point closestPoint = ray.findClosestPoint(intersections);
+		// Find the closest intersection point
+		Point closestPoint = ray.findClosestPoint(intersections);
 
-        // Calculate the color at the closest intersection point
-        return calcColor(closestPoint);
-    }
+		// Calculate the color at the closest intersection point
+		return calcColor(closestPoint);
+	}
 
-    /**
-     * Private method to calculate the color at a given point in the scene.
-     * For now, returns the ambient light intensity of the scene.
-     *
-     * @param closestPoint The closest intersection point on the ray.
-     * @return The color at the specified point.
-     */
-    private Color calcColor(Point closestPoint) {
-        return scene.ambientLight.getIntensity(); // Return ambient light intensity for now
-    }}
+	/**
+	 * Private method to calculate the color at a given point in the scene. For now,
+	 * returns the ambient light intensity of the scene.
+	 *
+	 * @param closestPoint The closest intersection point on the ray.
+	 * @return The color at the specified point.
+	 */
+	private Color calcColor(Point closestPoint) {
+		return scene.ambientLight.getIntensity(); // Return ambient light intensity for now
+	}
+}
