@@ -19,6 +19,7 @@ import primitives.*;
  * @author Yoni Leventhal, Adiel Yekutiel
  */
 public class PlaneTest {
+	// Small value to use for comparison of floating-point numbers for equality
 
 	private final double DELTA = 0.000001;
 

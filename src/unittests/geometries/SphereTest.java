@@ -22,6 +22,7 @@ import primitives.Vector;
  */
 class SphereTest {
 
+	// point for test
 	private final Point p100 = new Point(1, 0, 0);
 
 	/**

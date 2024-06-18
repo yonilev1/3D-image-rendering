@@ -1,14 +1,3 @@
-/**
- * Unit tests for the {@link renderer.ImageWriter} class.
- * This class tests the functionality of writing pixels to an image.
- * It verifies that pixels are correctly colored based on the provided colors.
- * <p>
- * Tests cover the initialization of an {@link renderer.ImageWriter} instance,
- * writing pixels with different colors to verify correctness.
- * </p>
- * 
- * @author Yoni and adiel
- */
 package unittests.renderer;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +5,17 @@ import org.junit.jupiter.api.Test;
 import primitives.Color;
 import renderer.ImageWriter;
 
+/**
+ * Unit tests for the {@link renderer.ImageWriter} class. This class tests the
+ * functionality of writing pixels to an image. It verifies that pixels are
+ * correctly colored based on the provided colors.
+ * <p>
+ * Tests cover the initialization of an {@link renderer.ImageWriter} instance,
+ * writing pixels with different colors to verify correctness.
+ * </p>
+ * 
+ * @author Yoni and adiel
+ */
 class ImageWriterTest {
 
 	/**

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import primitives.*;
 import renderer.*;
+import scene.Scene;
 import geometries.*;
 
 /**
@@ -16,13 +17,23 @@ import geometries.*;
  */
 public class cameraIntegrationWithGeometriesTest {
 
-	private Camera camera = Camera.getBuilder().setLocation(new Point(0, 0, 0))
-			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))//
-			.setVpSize(3, 3).setVpDistance(1).build();
+	// Initialize Camera with specified settings
+	private Camera camera = Camera.getBuilder().setRayTracer(new SimpleRayTracer(new Scene("Test"))) // Set RayTracer
+			.setImageWriter(new ImageWriter("Test", 1, 1)) // Set ImageWriter
+			.setLocation(new Point(0, 0, 0)) // Set Camera location
+			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)) // Set Camera direction
+			.setVpSize(3, 3) // Set view plane size
+			.setVpDistance(1) // Set view plane distance
+			.build();
 
-	private Camera camera1 = Camera.getBuilder().setLocation(new Point(0, 0, 0.5))
-			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))//
-			.setVpSize(3, 3).setVpDistance(1).build();
+	// Initialize another Camera with similar settings, but different location
+	private Camera camera1 = Camera.getBuilder().setRayTracer(new SimpleRayTracer(new Scene("Test"))) // Set RayTracer
+			.setImageWriter(new ImageWriter("Test", 1, 1)) // Set ImageWriter
+			.setLocation(new Point(0, 0, 0.5)) // Set Camera location
+			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)) // Set Camera direction
+			.setVpSize(3, 3) // Set view plane size
+			.setVpDistance(1) // Set view plane distance
+			.build();
 
 	/**
 	 * Helper method to generate rays through all pixels of a view plane and count
@@ -60,12 +71,6 @@ public class cameraIntegrationWithGeometriesTest {
 		// TC01: 2 intersection points
 		assertEquals(2, countIntersections(camera, new Sphere(new Point(0, 0, -3), 1), 3, 3), //
 				wrongNumberOfIntersections);
-
-		/*
-		 * camera.getBuilder().setLocation(new Point(0, 0, 0.5)) .setDirection(new
-		 * Vector(0, 0, -1), new Vector(0, 1, 0))// .setVpSize(3,
-		 * 3).setVpDistance(1).build();
-		 */
 
 		// TC02: 18 intersection points
 		assertEquals(18, countIntersections(camera1, new Sphere(new Point(0, 0, -2.5), 2.5), 3, 3), //
