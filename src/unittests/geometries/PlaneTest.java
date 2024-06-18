@@ -19,9 +19,11 @@ import primitives.*;
  * @author Yoni Leventhal, Adiel Yekutiel
  */
 public class PlaneTest {
-	// Small value to use for comparison of floating-point numbers for equality
-
-	private final double DELTA = 0.000001;
+	
+	/**
+     * DELTA for test
+     */
+	private static final double DELTA = 0.000001;
 
 	/**
 	 * Test method for {@link Plane#Plane(Point, Point, Point)} constructor.

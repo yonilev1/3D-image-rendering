@@ -17,24 +17,45 @@ import primitives.Vector;
  */
 class VectorTest {
 
-	// Small value to use for comparison of floating-point numbers for equality
-	private double DELTA = 0.0001;
+	/**
+     * DELTA for test
+     */
+	final static private double DELTA = 0.0001;
 
-	// vector for test
-	private Vector v1 = new Vector(1, 2, 3);
-	// vector for test
-	private Vector v1Opposite = new Vector(-1, -2, -3);
-	// vector for test
-	private Vector v2 = new Vector(-2, -4, -6);
-	// vector for test
-	private Vector v3 = new Vector(0, 3, -2);
-	// vector for test
-	private Vector v4 = new Vector(1, 2, 2);
-	// vector for test
-	private Vector v5 = new Vector(1, 0, 0);
-	// vector for test
-	private Vector v6 = new Vector(0, -3, 1);
+	 /**
+     * Vector for test
+     */
+    final static private Vector v1 = new Vector(1, 2, 3);
 
+    /**
+     * Vector for test
+     */
+    final static private Vector v1Opposite = new Vector(-1, -2, -3);
+
+    /**
+     * Vector for test
+     */
+    final static private Vector v2 = new Vector(-2, -4, -6);
+
+    /**
+     * Vector for test
+     */
+    final static private Vector v3 = new Vector(0, 3, -2);
+
+    /**
+     * Vector for test
+     */
+    final static private Vector v4 = new Vector(1, 2, 2);
+
+    /**
+     * Vector for test
+     */
+    final static private Vector v5 = new Vector(1, 0, 0);
+
+    /**
+     * Vector for test
+     */
+    final static private Vector v6 = new Vector(0, -3, 1);
 	/**
 	 * Test method for {@link primitives.Vector#Vector(double,double,double)}.
 	 */

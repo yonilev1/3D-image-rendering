@@ -51,10 +51,10 @@ class RayTest {
 	 */
 	@Test
 	void testFindClosestPoint() {
-		Ray ray = new Ray(new Point(0, 0, 0), new Vector(1, 1, 0));
-		Point a = new Point(2, 2, 0);
-		Point b = new Point(3, 3, 0);
-		Point c = new Point(4, 4, 0);
+		final Ray ray = new Ray(new Point(0, 0, 0), new Vector(1, 1, 0));
+		final Point a = new Point(2, 2, 0);
+		final Point b = new Point(3, 3, 0);
+		final Point c = new Point(4, 4, 0);
 		List<Point> points = List.of(b, a, c);
 		// ============ Equivalence Partitions Tests ==============
 
