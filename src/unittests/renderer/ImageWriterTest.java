@@ -30,12 +30,14 @@ class ImageWriterTest {
 		ImageWriter imageWriter = new ImageWriter("testMyImage", 801, 501);
 
 		// Define colors for background and grid lines
-		Color background = new Color(255, 255, 0); // Yellow background
-		Color grid = new Color(255, 0, 0); // Red grid lines
+		final Color background = new Color(255, 255, 0); // Yellow background
+		final Color grid = new Color(255, 0, 0); // Red grid lines
+		final int nx = imageWriter.getNx();
+		final int ny = imageWriter.getNy();
 
 		// Write pixels to simulate a grid pattern
-		for (int i = 0; i <= 500; ++i) {
-			for (int j = 0; j <= 800; ++j) {
+		for (int i = 0; i < ny; ++i) {
+			for (int j = 0; j < nx; ++j) {
 				// Alternate between grid color and background color based on grid pattern
 				imageWriter.writePixel(j, i, i % 50 == 0 || j % 50 == 0 ? grid : background);
 			}

@@ -33,22 +33,15 @@ public class SimpleRayTracer extends RayTracerBase {
 		var intersections = scene.geometries.findIntersections(ray);
 
 		// If no intersections found, return the background color of the scene
-		if (intersections == null) {
-			return scene.background;
-		}
-
-		// Find the closest intersection point
-		Point closestPoint = ray.findClosestPoint(intersections);
-
-		// Calculate the color at the closest intersection point
-		return calcColor(closestPoint);
+		return intersections == null ? scene.background //
+				: calcColor(ray.findClosestPoint(intersections));
 	}
 
 	/**
 	 * Private method to calculate the color at a given point in the scene. For now,
 	 * returns the ambient light intensity of the scene.
 	 *
-	 * @param closestPoint The closest intersection point on the ray.
+	 * @param closestPoint a point to find its color
 	 * @return The color at the specified point.
 	 */
 	private Color calcColor(Point closestPoint) {

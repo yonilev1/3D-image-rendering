@@ -90,9 +90,8 @@ public class Ray {
 	 *         list is empty.
 	 */
 	public Point findClosestPoint(List<Point> listOfPoints) {
-		if (listOfPoints.isEmpty()) {
+		if (listOfPoints == null || listOfPoints.isEmpty())
 			return null;
-		}
 
 		Point closestPoint = null; // Start by assuming the first point is closest
 		double minDistance = Double.POSITIVE_INFINITY; // Calculate distance to the first point

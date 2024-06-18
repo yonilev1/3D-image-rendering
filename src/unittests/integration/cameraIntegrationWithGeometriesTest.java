@@ -21,8 +21,8 @@ public class cameraIntegrationWithGeometriesTest {
 	 * The first Camera instance with specific settings. It is located at (0, 0, 0)
 	 * and faces the negative z-axis.
 	 */
-	final private Camera camera = Camera.getBuilder().setRayTracer(new SimpleRayTracer(new Scene("Test"))) // Set
-																											// RayTracer
+	final private Camera camera = Camera.getBuilder() //
+			.setRayTracer(new SimpleRayTracer(new Scene("Test"))) // Set Ray)Tracer
 			.setImageWriter(new ImageWriter("Test", 1, 1)) // Set ImageWriter
 			.setLocation(new Point(0, 0, 0)) // Set Camera location
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)) // Set Camera direction
@@ -34,8 +34,8 @@ public class cameraIntegrationWithGeometriesTest {
 	 * The second Camera instance with similar settings to the first one but located
 	 * at (0, 0, 0.5). It also faces the negative z-axis.
 	 */
-	final private Camera camera1 = Camera.getBuilder().setRayTracer(new SimpleRayTracer(new Scene("Test"))) // Set
-																											// RayTracer
+	final private Camera camera1 = Camera.getBuilder() //
+			.setRayTracer(new SimpleRayTracer(new Scene("Test"))) // Set RayTracer
 			.setImageWriter(new ImageWriter("Test", 1, 1)) // Set ImageWriter
 			.setLocation(new Point(0, 0, 0.5)) // Set Camera location
 			.setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0)) // Set Camera direction

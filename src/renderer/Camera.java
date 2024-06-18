@@ -211,7 +211,6 @@ public class Camera implements Cloneable {
 	 * @throws MissingResourceException if the imageWriter is null.
 	 */
 	public void writeToImage() {
-		// Delegate the call to the imageWriter's writeToImage method
 		imageWriter.writeToImage();
 	}
 
@@ -246,14 +245,11 @@ public class Camera implements Cloneable {
 		 * @throws IllegalArgumentException if the vectors are not orthogonal.
 		 */
 		public Builder setDirection(Vector vTo, Vector vUp) {
-			// Check if vectors are orthogonal
 			if (!isZero(vUp.dotProduct(vTo))) {
 				throw new IllegalArgumentException("vUp and vTo must be orthogonal");
 			}
-			// Normalize the vectors
 			camera.vTo = vTo.normalize();
 			camera.vUp = vUp.normalize();
-			// Calculate vRight as the cross product of vTo and vUp
 			camera.vRight = camera.vTo.crossProduct(camera.vUp);
 			return this;
 		}
@@ -324,58 +320,42 @@ public class Camera implements Cloneable {
 
 			final String MISSING_RENDERING_DATA = "Missing rendering data";
 
-			if (isZero(camera.vTo.dotProduct(camera.vTo))) {
-				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
-						"vTo vector and vUp vectore");
-			}
-			if (camera.p0 == null) {
+			if (camera.p0 == null)
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"Location (Point p)");
-			}
-			if (camera.vTo == null) {
+			if (camera.vTo == null)
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vTo vector");
-			}
-			if (camera.vUp == null) {
+			if (camera.vUp == null)
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vUp vector");
-			}
-			if (camera.vRight == null) {
+			if (isZero(camera.vTo.dotProduct(camera.vTo)))
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"vTo vector and vUp vectore");
+			if (camera.vRight == null)
 				camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
-				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vRight vector");
-			}
-			if (isZero(camera.width)) {
+			
+			if (isZero(camera.width))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane width");
-			}
-			if (isZero(camera.height)) {
+			if (isZero(camera.height))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane height");
-			}
-			if (isZero(camera.distanceFromCamera)) {
+			if (camera.width < 0 || camera.height < 0)
+				throw new IllegalStateException("Invalid view plane size. Width and height must be greater than zero.");
+			if (isZero(camera.distanceFromCamera))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"Distance from camera");
-			}
+			if (camera.distanceFromCamera < 0)
+				throw new IllegalStateException("Invalid distance from camera. Must be greater than zero.");
 
-			if (!(camera.imageWriter instanceof ImageWriter)) {
+			if (!(camera.imageWriter instanceof ImageWriter))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"View plane imageWriter");
-			}
-			if (!(camera.rayTracer instanceof RayTracerBase)) {
+			if (!(camera.rayTracer instanceof RayTracerBase))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"View plane rayTracer");
-			}
 
-			// Validate the view plane size
-			if (camera.width < 0 || camera.height < 0) {
-				throw new IllegalStateException("Invalid view plane size. Width and height must be greater than zero.");
-			}
-
-			// Validate the distance from the camera to the view plane
-			if (camera.distanceFromCamera < 0) {
-				throw new IllegalStateException("Invalid distance from camera. Must be greater than zero.");
-			}
-			// Return a clone of the camera instance
 			try {
 				return (Camera) camera.clone();
 			} catch (CloneNotSupportedException e) {
-				throw new RuntimeException(e);
+				throw new AssertionError();
 			}
 		}
 
