@@ -21,9 +21,12 @@ import primitives.Vector;
  * 
  */
 class SphereTest {
+	
 
-	// point for test
-	private final Point p100 = new Point(1, 0, 0);
+	/**
+	 * point for test
+	 */
+	private static final Point p100 = new Point(1, 0, 0);
 
 	/**
 	 * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
