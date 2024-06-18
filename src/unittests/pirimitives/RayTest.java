@@ -5,6 +5,7 @@ package unittests.pirimitives;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,7 @@ class RayTest {
 		assertEquals(a, ray.findClosestPoint(points), "wrong result");
 
 		// ============ Boundary Values Tests ==============
-		points = List.of();
+		points = new ArrayList<>();
 		// TC02: list is empty (should return null)
 		assertNull(ray.findClosestPoint(points), "Should have returned null");
 

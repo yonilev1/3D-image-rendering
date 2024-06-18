@@ -94,17 +94,15 @@ public class Ray {
 			return null;
 		}
 
-		Point closestPoint = listOfPoints.get(0); // Start by assuming the first point is closest
-		double minDistance = head.distance(closestPoint); // Calculate distance to the first point
+		Point closestPoint = null; // Start by assuming the first point is closest
+		double minDistance = Double.POSITIVE_INFINITY; // Calculate distance to the first point
 
 		for (Point point : listOfPoints) {
 			double distance = head.distance(point);
-
 			if (distance < minDistance) {
 				minDistance = distance;
 				closestPoint = point;
 			}
-
 		}
 		return closestPoint;
 	}
