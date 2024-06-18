@@ -19,10 +19,10 @@ import primitives.*;
  * @author Yoni Leventhal, Adiel Yekutiel
  */
 public class PlaneTest {
-	
+
 	/**
-     * DELTA for test
-     */
+	 * DELTA for test
+	 */
 	private static final double DELTA = 0.000001;
 
 	/**

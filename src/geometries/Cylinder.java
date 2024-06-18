@@ -3,8 +3,6 @@ package geometries;
 import primitives.*;
 import static primitives.Util.*;
 
-import java.util.List;
-
 /**
  * Represents a cylinder in three-dimensional space. A cylinder is defined by
  * its height and a ray that defines its axis.

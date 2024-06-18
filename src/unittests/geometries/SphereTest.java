@@ -21,7 +21,6 @@ import primitives.Vector;
  * 
  */
 class SphereTest {
-	
 
 	/**
 	 * point for test

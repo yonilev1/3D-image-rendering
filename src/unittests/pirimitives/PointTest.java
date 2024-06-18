@@ -16,24 +16,24 @@ import primitives.*;
  */
 class PointTest {
 	/**
-     * DELTA for test
-     */
+	 * DELTA for test
+	 */
 	final static private double DELTA = 0.0001;
 	/**
-     * Point for test
-     */
+	 * Point for test
+	 */
 	final static private Point p3 = new Point(2, 4, 5);
 	/**
-     * Point for test
-     */
+	 * Point for test
+	 */
 	final static private Point p2 = new Point(2, 3, 4);
 	/**
-     * Point for test
-     */
+	 * Point for test
+	 */
 	final static private Point p1 = new Point(1, 2, 3);
 	/**
-     * Vector for test
-     */
+	 * Vector for test
+	 */
 	final static private Vector v1 = new Vector(1, 1, 1);
 
 	/**
