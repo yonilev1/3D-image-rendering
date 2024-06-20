@@ -31,7 +31,7 @@ public class Triangle extends Polygon {
 	 */
 	@Override
 	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-		var intersections = plane.findGeoIntersections(ray);
+		List<Point> intersections = plane.findIntersections(ray);
 		// Check if the ray intersects the plane of the triangle
 		if (intersections == null)
 			return null;
@@ -69,7 +69,7 @@ public class Triangle extends Polygon {
 		if (d1 * d3 <= 0)
 			return null;
 
-		return intersections;
+		return List.of(new GeoPoint(this, intersections.get(0)));
 	}
 
 }
