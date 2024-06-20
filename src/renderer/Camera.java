@@ -332,7 +332,7 @@ public class Camera implements Cloneable {
 						"vTo vector and vUp vectore");
 			if (camera.vRight == null)
 				camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
-			
+
 			if (isZero(camera.width))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane width");
 			if (isZero(camera.height))

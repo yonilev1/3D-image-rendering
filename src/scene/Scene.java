@@ -56,7 +56,7 @@ public class Scene {
 	 * @param ambientLight the ambient light.
 	 * @return the current Scene object (for method chaining).
 	 */
-	public Scene setAbientLight(AmbientLight ambientLight) {
+	public Scene setAmbientLight(AmbientLight ambientLight) {
 		this.ambientLight = ambientLight;
 		return this;
 	}

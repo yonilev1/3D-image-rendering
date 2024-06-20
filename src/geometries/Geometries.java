@@ -1,14 +1,13 @@
 package geometries;
 
 import java.util.*;
-import primitives.Point;
-import primitives.Ray;
+import primitives.*;
 
 /**
  * The abstract class Geometries represents a collection of intersectable
  * geometries. It implements the Intersectable interface.
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
 
 	/** The list of intersectable geometries. */
 	final private List<Intersectable> intersectables = new LinkedList<>();
@@ -44,13 +43,13 @@ public class Geometries implements Intersectable {
 	 * @param ray the ray to intersect with the geometries
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
-	public List<Point> findIntersections(Ray ray) {
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
-		List<Point> intersections = null;
+		List<GeoPoint> intersections = null;
 
 		for (Intersectable geometry : intersectables) {
 			// get all intersections
-			List<Point> tempIntersections = geometry.findIntersections(ray);
+			List<GeoPoint> tempIntersections = geometry.findGeoIntersectionsHelper(ray);
 			// if any intersections
 			if (tempIntersections != null) {
 				// for first add

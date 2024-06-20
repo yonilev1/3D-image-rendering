@@ -12,7 +12,7 @@ import primitives.*;
  * 
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
 	/** List of polygon's vertices */
 	protected final List<Point> vertices;
 	/** Associated plane in which the polygon lays */
@@ -92,10 +92,10 @@ public class Polygon implements Geometry {
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
 	@Override
-	public List<Point> findIntersections(Ray ray) {
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
 		// Check if the ray intersects the plane of the polygon
-		var planeIntersections = plane.findIntersections(ray);
+		var planeIntersections = plane.findGeoIntersections(ray);
 		if (planeIntersections == null)
 			return null;
 

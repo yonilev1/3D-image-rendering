@@ -8,3 +8,6 @@ quadrangular
 int
 ia
 ka
+emission
+obj
+collinear

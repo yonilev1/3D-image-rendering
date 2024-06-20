@@ -8,7 +8,7 @@ import static primitives.Util.*;
 /**
  * Represents a plane in three-dimensional space.
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
 	/** A point on the plane. */
 	private final Point pointOnPlane;
@@ -67,15 +67,14 @@ public class Plane implements Geometry {
 	 * @param ray the ray to intersect with the plane
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
-	public List<Point> findIntersections(Ray ray) {
+	@Override
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
 		Point rayHead = ray.getHead(); // Origin of the ray
 		if (rayHead.equals(pointOnPlane))
 			return null;
 
-		Vector rayDir = ray.getDirection(); // Direction of the ray
-
-		double s = normalVector.dotProduct(rayDir);
+		double s = normalVector.dotProduct( ray.getDirection());
 		if (isZero(s))
 			return null;
 
@@ -83,7 +82,7 @@ public class Plane implements Geometry {
 		double t = alignZero(normalVector.dotProduct(pointOnPlane.subtract(rayHead)) / s);
 		// If t is not positive, there is no intersection
 		// If t is positive, the intersection point is in the ray's direction
-		return t <= 0 ? null : List.of(ray.getPoint(t));
+		return t <= 0 ? null : List.of(new GeoPoint(this,ray.getPoint(t)));
 	}
 
 }

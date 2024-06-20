@@ -29,8 +29,9 @@ public class Triangle extends Polygon {
 	 * @param ray the ray to intersect with the triangle
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
-	public List<Point> findIntersections(Ray ray) {
-		var intersections = plane.findIntersections(ray);
+	@Override
+	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+		var intersections = plane.findGeoIntersections(ray);
 		// Check if the ray intersects the plane of the triangle
 		if (intersections == null)
 			return null;
