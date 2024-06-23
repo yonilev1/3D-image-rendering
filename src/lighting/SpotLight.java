@@ -1,6 +1,7 @@
 package lighting;
 
 import primitives.*;
+import static primitives.Util.*;
 
 /**
  * The SpotLight class represents a spot light source in the scene.
@@ -10,6 +11,7 @@ import primitives.*;
 public class SpotLight extends PointLight {
 
     private Vector direction;
+    private double narrowBeam = 1;
 
     /**
      * Constructs a SpotLight with the specified intensity, position, and direction.
@@ -31,9 +33,8 @@ public class SpotLight extends PointLight {
      */
     @Override
     public SpotLight setKC(double kC) {
-        super.setKC(kC);
-        return this;
-    }
+        return (SpotLight) super.setKC(kC);
+        }
 
     /**
      * Sets the linear attenuation factor (kL) of the spot light.
@@ -43,8 +44,7 @@ public class SpotLight extends PointLight {
      */
     @Override
     public SpotLight setKL(double kL) {
-        super.setKL(kL);
-        return this;
+    	return (SpotLight) super.setKL(kL);
     }
 
     /**
@@ -55,8 +55,7 @@ public class SpotLight extends PointLight {
      */
     @Override
     public SpotLight setKQ(double kQ) {
-        super.setKQ(kQ);
-        return this;
+    	return (SpotLight) super.setKQ(kQ);
     }
 
     /**
@@ -67,18 +66,13 @@ public class SpotLight extends PointLight {
      */
     @Override
     public Color getIntensity(Point p) {
-        double factor = Math.max(0, direction.dotProduct(getL(p)));
-        return super.getIntensity(p).scale(factor);
+    	double cosinus = alignZero(direction.dotProduct(getL(p)));
+    	return narrowBeam != 1 ? super.getIntensity(p).scale(Math.pow(Math.max(0, cosinus), narrowBeam))//
+    			:super.getIntensity(p).scale(Math.max(0, cosinus));
     }
-
-    /**
-     * Calculates the direction of the light from the light source to the specified point.
-     *
-     * @param p The point to which the light direction is calculated.
-     * @return The direction of the light as a vector, or null if the point is at the light source position.
-     */
-    @Override
-    public Vector getL(Point p) {
-        return p.equals(position) ? null : p.subtract(position).normalize();
+    
+    public SpotLight setNarrowBeam(double narrowBeam) {
+    	this.narrowBeam = narrowBeam;
+    	return this;
     }
 }

@@ -1,7 +1,9 @@
 package renderer;
 
 import geometries.Intersectable.GeoPoint;
+import lighting.*;
 import primitives.*;
+import static primitives.Util.*;
 import scene.Scene;
 
 /**
@@ -45,7 +47,43 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @param closestPoint a point to find its color
 	 * @return The color at the specified point.
 	 */
-	private Color calcColor(GeoPoint closestPoint,Ray ray) {
-		return scene.ambientLight.getIntensity().add(closestPoint.geometry.getEmission()); // Return ambient light intensity for now
+	private Color calcColor(GeoPoint intersection,Ray ray) {
+		return scene.ambientLight.getIntensity().add(calcLocalEffects(intersection, ray)); // Return ambient light intensity for now
 	}
+	
+	private Color calcLocalEffects(GeoPoint gp, Ray ray) {
+		Color color = gp.geometry.getEmission();
+		Vector v =ray.getDirection();
+		Vector n = gp.geometry.getNormal(gp.point);
+		double nv = alignZero(n.dotProduct(v));
+		Material material = gp.geometry.getMaterial();
+		
+		if(nv == 0)
+			return color;
+		
+		
+		for(LightSource lightSource : scene.lights) {
+			Vector l = lightSource.getL(gp.point);
+			double nl = alignZero(n.dotProduct(l));
+			if(nl*nv > 0) {
+				Color iL = lightSource.getIntensity(gp.point);
+				color = color.add(iL.scale(calcDiffusive(material,nl)//
+						.add(calcSpecular(material,n,l,nl,v))));
+			}
+		}
+		return color;
+	}
+	
+	private Double3 calcDiffusive(Material material, double nl) {
+	    return material.kD.scale(nl >0 ? nl : -nl);
+	}
+	
+	private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
+	    Vector r = l.subtract(n.scale(2 * nl)); // Reflection vector
+	    double rv = alignZero(-r.dotProduct(v));
+	    
+	    return rv <= 0 ? Double3.ZERO : material.kS.scale(Math.pow(rv, material.shininess));
+	}
+
+
 }
