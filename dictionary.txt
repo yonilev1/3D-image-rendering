@@ -12,3 +12,8 @@ emission
 obj
 collinear
 specular
+gp
+nl
+kd
+ks
+png

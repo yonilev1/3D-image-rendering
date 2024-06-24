@@ -143,8 +143,8 @@ public class Camera implements Cloneable {
 	public Camera renderImage() {
 		int nX = imageWriter.getNx();
 		int nY = imageWriter.getNy();
-		for (int i = 0; i < nX; ++i)
-			for (int j = 0; j < nY; ++j)
+		for (int i = 0; i < nY; ++i)
+			for (int j = 0; j < nX; ++j)
 				castRay(nX, nY, j, i);
 
 		return this;
@@ -168,7 +168,7 @@ public class Camera implements Cloneable {
 		Color pixelColor = rayTracer.traceRay(ray);
 
 		// Write the color to the image at pixel (row, column)
-		imageWriter.writePixel(row, column, pixelColor);
+		imageWriter.writePixel(column, row, pixelColor);
 	}
 
 	/**
@@ -245,9 +245,9 @@ public class Camera implements Cloneable {
 		 * @throws IllegalArgumentException if the vectors are not orthogonal.
 		 */
 		public Builder setDirection(Vector vTo, Vector vUp) {
-			if (!isZero(vUp.dotProduct(vTo))) {
+			if (!isZero(vUp.dotProduct(vTo)))
 				throw new IllegalArgumentException("vUp and vTo must be orthogonal");
-			}
+
 			camera.vTo = vTo.normalize();
 			camera.vUp = vUp.normalize();
 			camera.vRight = camera.vTo.crossProduct(camera.vUp);
@@ -264,7 +264,7 @@ public class Camera implements Cloneable {
 		 *                                  0.
 		 */
 		public Builder setVpSize(double width, double height) {
-			if (width <= 0 || height <= 0) {
+			if (alignZero(width) <= 0 || alignZero(height) <= 0) {
 				throw new IllegalArgumentException("width and height must be greater than 0");
 			}
 			camera.width = width;
