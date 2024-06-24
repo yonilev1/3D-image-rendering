@@ -3,15 +3,22 @@ package lighting;
 import primitives.*;
 
 /**
- * The PointLight class represents a point light source in the scene.
- * A point light source has a specific position and its intensity diminishes
- * with distance according to the attenuation factors kC, kL, and kQ.
+ * The PointLight class represents a point light source in the scene. A point
+ * light source has a specific position and its intensity diminishes with
+ * distance according to the attenuation factors kC, kL, and kQ.
  */
 public class PointLight extends Light implements LightSource {
 
+    /** The position of the point light. */
     protected Point position;
+    
+    /** The constant attenuation factor. */
     private double kC = 1;
+    
+    /** The linear attenuation factor. */
     private double kL = 0;
+    
+    /** The quadratic attenuation factor. */
     private double kQ = 0;
 
     /**
@@ -71,10 +78,12 @@ public class PointLight extends Light implements LightSource {
     }
 
     /**
-     * Calculates the direction of the light from the light source to the specified point.
+     * Calculates the direction of the light from the light source to the specified
+     * point.
      *
      * @param p The point to which the light direction is calculated.
-     * @return The direction of the light as a vector, or null if the point is at the light source position.
+     * @return The direction of the light as a vector, or null if the point is at
+     *         the light source position.
      */
     @Override
     public Vector getL(Point p) {

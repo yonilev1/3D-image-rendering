@@ -74,7 +74,7 @@ public class Plane extends Geometry {
 		if (rayHead.equals(pointOnPlane))
 			return null;
 
-		double s = normalVector.dotProduct( ray.getDirection());
+		double s = normalVector.dotProduct(ray.getDirection());
 		if (isZero(s))
 			return null;
 
@@ -82,7 +82,7 @@ public class Plane extends Geometry {
 		double t = alignZero(normalVector.dotProduct(pointOnPlane.subtract(rayHead)) / s);
 		// If t is not positive, there is no intersection
 		// If t is positive, the intersection point is in the ray's direction
-		return t <= 0 ? null : List.of(new GeoPoint(this,ray.getPoint(t)));
+		return t <= 0 ? null : List.of(new GeoPoint(this, ray.getPoint(t)));
 	}
 
 }
