@@ -51,6 +51,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	private Color calcColor(GeoPoint intersection, Ray ray) {
 		return scene.ambientLight.getIntensity().add(calcLocalEffects(intersection, ray));
 	}
+	
 
 	/**
 	 * Calculates the local effects (diffuse and specular) at the intersection
@@ -82,6 +83,7 @@ public class SimpleRayTracer extends RayTracerBase {
 		return color;
 	}
 
+	
 	/**
 	 * Calculates the diffuse reflection component at the intersection point.
 	 *
@@ -109,4 +111,6 @@ public class SimpleRayTracer extends RayTracerBase {
 
 		return rv <= 0 ? Double3.ZERO : material.kS.scale(Math.pow(rv, material.shininess));
 	}
+	
+	
 }
