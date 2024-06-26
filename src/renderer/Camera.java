@@ -345,10 +345,10 @@ public class Camera implements Cloneable {
 			if (camera.distanceFromCamera < 0)
 				throw new IllegalStateException("Invalid distance from camera. Must be greater than zero.");
 
-			if (!(camera.imageWriter instanceof ImageWriter))
+			if ((camera.imageWriter == null))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"View plane imageWriter");
-			if (!(camera.rayTracer instanceof RayTracerBase))
+			if ((camera.rayTracer == null))
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"View plane rayTracer");
 

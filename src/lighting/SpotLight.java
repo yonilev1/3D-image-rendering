@@ -70,7 +70,7 @@ public class SpotLight extends PointLight {
 	public Color getIntensity(Point p) {
 		return super.getIntensity(p).scale(Math.pow(Math.max(0, direction.dotProduct(super.getL(p))), narrowBeam));
 	}
-	
+
 	/**
 	 * Sets the narrow beam factor of the spot light.
 	 *
