@@ -4,6 +4,9 @@ import geometries.Intersectable.GeoPoint;
 import lighting.*;
 import primitives.*;
 import static primitives.Util.*;
+
+import java.util.List;
+
 import scene.Scene;
 
 /**
@@ -11,6 +14,9 @@ import scene.Scene;
  * ray tracing functionality for a 3D scene.
  */
 public class SimpleRayTracer extends RayTracerBase {
+
+	/** DELTA for movement of vector by epsilon */
+	private static final double DELTA = 0.1;
 
 	/**
 	 * Constructs a new SimpleRayTracer with the specified scene.
@@ -53,6 +59,33 @@ public class SimpleRayTracer extends RayTracerBase {
 	}
 
 	/**
+	 * Determines if a point is unshaded by checking if there are any obstructions
+	 * between the light source and the point.
+	 *
+	 * @param gp The geometric point.
+	 * @param ls The light source.
+	 * @param l  The light direction vector.
+	 * @param n  The normal vector at the point.
+	 * @param nl The dot product of the normal vector and the light direction
+	 *           vector.
+	 * @return true if the point is unshaded, false otherwise.
+	 */
+	private boolean unshaded(GeoPoint gp, LightSource ls, Vector l, Vector n, double nl) {
+		Vector lightDir = l.scale(-1);
+		Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA);
+		Point point = gp.point.add(epsVector);
+		Ray ray = new Ray(point, lightDir);
+		List<Point> intersections = scene.geometries.findIntersections(ray);
+		if (intersections != null) {
+			for (Point p : intersections) {
+				if (p.distance(ray.getHead()) < ls.getDistance(p))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Calculates the local effects (diffuse and specular) at the intersection
 	 * point.
 	 *
@@ -73,7 +106,7 @@ public class SimpleRayTracer extends RayTracerBase {
 		for (LightSource lightSource : scene.lights) {
 			Vector l = lightSource.getL(gp.point);
 			double nl = alignZero(n.dotProduct(l));
-			if (nl * nv > 0) {
+			if ((nl * nv > 0) && (unshaded(gp, lightSource, l, n, nl))) {
 				Color iL = lightSource.getIntensity(gp.point);
 				color = color.add(iL.scale(calcDiffusive(material, nl) //
 						.add(calcSpecular(material, n, l, nl, v))));
@@ -109,5 +142,4 @@ public class SimpleRayTracer extends RayTracerBase {
 
 		return rv <= 0 ? Double3.ZERO : material.kS.scale(Math.pow(rv, material.shininess));
 	}
-
 }

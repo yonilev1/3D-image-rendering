@@ -79,13 +79,13 @@ public class Scene {
 	}
 
 	/**
-	 * Adds a light source to the scene.
+	 * sets a light source to the scene.
 	 *
-	 * @param light the light source to add.
+	 * @param lights the light source to add.
 	 * @return the current Scene object (for method chaining).
 	 */
-	public Scene addLight(LightSource light) {
-		this.lights.add(light);
+	public Scene setLight(List<LightSource> lights) {
+		this.lights = lights;
 		return this;
 	}
 }

@@ -17,3 +17,5 @@ nl
 kd
 ks
 png
+xyz
+ls
