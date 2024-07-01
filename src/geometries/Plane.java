@@ -68,7 +68,7 @@ public class Plane extends Geometry {
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
 	@Override
-	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
 		Point rayHead = ray.getHead(); // Origin of the ray
 		if (rayHead.equals(pointOnPlane))

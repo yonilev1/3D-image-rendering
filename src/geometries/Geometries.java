@@ -43,13 +43,13 @@ public class Geometries extends Intersectable {
 	 * @param ray the ray to intersect with the geometries
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
-	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
 		List<GeoPoint> intersections = null;
 
 		for (Intersectable geometry : intersectables) {
 			// get all intersections
-			List<GeoPoint> tempIntersections = geometry.findGeoIntersectionsHelper(ray);
+			var tempIntersections = geometry.findGeoIntersections(ray);
 			// if any intersections
 			if (tempIntersections != null) {
 				// for first add

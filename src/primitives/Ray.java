@@ -110,7 +110,7 @@ public class Ray {
 		double minDistance = Double.POSITIVE_INFINITY; // Initialize with a large value
 
 		for (GeoPoint point : listOfPoints) {
-			double distance = head.distance(point.point);
+			double distance = head.distanceSquared(point.point);
 			if (distance < minDistance) {
 				minDistance = distance;
 				closestPoint = point;

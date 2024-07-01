@@ -92,11 +92,11 @@ public class Polygon extends Geometry {
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
 	@Override
-	public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+	protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
 		// Check if the ray intersects the plane of the polygon
-		var planeIntersections = plane.findGeoIntersections(ray);
-		if (planeIntersections == null)
+		var intersections = plane.findIntersections(ray);
+		if (intersections == null)
 			return null;
 
 		// Retrieve the direction vector and head point of the ray
@@ -124,6 +124,6 @@ public class Polygon extends Geometry {
 				return null; // the sing are not the sane for all vertices
 		}
 		// Return the intersection point with the plane of the polygon
-		return planeIntersections;
+		return List.of(new GeoPoint(this, intersections.getFirst()));
 	}
 }

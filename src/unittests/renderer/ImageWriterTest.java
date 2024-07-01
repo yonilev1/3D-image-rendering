@@ -26,20 +26,19 @@ class ImageWriterTest {
 	 */
 	@Test
 	void testImageWriter() {
+		final int nx = 801, ny = 501, step = 50;
 		// Create a new ImageWriter instance with dimensions 800x500 pixels
-		ImageWriter imageWriter = new ImageWriter("testMyImage", 801, 501);
+		ImageWriter imageWriter = new ImageWriter("testMyImage", nx, ny);
 
 		// Define colors for background and grid lines
 		final Color background = new Color(255, 255, 0); // Yellow background
 		final Color grid = new Color(255, 0, 0); // Red grid lines
-		final int nx = imageWriter.getNx();
-		final int ny = imageWriter.getNy();
 
 		// Write pixels to simulate a grid pattern
 		for (int i = 0; i < ny; ++i) {
 			for (int j = 0; j < nx; ++j) {
 				// Alternate between grid color and background color based on grid pattern
-				imageWriter.writePixel(j, i, i % 50 == 0 || j % 50 == 0 ? grid : background);
+				imageWriter.writePixel(j, i, i % step == 0 || j % step == 0 ? grid : background);
 			}
 		}
 

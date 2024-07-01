@@ -14,7 +14,7 @@ public abstract class Intersectable {
 	 * @param ray the ray to intersect with the geometry
 	 * @return a list of intersection points, or null if there are no intersections
 	 */
-	public List<Point> findIntersections(Ray ray) {
+	public final List<Point> findIntersections(Ray ray) {
 		var geoList = findGeoIntersections(ray);
 		return geoList == null ? null : geoList.stream().map(gp -> gp.point).toList();
 	}
@@ -54,7 +54,7 @@ public abstract class Intersectable {
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
-			return obj instanceof GeoPoint other && geometry.equals(other.geometry) //
+			return obj instanceof GeoPoint other && geometry == other.geometry //
 					&& point.equals(other.point);
 		}
 

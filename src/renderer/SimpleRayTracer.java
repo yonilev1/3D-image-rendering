@@ -39,11 +39,10 @@ public class SimpleRayTracer extends RayTracerBase {
 	@Override
 	public Color traceRay(Ray ray) {
 		// Find intersections of the ray with the scene geometries
-		var intersections = scene.geometries.findGeoIntersectionsHelper(ray);
+		var intersection = ray.findClosestGeoPoint(scene.geometries.findGeoIntersections(ray));
 
 		// If no intersections found, return the background color of the scene
-		return intersections == null ? scene.background //
-				: calcColor(ray.findClosestGeoPoint(intersections), ray);
+		return intersection == null ? scene.background : calcColor(intersection, ray);
 	}
 
 	/**
@@ -138,8 +137,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	 */
 	private Double3 calcSpecular(Material material, Vector n, Vector l, double nl, Vector v) {
 		Vector r = l.subtract(n.scale(2 * nl));
-		double rv = alignZero(-r.dotProduct(v));
-
-		return rv <= 0 ? Double3.ZERO : material.kS.scale(Math.pow(rv, material.shininess));
+		double mminusRV = alignZero(-r.dotProduct(v));
+		return mminusRV <= 0 ? Double3.ZERO : material.kS.scale(Math.pow(mminusRV, material.shininess));
 	}
 }
