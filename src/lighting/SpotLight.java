@@ -1,6 +1,7 @@
 package lighting;
 
 import primitives.*;
+import static primitives.Util.*;
 
 /**
  * The SpotLight class represents a spot light source in the scene. A spot light
@@ -10,7 +11,7 @@ import primitives.*;
 public class SpotLight extends PointLight {
 
 	/** The direction of the spot light. */
-	private Vector direction;
+	private final Vector direction;
 
 	/** The narrow beam factor of the spot light. Default is 1. */
 	private double narrowBeam = 1;
@@ -68,7 +69,8 @@ public class SpotLight extends PointLight {
 	 */
 	@Override
 	public Color getIntensity(Point p) {
-		return super.getIntensity(p).scale(Math.pow(Math.max(0, direction.dotProduct(super.getL(p))), narrowBeam));
+		final double dirL =  alignZero(direction.dotProduct(getL(p)));
+		return dirL <= 0 ? Color.BLACK : super.getIntensity(p).scale(Math.pow(dirL, narrowBeam));
 	}
 
 	/**

@@ -10,7 +10,7 @@ import primitives.*;
 public class PointLight extends Light implements LightSource {
 
 	/** The position of the point light. */
-	protected Point position;
+	protected final Point position;
 
 	/** The constant attenuation factor. */
 	private double kC = 1;
@@ -74,7 +74,7 @@ public class PointLight extends Light implements LightSource {
 	@Override
 	public Color getIntensity(Point p) {
 		double d = position.distance(p);
-		return super.getIntensity().scale(1d / (kC + kL * d + kQ * d * d));
+		return intensity.scale(1d / (kC + kL * d + kQ * d * d));
 	}
 
 	/**
