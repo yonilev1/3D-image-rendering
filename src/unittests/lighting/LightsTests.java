@@ -26,7 +26,7 @@ public class LightsTests {
 	/** First camera builder for some of tests */
 	private final Camera.Builder camera1 = Camera.getBuilder().setRayTracer(new SimpleRayTracer(scene1))
 			.setLocation(new Point(0, 0, 1000)).setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
-			.setVpSize(150, 150).setVpDistance(1000);
+			.setVpSize(150,150).setVpDistance(1000);
 	/** Second camera builder for some of tests */
 	private final Camera.Builder camera2 = Camera.getBuilder().setRayTracer(new SimpleRayTracer(scene2))
 			.setLocation(new Point(0, 0, 1000)).setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
@@ -170,9 +170,9 @@ public class LightsTests {
 	@Test
 	public void trianglesPointAllLights() {
 		scene2.geometries.add(triangle1, triangle2);
-		scene2.lights.add(new SpotLight(trianglesLightColor, trianglesLightDirection, trianglesLightPosition).setKL(0.001).setKQ(0.0001));
-		scene2.lights.add(new PointLight(new Color(150, 10, 100),  new Point(30, 10, -100)).setKL(0.0001).setKQ(0.00002).setKC(0.356));
-		scene2.lights.add(new DirectionalLight(new Color(0, 90, 100), new Vector(2, 2, -2)));
+		scene2.lights.add(new SpotLight(trianglesLightColor, new Vector(2, 2, -2), new Point(30, 10, -100)).setKL(0.001).setKQ(0.0001));
+		scene2.lights.add(new PointLight(new Color(300, 10, 100),  new Point(-30, -100, -100)).setKL(0.0001).setKQ(0.00002));
+		scene2.lights.add(new DirectionalLight(new Color(0, 90, 300), new Vector(2, 2, -2)));
 		
 		camera2.setImageWriter(new ImageWriter("lightTrianglesAllLights", 500, 500)) //
 				.build() //
@@ -183,12 +183,11 @@ public class LightsTests {
 	@Test
 	public void sphereAllLights() {
 		scene1.geometries.add(sphere.setEmission(new Color(30, 30, 30)));
-		//scene1.geometries.add(sphere);
 		scene1.lights.add(new SpotLight(new Color(100, 150, 0),sphereLightDirection, new Point(-50, -50, 25)).setKL(0.001).setKQ(0.00001));
-		scene1.lights.add(new PointLight(new Color(255 , 0, 0),  new Point(170, 40, 60)).setKL(0.00001).setKQ(0.00002).setKC(0.556));
+		scene1.lights.add(new PointLight(new Color(255 , 0, 0),  new Point(170, 40, 60)).setKL(0.00001).setKQ(0.00002));
 		scene1.lights.add(new DirectionalLight(new Color(0, 500 ,500), new Vector(1, -1, -0.5)));
 
-		camera1.setImageWriter(new ImageWriter("lightSphereAllLights", 500, 500)).build().renderImage().writeToImage();
+		camera1.setImageWriter(new ImageWriter("lightSphereAllLights", 500,500)).build().renderImage().writeToImage();
 	}
 	
 
