@@ -88,46 +88,40 @@ public class SimpleRayTracer extends RayTracerBase {
 	private Color calcColor(GeoPoint gp, Ray ray, int level, Double3 k) {
 		if(isZero(ray.getDirection().dotProduct(gp.geometry.getNormal(gp.point)))) 
 			return Color.BLACK;
-		Color color = calcLocalEffects(gp, ray, k).add(gp.geometry.getEmission());
-		return 1 == level ? color : color.add(calcGlobalEffects(gp, ray, level, k));
+	
+			Color color = calcLocalEffects(gp, ray, k);
+			return 1 == level ? color : color.add(calcGlobalEffects(gp, ray.getDirection(), level, k));
+		
 	}
 
-	/**
-	 * Calculates the global effects (reflection and refraction) at a given point in
-	 * the scene.
-	 *
-	 * @param gp    The intersection point to calculate the color for.
-	 * @param ray   The ray that intersects with the point.
-	 * @param level The recursion level.
-	 * @param k     The attenuation factor.
-	 * @return The color resulting from the global effects at the specified
-	 *         intersection point.
-	 */
-	private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k) {
-		Vector v = ray.getDirection();
-		Vector n = gp.geometry.getNormal(gp.point);
-		Material material = gp.geometry.getMaterial();
-		return calcGlobalEffects(constructRefractedRay(gp, v, n), material.kT, level, k)
-				.add(calcGlobalEffects(constructRefractedRay(gp, v, n), material.kR, level, k));
-	}
+	private Color calcGlobalEffects(GeoPoint gp, Vector v, int level, Double3 k) {
+        Color color = Color.BLACK;
+        Material material = gp.geometry.getMaterial();
+        Double3 kr = material.kR;
+        Double3 kkr = k.product(kr);
+        Vector n = gp.geometry.getNormal(gp.point);
+        double vn = v.dotProduct(n);
+        Ray reflectedRay = constructReflectedRay(gp.point, v, n, vn);
+        Ray refractedRay = constructRefractedRay(gp, v, n);
+        if (!kkr.lowerThan(MIN_CALC_COLOR_K)) {
+            color = color.add(calcGlobalEffect(reflectedRay, level - 1, kr, kkr));
+        }
+        Double3 kt = material.kT;
+        Double3 kkt = k.product(kt);
+        if (!kkt.lowerThan(MIN_CALC_COLOR_K)) {
+            color = color.add(calcGlobalEffect(refractedRay, level - 1, kt, kkt));
+        }
+        return color;
+    }
 
-	/**
-	 * Recursively calculates the color for the global effects (reflection and
-	 * refraction).
-	 *
-	 * @param ray   The ray to trace.
-	 * @param kx    The reflection/refraction coefficient.
-	 * @param level The recursion level.
-	 * @param k     The attenuation factor.
-	 * @return The color resulting from the global effects.
-	 */
-	private Color calcGlobalEffects(Ray ray, Double3 kx, int level, Double3 k) {
-		Double3 kkx = kx.product(k);
-		if (kkx.lowerThan(MIN_CALC_COLOR_K))
-			return Color.BLACK;
-		GeoPoint gp = findClosestIntersection(ray);
-		return (gp == null ? scene.background : calcColor(gp, ray, level - 1, kkx).scale(kx));
-	}
+    private Color calcGlobalEffect(Ray ray, int level, Double3 k, Double3 kx) {
+        Double3 kkx = k.product(kx);
+        if (kkx.lowerThan(MIN_CALC_COLOR_K)) return Color.BLACK;
+        GeoPoint gp = findClosestIntersection(ray);
+        return (gp == null ? scene.background.scale(kx) :
+                isZero( gp.geometry.getNormal(gp.point).dotProduct(ray.getDirection()) ) ? Color.BLACK
+                        : calcColor(gp, ray, level - 1, kkx).scale(k));
+    }
 
 	/**
 	 * Constructs a refracted ray based on the intersection point and incoming ray.
@@ -140,6 +134,13 @@ public class SimpleRayTracer extends RayTracerBase {
 	private Ray constructRefractedRay(GeoPoint gp, Vector v, Vector n) {
 		return new Ray(gp.point, v, n);
 	}
+	
+	private Ray constructReflectedRay(Point pointGeo, Vector v, Vector n, double vn) {
+
+        // 𝒓=𝒗 −𝟐∙(𝒗∙𝒏)∙𝒏
+        Vector r = v.subtract(n.scale(2 * vn));
+        return new Ray(pointGeo, r, n);
+    }
 
 	/**
 	 * Calculates the transparency factor at a given point in the scene by checking
