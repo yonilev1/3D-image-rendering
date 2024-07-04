@@ -22,3 +22,5 @@ ls
 refraction
 refracted
 geopoint
+kr
+kx

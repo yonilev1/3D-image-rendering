@@ -142,4 +142,29 @@ public class Double3 {
 	public boolean lowerThan(Double3 other) {
 		return d1 < other.d1 && d2 < other.d2 && d3 < other.d3;
 	}
+	
+	/**
+	 * Checks if all components are greater than a specified minimum value.
+	 * 
+	 * @param minCalcColorK The minimum value to compare against.
+	 * @return {@code true} if all components (d1, d2, d3) are greater than
+	 *         {@code minCalcColorK}, otherwise {@code false}.
+	 */
+	public boolean greaterThan(double minCalcColorK) {
+		return d1 > minCalcColorK && d2 > minCalcColorK && d3 > minCalcColorK;
+	}
+
+	/**
+	 * Checks if all components are greater than the corresponding components of
+	 * another Double3 object.
+	 * 
+	 * @param other The Double3 object to compare against.
+	 * @return {@code true} if all components (d1, d2, d3) are greater than the
+	 *         corresponding components of {@code other}, otherwise {@code false}.
+	 */
+	public boolean greaterThan(Double3 other) {
+		return d1 > other.d1 && d2 > other.d2 && d3 > other.d3;
+	}
+
+	
 }

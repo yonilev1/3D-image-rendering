@@ -16,7 +16,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	/**
 	 * The maximum recursion level for color calculation.
 	 */
-	private static final int MAX_CALC_COLOR_LEVEL = 7;
+	private static final int MAX_CALC_COLOR_LEVEL = 10;
 
 	/**
 	 * The minimum attenuation factor for color calculation.
@@ -26,7 +26,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	/**
 	 * The initial attenuation factor for color calculation.
 	 */
-	private static final double INITIAL_K = 1.0;
+	private static final Double3 INITIAL_K = Double3.ONE;
 
 	/**
 	 * Constructs a new SimpleRayTracer with the specified scene.
@@ -72,7 +72,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return The color at the specified intersection point.
 	 */
 	private Color calcColor(GeoPoint gp, Ray ray) {
-		return calcColor(gp, ray, MAX_CALC_COLOR_LEVEL, new Double3(INITIAL_K)).add(scene.ambientLight.getIntensity());
+		return scene.ambientLight.getIntensity().add(calcColor(gp, ray, MAX_CALC_COLOR_LEVEL,INITIAL_K));
 	}
 
 	/**
@@ -86,7 +86,9 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return The color at the specified intersection point.
 	 */
 	private Color calcColor(GeoPoint gp, Ray ray, int level, Double3 k) {
-		Color color = calcLocalEffects(gp, ray, k);
+		if(isZero(ray.getDirection().dotProduct(gp.geometry.getNormal(gp.point)))) 
+			return Color.BLACK;
+		Color color = calcLocalEffects(gp, ray, k).add(gp.geometry.getEmission());
 		return 1 == level ? color : color.add(calcGlobalEffects(gp, ray, level, k));
 	}
 
@@ -102,8 +104,8 @@ public class SimpleRayTracer extends RayTracerBase {
 	 *         intersection point.
 	 */
 	private Color calcGlobalEffects(GeoPoint gp, Ray ray, int level, Double3 k) {
-		Vector n = gp.geometry.getNormal(gp.point);
 		Vector v = ray.getDirection();
+		Vector n = gp.geometry.getNormal(gp.point);
 		Material material = gp.geometry.getMaterial();
 		return calcGlobalEffects(constructRefractedRay(gp, v, n), material.kT, level, k)
 				.add(calcGlobalEffects(constructRefractedRay(gp, v, n), material.kR, level, k));
@@ -192,7 +194,7 @@ public class SimpleRayTracer extends RayTracerBase {
 			double nl = alignZero(n.dotProduct(l));
 			if ((nl * nv > 0)) {
 				Double3 ktr = transparency(gp, lightSource, l, n);
-				if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
+				if (ktr.product(k).greaterThan(MIN_CALC_COLOR_K)) {
 					Color iL = lightSource.getIntensity(gp.point).scale(ktr);
 					color = color.add(iL.scale(calcDiffusive(material, nl).add(calcSpecular(material, n, l, nl, v))));
 				}
