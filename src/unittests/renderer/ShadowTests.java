@@ -1,3 +1,4 @@
+
 package unittests.renderer;
 
 import static java.awt.Color.*;
@@ -75,7 +76,7 @@ public class ShadowTests {
 	public void sphereTriangleSpot1() {
 		sphereTriangleHelper("shadowSphereTriangleSpot1", //
 				new Triangle(new Point(-70, -40, 0), new Point(-40, -70, 0), new Point(-68, -68, -4)), //
-				new Point(-50, -50, 100));
+				new Point(-88, -88, 120));
 	}
 
 	/** Sphere-Triangle shading - move spot even more close */
@@ -83,7 +84,7 @@ public class ShadowTests {
 	public void sphereTriangleSpot2() {
 		sphereTriangleHelper("shadowSphereTriangleSpot2", //
 				new Triangle(new Point(-70, -40, 0), new Point(-40, -70, 0), new Point(-68, -68, -4)), //
-				new Point(-100, -100, 200));
+				new Point(-76, -76, 70));
 	}
 
 	/**

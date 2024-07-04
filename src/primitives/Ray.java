@@ -18,6 +18,11 @@ public class Ray {
 	private final Vector direction;
 
 	/**
+	 * A constant delta value used for numerical approximations or small adjustments
+	 */
+	private static final double DELTA = 0.1;
+
+	/**
 	 * Constructs a new ray with the specified starting point and direction. The
 	 * direction vector is normalized for the ray (no need to transfer a normalized
 	 * argument)
@@ -28,6 +33,21 @@ public class Ray {
 	public Ray(Point head, Vector direction) {
 		this.head = head;
 		this.direction = direction.normalize();
+	}
+
+	/**
+	 * ray constructor with offset point
+	 * 
+	 * @param point     in ray
+	 * @param direction in ray
+	 * @param normal    on plane
+	 */
+	public Ray(Point point, Vector direction, Vector normal) {
+		this.direction = direction.normalize();
+		double nv = normal.dotProduct(this.direction);
+		Vector dltVector = normal.scale(nv < 0 ? -DELTA : DELTA);
+		head = point.add(dltVector);
+
 	}
 
 	/**

@@ -69,7 +69,7 @@ public class SpotLight extends PointLight {
 	 */
 	@Override
 	public Color getIntensity(Point p) {
-		final double dirL =  alignZero(direction.dotProduct(getL(p)));
+		final double dirL = alignZero(direction.dotProduct(getL(p)));
 		return dirL <= 0 ? Color.BLACK : super.getIntensity(p).scale(Math.pow(dirL, narrowBeam));
 	}
 
