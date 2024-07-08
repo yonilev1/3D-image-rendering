@@ -25,3 +25,4 @@ geopoint
 kr
 kx
 vn
+mega
