@@ -16,7 +16,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	/**
 	 * The maximum recursion level for color calculation.
 	 */
-	private static final int MAX_CALC_COLOR_LEVEL = 10;
+	private static final int MAX_CALC_COLOR_LEVEL = 2;
 
 	/**
 	 * The minimum attenuation factor for color calculation.
