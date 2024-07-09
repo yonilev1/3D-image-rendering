@@ -26,3 +26,5 @@ kr
 kx
 vn
 mega
+magenta
+cyan
