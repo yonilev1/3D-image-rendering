@@ -101,6 +101,9 @@ public class Camera implements Cloneable {
 	public static Builder getBuilder() {
 		return new Builder();
 	}
+	public static Builder getBuilder1(Point position,Point p) {
+		return new Builder( position, p);
+	}
 
 	/**
 	 * Constructs a ray from the camera through a specific pixel on the view plane.
@@ -223,6 +226,23 @@ public class Camera implements Cloneable {
 		 * A new Camera instance being built.
 		 */
 		final private Camera camera = new Camera();
+		
+		public Builder() {
+			
+		}
+		
+		public Builder(Point position ,Point p) {
+			camera.p0=position;
+			camera.vTo= p.subtract(position).normalize();
+			if(camera.vTo.equals(new Vector(0,0,-1))|| camera.vTo.equals(new Vector(0,0,1))) {
+				camera.vRight=new Vector(0,-1,0);
+				camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+			}
+			else {
+			camera.vRight = camera.vTo.crossProduct(new Vector(0,0,1)).normalize();
+			camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+			}
+		}
 
 		/**
 		 * Sets the location of the camera.
@@ -308,6 +328,10 @@ public class Camera implements Cloneable {
 		public Builder setRayTracer(RayTracerBase rayTracer) {
 			camera.rayTracer = rayTracer;
 			return this;
+		}
+		public Builder calcVectors(Point position,Point p) {
+			return null;
+			
 		}
 
 		/**

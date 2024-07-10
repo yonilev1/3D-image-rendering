@@ -142,6 +142,13 @@ public class ReflectionRefractionTests {
 	    Camera.Builder camera5 = Camera.getBuilder()
 	    		.setDirection(new Vector(-1, -1, 0), new Vector( 0, 0,1 ))
 	            .setRayTracer(new SimpleRayTracer(scene));
+	    Camera.Builder camera6 = Camera.getBuilder1(new Point(-500, -500, 500),new Point (-50,-50,50))
+	            .setRayTracer(new SimpleRayTracer(scene));
+	    Camera.Builder camera7 = Camera.getBuilder1(new Point(0, 0, 500),new Point (0 ,0 ,-50))
+	            .setRayTracer(new SimpleRayTracer(scene));
+	    Camera.Builder camera8 = Camera.getBuilder1(new Point(500, 500, 500),new Point (50 ,50 ,50))
+	            .setRayTracer(new SimpleRayTracer(scene));;
+	    
 	    
 
 	    scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.1));
@@ -263,7 +270,15 @@ public class ReflectionRefractionTests {
 	    camera5.setLocation(new Point(210, 120, -51)).setVpDistance(100).setVpSize(200,200)
 	           .setImageWriter(new ImageWriter("ColoredCubeTriangle", 600,600)).build().renderImage()
 	           .writeToImage();
-	    
+	    camera6.setVpDistance(200).setVpSize(200,200)
+               .setImageWriter(new ImageWriter("ColoredCubeBACK1111111", 600,600)).build().renderImage()
+               .writeToImage();
+	    camera7.setVpDistance(100).setVpSize(200,200)
+               .setImageWriter(new ImageWriter("ColoredCubeDOWN11111", 600,600)).build().renderImage()
+               .writeToImage();
+	    camera8.setVpDistance(300).setVpSize(200,200)
+        .setImageWriter(new ImageWriter("ColoredCube1", 600,600)).build().renderImage()
+        .writeToImage();
 	}
 
 
