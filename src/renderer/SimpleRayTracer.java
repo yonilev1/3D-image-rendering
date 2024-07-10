@@ -1,5 +1,6 @@
 package renderer;
 
+
 import geometries.Intersectable.GeoPoint;
 import lighting.*;
 import primitives.*;
@@ -86,11 +87,14 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @return The color at the specified intersection point.
 	 */
 	private Color calcColor(GeoPoint gp, Ray ray, int level, Double3 k) {
-		if (isZero(ray.getDirection().dotProduct(gp.geometry.getNormal(gp.point))))
+		Vector v = ray.getDirection();
+		Vector n = gp.geometry.getNormal(gp.point);
+		double vn = v.dotProduct(n);
+		if (isZero(vn))
 			return Color.BLACK;
 
-		Color color = calcLocalEffects(gp, ray, k);
-		return 1 == level ? color : color.add(calcGlobalEffects(gp, ray.getDirection(), level, k));
+		Color color = calcLocalEffects(gp, v, n, vn, k);
+		return 1 == level ? color : color.add(calcGlobalEffects(gp, v, n, vn, level, k));
 
 	}
 
@@ -100,28 +104,17 @@ public class SimpleRayTracer extends RayTracerBase {
 	 *
 	 * @param gp    The intersection point to calculate the effects for.
 	 * @param v     The direction vector of the incoming ray.
+	 * @param n     The normal vector at the point.
+	 * @param vn    The dot product of v and n
 	 * @param level The recursion level.
 	 * @param k     The attenuation factor.
 	 * @return The color resulting from the global effects.
 	 */
-	private Color calcGlobalEffects(GeoPoint gp, Vector v, int level, Double3 k) {
-		Color color = Color.BLACK;
+	private Color calcGlobalEffects(GeoPoint gp, Vector v, Vector n, double vn, int level, Double3 k) {
 		Material material = gp.geometry.getMaterial();
-		Double3 kr = material.kR;
-		Double3 kkr = k.product(kr);
-		Vector n = gp.geometry.getNormal(gp.point);
-		double vn = v.dotProduct(n);
 		Ray reflectedRay = constructReflectedRay(gp.point, v, n, vn);
 		Ray refractedRay = constructRefractedRay(gp, v, n);
-		if (!kkr.lowerThan(MIN_CALC_COLOR_K)) {
-			color = color.add(calcGlobalEffect(reflectedRay, level - 1, kr, kkr));
-		}
-		Double3 kt = material.kT;
-		Double3 kkt = k.product(kt);
-		if (!kkt.lowerThan(MIN_CALC_COLOR_K)) {
-			color = color.add(calcGlobalEffect(refractedRay, level - 1, kt, kkt));
-		}
-		return color;
+		return calcGlobalEffect(reflectedRay, level - 1, k, material.kR).add(calcGlobalEffect(refractedRay, level - 1, k, material.kT));
 	}
 
 	/**
@@ -138,9 +131,7 @@ public class SimpleRayTracer extends RayTracerBase {
 		if (kkx.lowerThan(MIN_CALC_COLOR_K))
 			return Color.BLACK;
 		GeoPoint gp = findClosestIntersection(ray);
-		return (gp == null ? scene.background.scale(kx)
-				: isZero(gp.geometry.getNormal(gp.point).dotProduct(ray.getDirection())) ? Color.BLACK
-						: calcColor(gp, ray, level - 1, kkx).scale(k));
+		return (gp == null ? scene.background : calcColor(gp, ray, level - 1, kkx)).scale(k);
 	}
 
 	/**
@@ -183,18 +174,18 @@ public class SimpleRayTracer extends RayTracerBase {
 	private Double3 transparency(GeoPoint gp, LightSource ls, Vector l, Vector n) {
 		Vector lightDir = l.scale(-1);
 		Ray lR = new Ray(gp.point, lightDir, n);
+		Double3 ktr = Double3.ONE;
 
 		var intersections = scene.geometries.findGeoIntersections(lR);
 		if (intersections == null)
-			return Double3.ONE;
+			return ktr;
 
-		Double3 ktr = Double3.ONE;
 		double distanceToLight = ls.getDistance(gp.point);
 		for (GeoPoint intersectionPoint : intersections) {
 			if (alignZero(intersectionPoint.point.distance(gp.point) - distanceToLight) <= 0) {
 				ktr = ktr.product(intersectionPoint.geometry.getMaterial().kT);
-				if (ktr.equals(Double3.ZERO))
-					break;
+				if (ktr.lowerThan(MIN_CALC_COLOR_K))
+					return Double3.ZERO;
 			}
 		}
 		return ktr;
@@ -205,23 +196,19 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * point.
 	 *
 	 * @param gp  The intersection point.
-	 * @param ray The ray that intersects with the point.
+	 * @param v  The direction vector of the incoming ray.
+	 * @param n  The normal vector at the intersection point.
 	 * @param k   The attenuation factor.
 	 * @return The color resulting from the local effects at the intersection point.
 	 */
-	private Color calcLocalEffects(GeoPoint gp, Ray ray, Double3 k) {
-		Vector v = ray.getDirection();
-		Vector n = gp.geometry.getNormal(gp.point);
-		double nv = alignZero(n.dotProduct(v));
+	private Color calcLocalEffects(GeoPoint gp, Vector v, Vector n, double vn, Double3 k) {
 		Color color = gp.geometry.getEmission();
-		if (nv == 0)
-			return color;
 
 		Material material = gp.geometry.getMaterial();
 		for (LightSource lightSource : scene.lights) {
 			Vector l = lightSource.getL(gp.point);
 			double nl = alignZero(n.dotProduct(l));
-			if ((nl * nv > 0)) {
+			if ((nl * vn > 0)) {
 				Double3 ktr = transparency(gp, lightSource, l, n);
 				if (ktr.product(k).greaterThan(MIN_CALC_COLOR_K)) {
 					Color iL = lightSource.getIntensity(gp.point).scale(ktr);

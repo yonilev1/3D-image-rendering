@@ -38,12 +38,12 @@ public class Ray {
 	/**
 	 * ray constructor with offset point
 	 * 
-	 * @param point     in ray
-	 * @param direction in ray
-	 * @param normal    on plane
+	 * @param point     original head point
+	 * @param direction direction of the ray - <b>must be normalized</b>
+	 * @param normal    orthogonal to a surface
 	 */
 	public Ray(Point point, Vector direction, Vector normal) {
-		this.direction = direction.normalize();
+		this.direction = direction;
 		double nv = normal.dotProduct(this.direction);
 		Vector dltVector = normal.scale(nv < 0 ? -DELTA : DELTA);
 		head = point.add(dltVector);

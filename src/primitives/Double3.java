@@ -151,7 +151,7 @@ public class Double3 {
 	 *         {@code minCalcColorK}, otherwise {@code false}.
 	 */
 	public boolean greaterThan(double minCalcColorK) {
-		return d1 > minCalcColorK && d2 > minCalcColorK && d3 > minCalcColorK;
+		return d1 > minCalcColorK || d2 > minCalcColorK || d3 > minCalcColorK;
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class Double3 {
 	 *         corresponding components of {@code other}, otherwise {@code false}.
 	 */
 	public boolean greaterThan(Double3 other) {
-		return d1 > other.d1 && d2 > other.d2 && d3 > other.d3;
+		return d1 > other.d1 || d2 > other.d2 || d3 > other.d3;
 	}
 
 }

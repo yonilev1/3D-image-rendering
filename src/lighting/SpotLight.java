@@ -83,9 +83,4 @@ public class SpotLight extends PointLight {
 		this.narrowBeam = narrowBeam;
 		return this;
 	}
-
-	@Override
-	public double getDistance(Point point) {
-		return position.distance(point);
-	}
 }

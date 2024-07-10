@@ -175,10 +175,12 @@ public class LightsTests {
 		scene2.lights.add(new PointLight(new Color(150, 10, 100), new Point(30, 10, -100)).setKL(0.0001).setKQ(0.00002)
 				.setKC(0.356));
 		scene2.lights.add(new DirectionalLight(new Color(10, 30, 100), new Vector(2, 2, -2)));
-		scene2.lights.add(new SpotLight(new Color(0, 500, 800), new Vector(2, 2, -2), new Point(80, 80, -130)).setKL(0.01).setKQ(0.001));
-		scene2.lights.add(new PointLight(new Color(100, 200, 50),  new Point(-30, -100, -100)).setKL(0.0001).setKQ(0.00002));
+		scene2.lights.add(new SpotLight(new Color(0, 500, 800), new Vector(2, 2, -2), new Point(80, 80, -130))
+				.setKL(0.01).setKQ(0.001));
+		scene2.lights
+				.add(new PointLight(new Color(100, 200, 50), new Point(-30, -100, -100)).setKL(0.0001).setKQ(0.00002));
 		scene2.lights.add(new DirectionalLight(new Color(100, 9, 20), new Vector(2, 2, -2)));
-		
+
 		camera2.setImageWriter(new ImageWriter("lightTrianglesAllLights", 500, 500)) //
 				.build() //
 				.renderImage() //

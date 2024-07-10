@@ -2,7 +2,6 @@ package renderer;
 
 import primitives.*;
 import primitives.Vector;
-
 import static primitives.Util.*;
 
 import java.util.*;
@@ -101,8 +100,9 @@ public class Camera implements Cloneable {
 	public static Builder getBuilder() {
 		return new Builder();
 	}
-	public static Builder getBuilder1(Point position,Point p) {
-		return new Builder( position, p);
+
+	public static Builder getBuilder1(Point position, Point p) {
+		return new Builder(position, p);
 	}
 
 	/**
@@ -226,43 +226,49 @@ public class Camera implements Cloneable {
 		 * A new Camera instance being built.
 		 */
 		final private Camera camera = new Camera();
-		
+
 		public Builder() {
-			
+
 		}
-		
-		public Builder(Point position ,Point p) {
-			camera.p0=position;
-			camera.vTo= p.subtract(position).normalize();
-			if(camera.vTo.equals(new Vector(0,0,-1))|| camera.vTo.equals(new Vector(0,0,1))) {
-				camera.vRight=new Vector(0,-1,0);
+
+		public Builder(Point position, Point p) {
+			camera.p0 = position;
+			camera.vTo = p.subtract(position).normalize();
+			if (camera.vTo.equals(new Vector(0, 0, -1)) || camera.vTo.equals(new Vector(0, 0, 1))) {
+				camera.vRight = new Vector(0, -1, 0);
+				camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+			} else {
+				camera.vRight = camera.vTo.crossProduct(new Vector(0, 0, 1)).normalize();
 				camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
 			}
-			else {
-			camera.vRight = camera.vTo.crossProduct(new Vector(0,0,1)).normalize();
-			camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
-			}
 		}
+
 		public Builder cameraSpin(double angle) {
-			double angleRadians=Math.toRadians(angle);
-			double cos=Math.cos(angleRadians);
-			double sin=Math.sin(angleRadians);
-			
-			camera.vRight=new Vector(
-					cos*camera.vRight.getX()+sin*camera.vUp.getX(),
-					cos*camera.vRight.getY()+sin*camera.vUp.getY(),
-					cos*camera.vRight.getZ()+sin*camera.vUp.getZ()
-					).normalize();
-			camera.vUp=new Vector(
-					-sin*camera.vRight.getX()+cos*camera.vUp.getX(),
-					-sin*camera.vRight.getY()+cos*camera.vUp.getY(),
-					-sin*camera.vRight.getZ()+cos*camera.vUp.getZ()
-					).normalize();
-			
-			return this;
-			
-			
+		    double angleRadians = Math.toRadians(angle);
+		    double cos = Math.cos(angleRadians);
+		    double sin = Math.sin(angleRadians);
+
+		    // Store original values
+		    Vector originalVRight = camera.vRight;
+		    Vector originalVUp = camera.vUp;
+
+		    // Update vRight using original vRight and vUp
+		    camera.vRight = new Vector(
+		        cos * originalVRight.getX() + sin * originalVUp.getX(),
+		        cos * originalVRight.getY() + sin * originalVUp.getY(),
+		        cos * originalVRight.getZ() + sin * originalVUp.getZ()
+		    ).normalize();
+
+		    // Update vUp using original vRight and vUp
+		    camera.vUp = new Vector(
+		        -sin * originalVRight.getX() + cos * originalVUp.getX(),
+		        -sin * originalVRight.getY() + cos * originalVUp.getY(),
+		        -sin * originalVRight.getZ() + cos * originalVUp.getZ()
+		    ).normalize();
+
+		    return this;
 		}
+
 
 		/**
 		 * Sets the location of the camera.
@@ -349,9 +355,10 @@ public class Camera implements Cloneable {
 			camera.rayTracer = rayTracer;
 			return this;
 		}
-		public Builder calcVectors(Point position,Point p) {
+
+		public Builder calcVectors(Point position, Point p) {
 			return null;
-			
+
 		}
 
 		/**
