@@ -243,6 +243,26 @@ public class Camera implements Cloneable {
 			camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
 			}
 		}
+		public Builder cameraSpin(double angle) {
+			double angleRadians=Math.toRadians(angle);
+			double cos=Math.cos(angleRadians);
+			double sin=Math.sin(angleRadians);
+			
+			camera.vRight=new Vector(
+					cos*camera.vRight.getX()+sin*camera.vUp.getX(),
+					cos*camera.vRight.getY()+sin*camera.vUp.getY(),
+					cos*camera.vRight.getZ()+sin*camera.vUp.getZ()
+					).normalize();
+			camera.vUp=new Vector(
+					-sin*camera.vRight.getX()+cos*camera.vUp.getX(),
+					-sin*camera.vRight.getY()+cos*camera.vUp.getY(),
+					-sin*camera.vRight.getZ()+cos*camera.vUp.getZ()
+					).normalize();
+			
+			return this;
+			
+			
+		}
 
 		/**
 		 * Sets the location of the camera.

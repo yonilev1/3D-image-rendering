@@ -115,6 +115,15 @@ public class Vector extends Point {
 				xyz.d1 * v.xyz.d2 - xyz.d2 * v.xyz.d1);
 	}
 
+	public double getX() {
+		return this.xyz.d1;
+	}
+	public double getY() {
+		return this.xyz.d2;
+	}
+	public double getZ() {
+		return this.xyz.d3;
+	}
 	/**
 	 * Normalizes this vector, returning a new vector with length 1.
 	 *

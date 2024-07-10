@@ -276,7 +276,7 @@ public class ReflectionRefractionTests {
 	    camera7.setVpDistance(100).setVpSize(200,200)
                .setImageWriter(new ImageWriter("ColoredCubeDOWN11111", 600,600)).build().renderImage()
                .writeToImage();
-	    camera8.setVpDistance(300).setVpSize(200,200)
+	    camera8.setVpDistance(300).setVpSize(200,200).cameraSpin(91)
         .setImageWriter(new ImageWriter("ColoredCube1", 600,600)).build().renderImage()
         .writeToImage();
 	}
