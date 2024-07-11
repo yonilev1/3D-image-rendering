@@ -114,7 +114,7 @@ public class SimpleRayTracer extends RayTracerBase {
 		Material material = gp.geometry.getMaterial();
 		Ray reflectedRay = constructReflectedRay(gp.point, v, n, vn);
 		Ray refractedRay = constructRefractedRay(gp, v, n);
-		return calcGlobalEffect(reflectedRay, level - 1, k, material.kR).add(calcGlobalEffect(refractedRay, level - 1, k, material.kT));
+		return calcGlobalEffect(reflectedRay, level, k, material.kR).add(calcGlobalEffect(refractedRay, level, k, material.kT));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class SimpleRayTracer extends RayTracerBase {
 		if (kkx.lowerThan(MIN_CALC_COLOR_K))
 			return Color.BLACK;
 		GeoPoint gp = findClosestIntersection(ray);
-		return (gp == null ? scene.background : calcColor(gp, ray, level - 1, kkx)).scale(k);
+		return (gp == null ? scene.background : calcColor(gp, ray, level - 1, kkx)).scale(kx);
 	}
 
 	/**

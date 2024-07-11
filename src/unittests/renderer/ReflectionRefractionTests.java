@@ -60,13 +60,13 @@ public class ReflectionRefractionTests {
 
 		cameraBuilder //
 				.setLocation(new Point(0, 0, 10000)) //
-	//			.setLocation(new Point(-125, -125, 10000)) // debug
+//				.setLocation(new Point(-700, -650, 10000)) // debug
 				.setVpDistance(10000).setVpSize(2500, 2500) //
 				.setImageWriter(new ImageWriter("reflectionTwoSpheresMirrored", 500, 500)) //
 //				.setImageWriter(new ImageWriter("reflectionTwoSpheresMirrored", 1, 1)) // debug
 				.build() //
 				.renderImage() //
-				.printGrid(25, new Color(YELLOW)) // debug
+//				.printGrid(25, new Color(YELLOW)) // debug
 				.writeToImage();
 	}
 
@@ -143,26 +143,8 @@ public class ReflectionRefractionTests {
 	/** Geometry combination including refraction and reflection */
 	@Test
 	public void coloredCubeTest() {
-		Camera.Builder camera1 = Camera.getBuilder().setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera2 = Camera.getBuilder().setDirection(new Vector(1, 1, -1), new Vector(1, 1, 2))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera3 = Camera.getBuilder().setDirection(new Vector(0, 0, -1), new Vector(1, 0, 0))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera4 = Camera.getBuilder().setDirection(new Vector(-1, 0, -1), new Vector(-1, 0, 1))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera5 = Camera.getBuilder().setDirection(new Vector(-1, -1, 0), new Vector(0, 0, 1))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera6 = Camera.getBuilder1(new Point(-500, -500, 500), new Point(-50, -50, 50))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera7 = Camera.getBuilder1(new Point(0, 0, 500), new Point(0, 0, -50))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera8 = Camera.getBuilder1(new Point(500, 500, 500), new Point(50, 50, 50))
-				.setRayTracer(new SimpleRayTracer(scene));
-		;
-
 		scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.1));
-		
+
 		final Material sphereMaterial = new Material().setKD(0.05).setKS(0.25).setShininess(20).setKR(0.8);
 		final double faceKT = 0.35;
 		final double SRadius = 50d;
@@ -181,17 +163,13 @@ public class ReflectionRefractionTests {
 		Point apex = new Point(0, 0, -130);
 
 		scene.geometries.add(
-
 				// Sides of the pyramid
 				new Triangle(v0, v1, apex).setEmission(new Color(0, 255, 0)) // green color
 						.setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(70)),
-
 				new Triangle(v1, v2, apex).setEmission(new Color(0, 0, 255)) // Blue color
 						.setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(70)),
-
 				new Triangle(v2, v3, apex).setEmission(new Color(255, 255, 0)) // yellow color
 						.setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(70)),
-
 				new Triangle(v3, v0, apex).setEmission(new Color(255, 0, 0)) // red color
 						.setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(70)));
 
@@ -199,76 +177,92 @@ public class ReflectionRefractionTests {
 				// Top face (red)
 				new Polygon(v4, v5, v6, v7).setEmission(new Color(255, 0, 0))
 						.setMaterial(new Material().setKD(0.25).setKS(0.5).setKT(faceKT).setShininess(70)),
-
 				// Right face (green)
 				new Polygon(v3, v2, v6, v7).setEmission(new Color(0, 255, 0))
 						.setMaterial(new Material().setKD(0.25).setKS(0.5).setKT(faceKT).setShininess(70)),
-
 				// Front face (blue)
 				new Polygon(v1, v5, v6, v2).setEmission(new Color(0, 0, 255))
 						.setMaterial(new Material().setKD(0.25).setKS(0.5).setKT(faceKT).setShininess(70)),
-
 				// Back face (yellow)
 				new Polygon(v0, v4, v7, v3).setEmission(new Color(255, 255, 0))
 						.setMaterial(new Material().setKD(0.25).setKS(0.5).setKT(faceKT).setShininess(70)),
-
 				// Bottom face (cyan)
 				new Polygon(v0, v1, v2, v3).setEmission(new Color(0, 255, 255))
 						.setMaterial(new Material().setKD(0.25).setKS(0.5).setKT(faceKT).setShininess(70)),
-
 				// Left face (magenta)
 				new Polygon(v0, v1, v5, v4).setEmission(new Color(255, 0, 255))
 						.setMaterial(new Material().setKD(0.25).setKS(0.5).setKT(faceKT).setShininess(70)),
-
 				// plane under the geometries
 				new Plane(new Point(0, 0, -300), new Vector(0, 0, 1)).setMaterial(new Material().setKD(0.9))
 						.setEmission(new Color(blue).reduce(4)),
-
 				// inside Sphere
 				new Sphere(new Point(0, 0, 0), 30d).setEmission(new Color(100, 100, 100))
 						.setMaterial(new Material().setKD(0.25).setKS(0.25).setShininess(20)),
-
 				// Upper Sphere
 				new Sphere(new Point(0, 0, 180), SRadius).setEmission(sphereColor).setMaterial(sphereMaterial),
-
 				// Right Sphere
 				new Sphere(new Point(0, 170, 0), SRadius).setEmission(sphereColor).setMaterial(sphereMaterial),
-
 				// Front Sphere
 				new Sphere(new Point(170, 0, 0), SRadius).setEmission(sphereColor).setMaterial(sphereMaterial),
-
 				// Down Sphere
 				new Sphere(new Point(0, 0, -200), SRadius).setEmission(sphereColor).setMaterial(sphereMaterial),
-
 				// Left Sphere
 				new Sphere(new Point(0, -170, 0), SRadius).setEmission(sphereColor).setMaterial(sphereMaterial),
-
 				// Back Sphere
-				new Sphere(new Point(-170, 0, 0), SRadius).setEmission(sphereColor.add()).setMaterial(sphereMaterial)
+				new Sphere(new Point(-170, 0, 0), SRadius).setEmission(sphereColor.add()).setMaterial(sphereMaterial));
 
-		);
+		scene.lights
+				.add(new PointLight(new Color(250, 250, 250), new Point(100, 200, 200)).setKL(0.001).setKQ(0.00001));
+		scene.lights.add(
+				new PointLight(new Color(155, 155, 155), new Point(-200, -200, -200)).setKL(0.0001).setKQ(0.00001));
 
-		scene.lights.add(new PointLight(new Color(250, 250, 250), new Point(100, 200, 200)).setKL(0.001).setKQ(0.00001));
-
-		scene.lights.add(new PointLight(new Color(155, 155, 155), new Point(-200, -200, -200)).setKL(0.0001).setKQ(0.00001));
-
-		camera1.setLocation(new Point(500, 500, 500)).setVpDistance(300).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCube", 600, 600)).build().renderImage().writeToImage();
-		camera2.setLocation(new Point(-500, -500, 500)).setVpDistance(200).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCubeBACK", 600, 600)).build().renderImage().writeToImage();
-		camera3.setLocation(new Point(0, 0, 500)).setVpDistance(100).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCubeDOWN", 600, 600)).build().renderImage().writeToImage();
-		camera4.setLocation(new Point(350, 0, 400)).setVpDistance(300).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCubeFRONT", 600, 600)).build().renderImage().writeToImage();
-		camera5.setLocation(new Point(210, 120, -51)).setVpDistance(100).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCubeTriangle", 600, 600)).build().renderImage().writeToImage();
-		camera6.setVpDistance(200).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCubeBACK1111111", 600, 600)).build().renderImage()
-				.writeToImage();
-		camera7.setVpDistance(100).setVpSize(200, 200).setImageWriter(new ImageWriter("ColoredCubeDOWN11111", 600, 600))
+		Camera.Builder cameraBuilder = Camera.getBuilder().setRayTracer(new SimpleRayTracer(scene)) //
+				.setVpSize(180, 180);
+		Camera.Builder camera6 = Camera.getBuilder1(new Point(-500, -500, 500), new Point(-50, -50, 50))
+				.setRayTracer(new SimpleRayTracer(scene));
+		Camera.Builder camera7 = Camera.getBuilder1(new Point(0, 0, 500), new Point(0, 0, -50))
+				.setRayTracer(new SimpleRayTracer(scene));
+		Camera.Builder camera8 = Camera.getBuilder1(new Point(500, 500, 500), new Point(50, 50, 50))
+				.setRayTracer(new SimpleRayTracer(scene));
+		int resolution = 1000;
+		cameraBuilder.setLocation(new Point(500, 500, 500)) //
+				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
+				.setVpDistance(300) //
+				.setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
+				.build() //
+				.renderImage().writeToImage();
+		cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
+				.setDirection(new Vector(1, 1, -1), new Vector(1, 1, 2)) //
+				.setImageWriter(new ImageWriter("ColoredCubeBACK", resolution, resolution)) //
+				.build() //
+				.renderImage().writeToImage();
+		cameraBuilder.setLocation(new Point(0, 0, 500)) //
+				.setDirection(new Vector(0, 0, -1), new Vector(1, 0, 0)) //
+				.setVpDistance(100) //
+				.setImageWriter(new ImageWriter("ColoredCubeDOWN", resolution, resolution)) //
+				.build() //
+				.renderImage().writeToImage();
+		cameraBuilder.setLocation(new Point(350, 0, 400)) //
+				.setDirection(new Vector(-1, 0, -1), new Vector(-1, 0, 1)) //
+				.setVpDistance(300) //
+				.setImageWriter(new ImageWriter("ColoredCubeFRONT", resolution, resolution)) //
+				.build() //
+				.renderImage().writeToImage();
+		cameraBuilder.setLocation(new Point(210, 120, -51)) //
+				.setDirection(new Vector(-1, -1, 0), new Vector(0, 0, 1)) //
+				.setVpDistance(100) //
+				.setImageWriter(new ImageWriter("ColoredCubeTriangle", resolution, resolution)) //
+				.build() //
+				.renderImage().writeToImage();
+		camera6.setVpDistance(200).setVpSize(200, 200) //
+				.setImageWriter(new ImageWriter("ColoredCubeBACK1111111", resolution, resolution)) //
+				.build().renderImage().writeToImage();
+		camera7.setVpDistance(100).setVpSize(200, 200)
+				.setImageWriter(new ImageWriter("ColoredCubeDOWN11111", resolution, resolution)) //
 				.build().renderImage().writeToImage();
 		camera8.setVpDistance(300).setVpSize(200, 200).cameraSpin(90)
-				.setImageWriter(new ImageWriter("ColoredCubeSpin90", 600, 600)).build().renderImage().writeToImage();
+				.setImageWriter(new ImageWriter("ColoredCubeSpin90", resolution, resolution)) //
+				.build().renderImage().writeToImage();
 	}
 
 }
