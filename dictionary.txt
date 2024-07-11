@@ -28,3 +28,4 @@ vn
 mega
 magenta
 cyan
+radians

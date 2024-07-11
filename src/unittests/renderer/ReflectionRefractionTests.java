@@ -248,11 +248,9 @@ public class ReflectionRefractionTests {
 
 		);
 
-		scene.lights
-				.add(new PointLight(new Color(250, 250, 250), new Point(100, 200, 200)).setKL(0.001).setKQ(0.00001));
+		scene.lights.add(new PointLight(new Color(250, 250, 250), new Point(100, 200, 200)).setKL(0.001).setKQ(0.00001));
 
-		//scene.lights.add(
-			//	new PointLight(new Color(155, 155, 155), new Point(-200, -200, -200)).setKL(0.0001).setKQ(0.00001));
+		scene.lights.add(new PointLight(new Color(155, 155, 155), new Point(-200, -200, -200)).setKL(0.0001).setKQ(0.00001));
 
 		camera1.setLocation(new Point(500, 500, 500)).setVpDistance(300).setVpSize(200, 200)
 				.setImageWriter(new ImageWriter("ColoredCube", 600, 600)).build().renderImage().writeToImage();

@@ -198,6 +198,7 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * @param gp  The intersection point.
 	 * @param v  The direction vector of the incoming ray.
 	 * @param n  The normal vector at the intersection point.
+	 * @param vn  dot product of v and n.
 	 * @param k   The attenuation factor.
 	 * @return The color resulting from the local effects at the intersection point.
 	 */
