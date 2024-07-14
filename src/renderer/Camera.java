@@ -102,17 +102,6 @@ public class Camera implements Cloneable {
     }
 
     /**
-     * Returns a new Builder instance with specified position and point.
-     * 
-     * @param position the camera position.
-     * @param p the target point.
-     * @return a new Builder instance.
-     */
-    public static Builder getBuilder1(Point position, Point p) {
-        return new Builder(position, p);
-    }
-
-    /**
      * Constructs a ray from the camera through a specific pixel on the view plane.
      * 
      * @param nX the number of pixels in the X direction.
@@ -235,7 +224,7 @@ public class Camera implements Cloneable {
          * @param position the camera position.
          * @param p the target point.
          */
-        public Builder(Point position, Point p) {
+        public Builder setView(Point position, Point p) {
             camera.p0 = position;
             camera.vTo = p.subtract(position).normalize();
             if (camera.vTo.equals(new Vector(0, 0, -1)) || camera.vTo.equals(new Vector(0, 0, 1))) {
@@ -245,7 +234,9 @@ public class Camera implements Cloneable {
                 camera.vRight = camera.vTo.crossProduct(new Vector(0, 0, 1)).normalize();
                 camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
             }
+            return this;
         }
+        
 
         /**
          * Rotates the camera around its viewing direction.

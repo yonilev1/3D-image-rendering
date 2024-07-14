@@ -218,12 +218,6 @@ public class ReflectionRefractionTests {
 
 		Camera.Builder cameraBuilder = Camera.getBuilder().setRayTracer(new SimpleRayTracer(scene)) //
 				.setVpSize(180, 180);
-		Camera.Builder camera6 = Camera.getBuilder1(new Point(-500, -500, 500), new Point(-50, -50, 50))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera7 = Camera.getBuilder1(new Point(0, 0, 500), new Point(0, 0, -50))
-				.setRayTracer(new SimpleRayTracer(scene));
-		Camera.Builder camera8 = Camera.getBuilder1(new Point(500, 500, 500), new Point(50, 50, 50))
-				.setRayTracer(new SimpleRayTracer(scene));
 		int resolution = 1000;
 		cameraBuilder.setLocation(new Point(500, 500, 500)) //
 				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
@@ -254,15 +248,21 @@ public class ReflectionRefractionTests {
 				.setImageWriter(new ImageWriter("ColoredCubeTriangle", resolution, resolution)) //
 				.build() //
 				.renderImage().writeToImage();
-		camera6.setVpDistance(200).setVpSize(200, 200) //
-				.setImageWriter(new ImageWriter("ColoredCubeBACK1111111", resolution, resolution)) //
-				.build().renderImage().writeToImage();
-		camera7.setVpDistance(100).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCubeDOWN11111", resolution, resolution)) //
-				.build().renderImage().writeToImage();
-		camera8.setVpDistance(300).setVpSize(200, 200).cameraSpin(90)
-				.setImageWriter(new ImageWriter("ColoredCubeSpin90", resolution, resolution)) //
-				.build().renderImage().writeToImage();
+		cameraBuilder.setView(new Point(0, 0, 500), new Point(0, 0, -50))//
+		         .setVpDistance(200)
+		         .setVpSize(200, 200)
+				 .setImageWriter(new ImageWriter("ColoredCubeDOWN11111", resolution, resolution)) //
+				 .build(). //
+				 renderImage() //
+				 .writeToImage();
+		cameraBuilder.setView(new Point(500, 500, 500), new Point(50, 50, 50))//
+	             .setVpDistance(300)//
+		         .setVpSize(200, 200)//
+		         .cameraSpin(90)
+				 .setImageWriter(new ImageWriter("ColoredCubeSpin90", resolution, resolution)) //
+		         .build() //
+		         .renderImage() //
+		         .writeToImage(); 
 	}
 
 }
