@@ -14,6 +14,12 @@ import java.util.*;
  */
 public class Camera implements Cloneable {
 
+	
+	
+	private double aperture;   // Radius of the camera's aperture
+	
+	private double focalDistance;  // Distance to the focal plane
+
     /**
      * The location of the camera.
      */
@@ -64,6 +70,17 @@ public class Camera implements Cloneable {
      */
     private Camera() {
     }
+    
+ // Getters and Setters
+ 	
+
+ 	public double getFocalDistance() {
+ 	    return focalDistance;
+ 	}
+
+ 	public void setFocalDistance(double focalDistance) {
+ 	    this.focalDistance = focalDistance;
+ 	}
 
     /**
      * Gets the height of the view plane.
@@ -266,6 +283,12 @@ public class Camera implements Cloneable {
 
             return this;
         }
+        
+        //aperture getter
+     	public Builder setAperture(double aperture) {
+     	    camera.aperture = aperture;
+     	    return this;
+     	}
 
         /**
          * Sets the location of the camera.

@@ -247,7 +247,7 @@ public class ReflectionRefractionTests {
 				.setVpDistance(100) //
 				.setImageWriter(new ImageWriter("ColoredCubeTriangle", resolution, resolution)) //
 				.build() //
-				.renderImage().writeToImage();
+				.renderImage().writeToImage();               
 		cameraBuilder.setView(new Point(0, 0, 500), new Point(0, 0, -50))//
 		         .setVpDistance(200)
 		         .setVpSize(200, 200)
