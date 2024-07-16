@@ -95,7 +95,6 @@ public class Camera implements Cloneable {
      * @return the list of rays for depth of field effect.
      */
     public List<Ray> constructRayWithDOF(int nX, int nY, int j, int i) {
-        List<Ray> rays = new ArrayList<>();
         Point pij = p0.add(vTo.scale(distanceFromCamera));
         double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
         double yi = (((nY - 1) / 2.0) - i) * (height / nY);
@@ -107,23 +106,7 @@ public class Camera implements Cloneable {
         if (!isZero(yi)) {
             pij = pij.add(vUp.scale(yi));
         }
-
-        Point focalPoint = pij.add(pij.subtract(p0).normalize().scale(focalDistance));
-
-        Random rand = new Random();
-        int numRays = 10; // Number of rays to sample within the aperture for DOF effect
-        for (int k = 0; k < numRays; k++) {
-            double angle = 2 * Math.PI * rand.nextDouble();
-            double radius = aperture * Math.sqrt(rand.nextDouble());
-            double apertureX = radius * Math.cos(angle);
-            double apertureY = radius * Math.sin(angle);
-
-            Point randomAperturePoint = p0.add(vRight.scale(apertureX)).add(vUp.scale(apertureY));
-            Vector rayDirection = focalPoint.subtract(randomAperturePoint).normalize();
-            rays.add(new Ray(randomAperturePoint, rayDirection));
-        }
-
-        return rays;
+        
     }
 
     public Camera renderImage() {
