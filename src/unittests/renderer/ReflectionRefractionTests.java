@@ -101,47 +101,6 @@ public class ReflectionRefractionTests {
 
 	/** Geometry combination including refraction and reflection */
 	@Test
-	public void geometryCombinationTest() {
-		Camera.Builder camera = Camera.getBuilder().setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
-				.setRayTracer(new SimpleRayTracer(scene));
-
-		scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.15));
-
-		scene.geometries.add( //
-				new Sphere(new Point(10, 10, -50), 10d).setEmission(new Color(55, 90, 10))
-						.setMaterial(new Material().setKD(0.001).setKS(0.05).setShininess(10).setKR(0.8)),
-				new Sphere(new Point(0, 0, -50), 10d).setEmission(new Color(0, 10, 100))
-						.setMaterial(new Material().setKD(0.001).setKS(0.05).setShininess(10).setKT(0.6)),
-				new Sphere(new Point(-20, -20, -50), 10d).setEmission(new Color(0, 190, 0))
-						.setMaterial(new Material().setKD(0.001).setKS(0.05).setShininess(10).setKR(0.6)),
-				new Sphere(new Point(-40, -40, -50), 10d).setEmission(new Color(255, 190, 0))
-						.setMaterial(new Material().setKD(0.001).setKS(0.05).setShininess(10).setKT(0.6)),
-				new Sphere(new Point(-60, -60, -50), 10d).setEmission(new Color(200, 0, 100))
-						.setMaterial(new Material().setKD(0.001).setKS(0.05).setShininess(10).setKR(0.6)),
-				new Sphere(new Point(-80, -80, -50), 10d).setEmission(new Color(55, 90, 10))
-						.setMaterial(new Material().setKD(0.001).setKS(0.05).setShininess(10).setKT(0.6)),
-
-				new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135), new Point(75, 75, -150)) //
-						.setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(60)), //
-
-				new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
-						.setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(60)), //
-
-				new Sphere(new Point(60, 50, -50), 30d).setEmission(new Color(BLUE)) //
-						.setMaterial(new Material().setKD(0.2).setKS(0.2).setShininess(30).setKR(0.6)),
-
-				new Sphere(new Point(-35, 20, 10), 30d).setEmission(new Color(RED)) //
-						.setMaterial(new Material().setKD(0.2).setKS(0.2).setShininess(30).setKT(0.7)));
-
-		scene.lights.add(new SpotLight(new Color(300, 500, 300), new Vector(0, 0, -1), new Point(0, 0, 100)) //
-				.setKL(0.000001).setKQ(0.00001));
-
-		camera.setLocation(new Point(0, 0, 1000)).setVpDistance(1000).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("GeometryCombination", 600, 600)).build().renderImage().writeToImage();
-	}
-
-	/** Geometry combination including refraction and reflection */
-	@Test
 	public void coloredCubeTest() {
 		scene.setAmbientLight(new AmbientLight(new Color(WHITE), 0.1));
 
@@ -223,9 +182,12 @@ public class ReflectionRefractionTests {
 				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
 				.setVpDistance(300) //
 				.setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
+				.setAperture(4)
+				.setFocalDistance(450)
 				.build() //
 				.renderImage().writeToImage();
-		cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
+		        
+	/*	cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
 				.setDirection(new Vector(1, 1, -1), new Vector(1, 1, 2)) //
 				.setImageWriter(new ImageWriter("ColoredCubeBACK", resolution, resolution)) //
 				.build() //
@@ -261,8 +223,8 @@ public class ReflectionRefractionTests {
 		         .cameraSpin(90)
 				 .setImageWriter(new ImageWriter("ColoredCubeSpin90", resolution, resolution)) //
 		         .build() //
-		         .renderImage() //
-		         .writeToImage(); 
+	            .renderImage() //
+		         .writeToImage(); */
 	}
 
 }
