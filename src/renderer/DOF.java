@@ -9,7 +9,6 @@ import java.util.Random;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
-//import renderer.Camera.Builder;
 
 public class DOF {
 	private double aperture;   // Radius of the camera's aperture
@@ -23,14 +22,15 @@ public class DOF {
 	    public double getAperture() {
 	        return aperture;
 	    }
+	    
 	    public DOF() {
-	        this.aperture = 0;
-	        this.focalDistance = 0;
 	    }
-
-	    public DOF(double aperture, double focalDistance) {
-	        this.aperture = aperture;
-	        this.focalDistance = focalDistance;
+	    
+	    public void setFocalDistance(double fd) {
+	    	this.focalDistance = fd;
+	    }
+	    public void setAperture(double aperture) {
+	    	this.aperture = aperture;
 	    }
 	    
 	    public List<Ray> constructRayWithDOF(Point pij ,Camera thisCamera){

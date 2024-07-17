@@ -19,6 +19,7 @@ public class Camera  implements Cloneable {
     private Vector vTo; // The forward direction vector of the camera
     private Vector vUp; // The up direction vector of the camera
     private Vector vRight; // The right direction vector of the camera
+    private boolean isDof = false; 
 
     private double height = 0; // The height of the view plane
     private double width = 0; // The width of the view plane
@@ -26,10 +27,10 @@ public class Camera  implements Cloneable {
 
     private ImageWriter imageWriter; // The image writer responsible for writing pixels to an image
     private RayTracerBase rayTracer; // The ray tracer responsible for tracing rays and computing colors
-    public DOF dof; // The DOF instance
+    public DOF dof = new DOF();
 
     private Camera() {
-    	this.dof = new DOF(); // Initialize with default DOF
+  
     }
 
     // Getters and Setters
@@ -61,6 +62,9 @@ public class Camera  implements Cloneable {
     public Vector getVright() {
         return vRight;
     }
+    public boolean getIsDof() {
+        return isDof;
+    }
     
     
        public Camera renderImage() {
@@ -75,9 +79,8 @@ public class Camera  implements Cloneable {
     }
        
     private void castRay(int nX, int nY, int j, int i) {
-    	boolean DontDof = (dof.getAperture()==0 && dof.getFocalDistance()==0);
 		List<Ray> rays = new ArrayList<>();
-		if (DontDof) {
+		if (!getIsDof()) {
 			rays.add(constructRay(nX, nY,j, i));}
 		else{
 			Point pij =  findPij( nX,  nY,  j,  i);
@@ -247,10 +250,11 @@ public class Camera  implements Cloneable {
             camera.rayTracer = rayTracer;
             return this;
         }
-
         
         public Builder setDOF(double aperture, double focalDistance) {
-            camera.dof = new DOF(aperture, focalDistance);
+            camera.dof.setAperture(aperture);
+            camera.dof.setFocalDistance(focalDistance);
+            camera.isDof = true;
             return this;
         }
 
