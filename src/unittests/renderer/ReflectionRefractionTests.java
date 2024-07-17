@@ -182,6 +182,7 @@ public class ReflectionRefractionTests {
 				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
 			    .setVpDistance(300) //
 			    .setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
+			    .setIsDof(true)
 		     	.setDOF(7, 450) //
 			    .build() //
 			    .renderImage()
@@ -189,7 +190,7 @@ public class ReflectionRefractionTests {
 		cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
 				.setDirection(new Vector(1, 1, -1), new Vector(1, 1, 2)) //
 				.setImageWriter(new ImageWriter("ColoredCubeBACK", resolution, resolution)) //
-				.setDOF(0,0)//
+				.setIsDof(false)
 				.build() //
 				.renderImage().writeToImage();
 	/*	cameraBuilder.setLocation(new Point(0, 0, 500)) //

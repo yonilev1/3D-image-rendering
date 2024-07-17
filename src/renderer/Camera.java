@@ -240,6 +240,11 @@ public class Camera  implements Cloneable {
             return this;
         }
         
+        public Builder setIsDof(boolean isDof) {
+            camera.isDof = isDof;
+            return this;
+        }
+        
         /**
          * Sets the ray tracer for the camera configuration.
          * 
@@ -254,11 +259,11 @@ public class Camera  implements Cloneable {
         public Builder setDOF(double aperture, double focalDistance) {
             camera.dof.setAperture(aperture);
             camera.dof.setFocalDistance(focalDistance);
-            camera.isDof = true;
             return this;
         }
 
         public Camera build() {
+
             final String MISSING_RENDERING_DATA = "Missing rendering data";
 
             if (camera.p0 == null)
