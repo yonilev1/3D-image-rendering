@@ -3,18 +3,39 @@ package renderer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import renderer.Camera;
+//import renderer.Camera;
 
+//import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+//import renderer.Camera.Builder;
 
 public class DOF {
+	private double aperture;   // Radius of the camera's aperture
+    private double focalDistance ;  // Distance to the focal plane
+    
 	
-	public List<Ray>constructRayWithDOF(Point pij,Point p0,double focalDistance, double aperture)
-	{
-        List<Ray> rays = new ArrayList<>();
-		Point focalPoint = pij.add(pij.subtract(p0).normalize().scale(focalDistance));
+	 public double getFocalDistance() {
+	        return focalDistance;
+	    }
+
+	    public double getAperture() {
+	        return aperture;
+	    }
+	    public DOF() {
+	        this.aperture = 0;
+	        this.focalDistance = 0;
+	    }
+
+	    public DOF(double aperture, double focalDistance) {
+	        this.aperture = aperture;
+	        this.focalDistance = focalDistance;
+	    }
+	    
+	    public List<Ray> constructRayWithDOF(Point pij ,Camera thisCamera){
+	    List<Ray> rays = new ArrayList<>();
+		Point focalPoint = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
 	    Random rand = new Random();
 	    int numRays = 10; // Number of rays to sample within the aperture for DOF effect
 	    for (int k = 0; k < numRays; k++) {
@@ -23,11 +44,12 @@ public class DOF {
 	        double apertureX = radius * Math.cos(angle);
 	        double apertureY = radius * Math.sin(angle);
 
-	        Point randomAperturePoint = p0.add(vRight.scale(apertureX)).add(vUp.scale(apertureY));
+	        Point randomAperturePoint = thisCamera.getCameraLocation().add(thisCamera.getVright().scale(apertureX)).add(thisCamera.getVup().scale(apertureY));
 	        Vector rayDirection = focalPoint.subtract(randomAperturePoint).normalize();
 	        rays.add(new Ray(randomAperturePoint, rayDirection));
 	        }
 
-	    return rays;
-	}
+	   return rays;
+	   }
+	
 }

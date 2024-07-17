@@ -180,19 +180,19 @@ public class ReflectionRefractionTests {
 		int resolution = 1000;
 		cameraBuilder.setLocation(new Point(500, 500, 500)) //
 				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
-				.setVpDistance(300) //
-				.setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
-				.setAperture(4)
-				.setFocalDistance(450)
-				.build() //
-				.renderImage().writeToImage();
-		        
-	/*	cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
+			    .setVpDistance(300) //
+			    .setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
+		     	.setDOF(7, 450) //
+			    .build() //
+			    .renderImage()
+			    .writeToImage();    
+		cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
 				.setDirection(new Vector(1, 1, -1), new Vector(1, 1, 2)) //
 				.setImageWriter(new ImageWriter("ColoredCubeBACK", resolution, resolution)) //
+				.setDOF(0,0)//
 				.build() //
 				.renderImage().writeToImage();
-		cameraBuilder.setLocation(new Point(0, 0, 500)) //
+	/*	cameraBuilder.setLocation(new Point(0, 0, 500)) //
 				.setDirection(new Vector(0, 0, -1), new Vector(1, 0, 0)) //
 				.setVpDistance(100) //
 				.setImageWriter(new ImageWriter("ColoredCubeDOWN", resolution, resolution)) //

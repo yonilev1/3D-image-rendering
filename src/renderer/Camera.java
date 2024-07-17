@@ -12,11 +12,10 @@ import java.util.*;
  * properties defining the view plane's dimensions and its distance from the
  * camera.
  */
-public class Camera implements Cloneable {
-    private double aperture=1;   // Radius of the camera's aperture
-    private double focalDistance =1;  // Distance to the focal plane
+public class Camera  implements Cloneable {
+    
 
-    private Point p0 = new Point (0,0,0); // The location of the camera
+    private Point p0 ; // The location of the camera
     private Vector vTo; // The forward direction vector of the camera
     private Vector vUp; // The up direction vector of the camera
     private Vector vRight; // The right direction vector of the camera
@@ -27,17 +26,14 @@ public class Camera implements Cloneable {
 
     private ImageWriter imageWriter; // The image writer responsible for writing pixels to an image
     private RayTracerBase rayTracer; // The ray tracer responsible for tracing rays and computing colors
+    public DOF dof; // The DOF instance
 
-    private Camera() {}
+    private Camera() {
+    	this.dof = new DOF(); // Initialize with default DOF
+    }
 
     // Getters and Setters
-    public double getFocalDistance() {
-        return focalDistance;
-    }
-
-    public double getAperture() {
-        return aperture;
-    }
+   
     
     public Point getCameraLocation() {
         return p0;
@@ -58,7 +54,58 @@ public class Camera implements Cloneable {
     public static Builder getBuilder() {
         return new Builder();
     }
+    
+    public Vector getVup() {
+        return vUp;
+    }
+    public Vector getVright() {
+        return vRight;
+    }
+    
+    
+       public Camera renderImage() {
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
+        for (int i = 0; i < nY; ++i) {
+            for (int j = 0; j < nX; ++j) {
+                castRay(nX, nY, j, i);
+            }
+        }
+        return this;
+    }
+       
+    private void castRay(int nX, int nY, int j, int i) {
+    	boolean DontDof = (dof.getAperture()==0 && dof.getFocalDistance()==0);
+		List<Ray> rays = new ArrayList<>();
+		if (DontDof) {
+			rays.add(constructRay(nX, nY,j, i));}
+		else{
+			Point pij =  findPij( nX,  nY,  j,  i);
+            rays= dof.constructRayWithDOF(pij, this);
+            }
+        Color pixelColor = Color.BLACK;
+        for (Ray ray : rays) {
+            pixelColor = pixelColor.add(rayTracer.traceRay(ray));
+        }
+        pixelColor = pixelColor.reduce(rays.size());
+        imageWriter.writePixel(j, i, pixelColor);
+    }
+    
+    private Point findPij(int nX, int nY, int j, int i) {
+       Point pij = p0.add(vTo.scale(distanceFromCamera));
+        double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
+        double yi = (((nY - 1) / 2.0) - i) * (height / nY);
 
+        if (!isZero(xj)) {
+            pij = pij.add(vRight.scale(xj));
+        }
+
+        if (!isZero(yi)) {
+            pij = pij.add(vUp.scale(yi));
+        }
+        return pij;
+        
+       }
     /**
      * Constructs a ray from the camera through a specific pixel on the view plane.
      *
@@ -69,21 +116,11 @@ public class Camera implements Cloneable {
      * @return the constructed ray.
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        Point pij = p0.add(vTo.scale(distanceFromCamera));
-        double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
-        double yi = (((nY - 1) / 2.0) - i) * (height / nY);
-
-        if (!isZero(xj)) {
-            pij = pij.add(vRight.scale(xj));
-        }
-
-        if (!isZero(yi)) {
-            pij = pij.add(vUp.scale(yi));
-        }
-
-        return new Ray(p0, pij.subtract(p0));
+    	Point pij =  findPij( nX,  nY,  j,  i);
+        return  new Ray (p0, pij.subtract(p0));
     }
-
+        
+   
     /**
      * Constructs a ray from the camera through a specific pixel on the view plane
      * with depth of field effect.
@@ -94,43 +131,10 @@ public class Camera implements Cloneable {
      * @param i  the pixel index in the Y direction.
      * @return the list of rays for depth of field effect.
      */
-    public List<Ray> constructRayWithDOF(int nX, int nY, int j, int i) {
-        Point pij = p0.add(vTo.scale(distanceFromCamera));
-        double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
-        double yi = (((nY - 1) / 2.0) - i) * (height / nY);
+   
+ 
 
-        if (!isZero(xj)) {
-            pij = pij.add(vRight.scale(xj));
-        }
-
-        if (!isZero(yi)) {
-            pij = pij.add(vUp.scale(yi));
-        }
-        
-    }
-
-    public Camera renderImage() {
-        int nX = imageWriter.getNx();
-        int nY = imageWriter.getNy();
-        for (int i = 0; i < nY; ++i) {
-            for (int j = 0; j < nX; ++j) {
-                castRayWithDOF(nX, nY, j, i);
-            }
-        }
-        return this;
-    }
-
-    private void castRayWithDOF(int nX, int nY, int column, int row) {
-        List<Ray> rays = constructRayWithDOF(nX, nY, column, row);
-        Color pixelColor = Color.BLACK;
-
-        for (Ray ray : rays) {
-            pixelColor = pixelColor.add(rayTracer.traceRay(ray));
-        }
-
-        pixelColor = pixelColor.reduce(rays.size());
-        imageWriter.writePixel(column, row, pixelColor);
-    }
+    
 
     public Camera printGrid(int interval, Color color) {
         int nY = imageWriter.getNy();
@@ -200,17 +204,7 @@ public class Camera implements Cloneable {
             camera.p0 = p;
             return this;
         }
-
-        public Builder setAperture(double aperture) {
-            camera.aperture = aperture;
-            return this;
-        }
-
-        public Builder setFocalDistance(double focalDistance) {
-        	camera.focalDistance =focalDistance;
-            return this;
-        }
-
+        
         public Builder setDirection(Vector vTo, Vector vUp) {
             if (!isZero(vUp.dotProduct(vTo)))
                 throw new IllegalArgumentException("vUp and vTo must be orthogonal");
@@ -242,9 +236,21 @@ public class Camera implements Cloneable {
             camera.imageWriter = imageWriter;
             return this;
         }
-
+        
+        /**
+         * Sets the ray tracer for the camera configuration.
+         * 
+         * @param rayTracer The ray tracer to be set.
+         * @return This Builder object.
+         */
         public Builder setRayTracer(RayTracerBase rayTracer) {
             camera.rayTracer = rayTracer;
+            return this;
+        }
+
+        
+        public Builder setDOF(double aperture, double focalDistance) {
+            camera.dof = new DOF(aperture, focalDistance);
             return this;
         }
 
