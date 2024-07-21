@@ -77,7 +77,7 @@ public class DOF {
 		List<Ray> rays = new ArrayList<>();
 		Point focalPoint = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
 		Random rand = new Random();
-		int numRays = 10; 
+		int numRays = 10;
 		for (int k = 0; k < numRays; k++) {
 			double angle = 2 * Math.PI * rand.nextDouble();
 			double radius = aperture * Math.sqrt(rand.nextDouble());

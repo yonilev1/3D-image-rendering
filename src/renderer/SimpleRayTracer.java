@@ -1,6 +1,5 @@
 package renderer;
 
-
 import geometries.Intersectable.GeoPoint;
 import lighting.*;
 import primitives.*;
@@ -114,7 +113,8 @@ public class SimpleRayTracer extends RayTracerBase {
 		Material material = gp.geometry.getMaterial();
 		Ray reflectedRay = constructReflectedRay(gp.point, v, n, vn);
 		Ray refractedRay = constructRefractedRay(gp, v, n);
-		return calcGlobalEffect(reflectedRay, level, k, material.kR).add(calcGlobalEffect(refractedRay, level, k, material.kT));
+		return calcGlobalEffect(reflectedRay, level, k, material.kR)
+				.add(calcGlobalEffect(refractedRay, level, k, material.kT));
 	}
 
 	/**
@@ -195,11 +195,11 @@ public class SimpleRayTracer extends RayTracerBase {
 	 * Calculates the local effects (diffuse and specular) at the intersection
 	 * point.
 	 *
-	 * @param gp  The intersection point.
+	 * @param gp The intersection point.
 	 * @param v  The direction vector of the incoming ray.
 	 * @param n  The normal vector at the intersection point.
-	 * @param vn  dot product of v and n.
-	 * @param k   The attenuation factor.
+	 * @param vn dot product of v and n.
+	 * @param k  The attenuation factor.
 	 * @return The color resulting from the local effects at the intersection point.
 	 */
 	private Color calcLocalEffects(GeoPoint gp, Vector v, Vector n, double vn, Double3 k) {
