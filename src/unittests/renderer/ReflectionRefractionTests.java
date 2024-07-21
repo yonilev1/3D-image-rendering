@@ -178,54 +178,47 @@ public class ReflectionRefractionTests {
 		Camera.Builder cameraBuilder = Camera.getBuilder().setRayTracer(new SimpleRayTracer(scene)) //
 				.setVpSize(180, 180);
 		int resolution = 1000;
+		/*
+		 * cameraBuilder.setLocation(new Point(500, 500, 500)) // .setDirection(new
+		 * Vector(-1, -1, -1), new Vector(-1, -1, 2)) // .setVpDistance(300) //
+		 * .setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
+		 * .setIsDof(true) .setDOF(7, 450) // .build() // .renderImage()
+		 * .writeToImage();
+		 */
+
 		cameraBuilder.setLocation(new Point(500, 500, 500)) //
 				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
-			    .setVpDistance(300) //
-			    .setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
-			    .setIsDof(true)
-		     	.setDOF(7, 450) //
-			    .build() //
-			    .renderImage()
-			    .writeToImage();    
+				.setVpDistance(300) //
+				.setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
+				.setIsDof(true).setDOF(7, 450) //
+				.build() //
+				.renderImage().writeToImage();
+
 		cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
 				.setDirection(new Vector(1, 1, -1), new Vector(1, 1, 2)) //
 				.setImageWriter(new ImageWriter("ColoredCubeBACK", resolution, resolution)) //
-				.setIsDof(false)
-				.build() //
+				.setIsDof(false).build() //
 				.renderImage().writeToImage();
-	/*	cameraBuilder.setLocation(new Point(0, 0, 500)) //
-				.setDirection(new Vector(0, 0, -1), new Vector(1, 0, 0)) //
-				.setVpDistance(100) //
-				.setImageWriter(new ImageWriter("ColoredCubeDOWN", resolution, resolution)) //
-				.build() //
-				.renderImage().writeToImage();
-		cameraBuilder.setLocation(new Point(350, 0, 400)) //
-				.setDirection(new Vector(-1, 0, -1), new Vector(-1, 0, 1)) //
-				.setVpDistance(300) //
-				.setImageWriter(new ImageWriter("ColoredCubeFRONT", resolution, resolution)) //
-				.build() //
-				.renderImage().writeToImage();
-		cameraBuilder.setLocation(new Point(210, 120, -51)) //
-				.setDirection(new Vector(-1, -1, 0), new Vector(0, 0, 1)) //
-				.setVpDistance(100) //
-				.setImageWriter(new ImageWriter("ColoredCubeTriangle", resolution, resolution)) //
-				.build() //
-				.renderImage().writeToImage();               
-		cameraBuilder.setView(new Point(0, 0, 500), new Point(0, 0, -50))//
-		         .setVpDistance(200)
-		         .setVpSize(200, 200)
-				 .setImageWriter(new ImageWriter("ColoredCubeDOWN11111", resolution, resolution)) //
-				 .build(). //
-				 renderImage() //
-				 .writeToImage();
-		cameraBuilder.setView(new Point(500, 500, 500), new Point(50, 50, 50))//
-	             .setVpDistance(300)//
-		         .setVpSize(200, 200)//
-		         .cameraSpin(90)
-				 .setImageWriter(new ImageWriter("ColoredCubeSpin90", resolution, resolution)) //
-		         .build() //
-	            .renderImage() //
-		         .writeToImage(); */
+		/*
+		 * cameraBuilder.setLocation(new Point(0, 0, 500)) // .setDirection(new
+		 * Vector(0, 0, -1), new Vector(1, 0, 0)) // .setVpDistance(100) //
+		 * .setImageWriter(new ImageWriter("ColoredCubeDOWN", resolution, resolution))
+		 * // .build() // .renderImage().writeToImage(); cameraBuilder.setLocation(new
+		 * Point(350, 0, 400)) // .setDirection(new Vector(-1, 0, -1), new Vector(-1, 0,
+		 * 1)) // .setVpDistance(300) // .setImageWriter(new
+		 * ImageWriter("ColoredCubeFRONT", resolution, resolution)) // .build() //
+		 * .renderImage().writeToImage(); cameraBuilder.setLocation(new Point(210, 120,
+		 * -51)) // .setDirection(new Vector(-1, -1, 0), new Vector(0, 0, 1)) //
+		 * .setVpDistance(100) // .setImageWriter(new ImageWriter("ColoredCubeTriangle",
+		 * resolution, resolution)) // .build() // .renderImage().writeToImage();
+		 * cameraBuilder.setView(new Point(0, 0, 500), new Point(0, 0, -50))//
+		 * .setVpDistance(200) .setVpSize(200, 200) .setImageWriter(new
+		 * ImageWriter("ColoredCubeDOWN11111", resolution, resolution)) // .build(). //
+		 * renderImage() // .writeToImage(); cameraBuilder.setView(new Point(500, 500,
+		 * 500), new Point(50, 50, 50))// .setVpDistance(300)// .setVpSize(200, 200)//
+		 * .cameraSpin(90) .setImageWriter(new ImageWriter("ColoredCubeSpin90",
+		 * resolution, resolution)) // .build() // .renderImage() // .writeToImage();
+		 */
 	}
 
 }

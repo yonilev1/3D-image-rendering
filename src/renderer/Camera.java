@@ -12,291 +12,466 @@ import java.util.*;
  * properties defining the view plane's dimensions and its distance from the
  * camera.
  */
-public class Camera  implements Cloneable {
-    
+public class Camera implements Cloneable {
 
-    private Point p0 ; // The location of the camera
-    private Vector vTo; // The forward direction vector of the camera
-    private Vector vUp; // The up direction vector of the camera
-    private Vector vRight; // The right direction vector of the camera
-    private boolean isDof = false; 
+	/**
+	 * The location of the camera.
+	 */
+	private Point p0;
 
-    private double height = 0; // The height of the view plane
-    private double width = 0; // The width of the view plane
-    private double distanceFromCamera = 0; // The distance from the camera to the view plane
+	/**
+	 * The forward direction vector of the camera.
+	 */
+	private Vector vTo;
 
-    private ImageWriter imageWriter; // The image writer responsible for writing pixels to an image
-    private RayTracerBase rayTracer; // The ray tracer responsible for tracing rays and computing colors
-    public DOF dof = new DOF();
+	/**
+	 * The up direction vector of the camera.
+	 */
+	private Vector vUp;
 
-    private Camera() {
-  
-    }
+	/**
+	 * The right direction vector of the camera.
+	 */
+	private Vector vRight;
 
-    // Getters and Setters
-   
-    
-    public Point getCameraLocation() {
-        return p0;
-    }
-    
-    public double getHeight() {
-        return height;
-    }
+	/**
+	 * Indicates whether Depth of Field (DOF) is enabled.
+	 */
+	private boolean isDof = false;
 
-    public double getWidth() {
-        return width;
-    }
+	/**
+	 * The height of the view plane.
+	 */
+	private double height = 0;
 
-    public double getDistanceFromCamera() {
-        return distanceFromCamera;
-    }
+	/**
+	 * The width of the view plane.
+	 */
+	private double width = 0;
 
-    public static Builder getBuilder() {
-        return new Builder();
-    }
-    
-    public Vector getVup() {
-        return vUp;
-    }
-    public Vector getVright() {
-        return vRight;
-    }
-    public boolean getIsDof() {
-        return isDof;
-    }
-    
-    
-       public Camera renderImage() {
-        int nX = imageWriter.getNx();
-        int nY = imageWriter.getNy();
-        for (int i = 0; i < nY; ++i) {
-            for (int j = 0; j < nX; ++j) {
-                castRay(nX, nY, j, i);
-            }
-        }
-        return this;
-    }
-       
-    private void castRay(int nX, int nY, int j, int i) {
+	/**
+	 * The distance from the camera to the view plane.
+	 */
+	private double distanceFromCamera = 0;
+
+	/**
+	 * The image writer responsible for writing pixels to an image.
+	 */
+	private ImageWriter imageWriter;
+
+	/**
+	 * The ray tracer responsible for tracing rays and computing colors.
+	 */
+	private RayTracerBase rayTracer;
+
+	/**
+	 * Depth of Field settings.
+	 */
+	public DOF dof = new DOF();
+
+	/**
+	 * Private constructor for the Camera class.
+	 */
+	private Camera() {
+	}
+
+	// Getters and Setters
+
+	/**
+	 * Gets the location of the camera.
+	 * 
+	 * @return The camera location.
+	 */
+	public Point getCameraLocation() {
+		return p0;
+	}
+
+	/**
+	 * Gets the height of the view plane.
+	 * 
+	 * @return The height of the view plane.
+	 */
+	public double getHeight() {
+		return height;
+	}
+
+	/**
+	 * Gets the width of the view plane.
+	 * 
+	 * @return The width of the view plane.
+	 */
+	public double getWidth() {
+		return width;
+	}
+
+	/**
+	 * Gets the distance from the camera to the view plane.
+	 * 
+	 * @return The distance from the camera to the view plane.
+	 */
+	public double getDistanceFromCamera() {
+		return distanceFromCamera;
+	}
+
+	/**
+	 * Gets the builder for the Camera class.
+	 * 
+	 * @return The Camera Builder.
+	 */
+	public static Builder getBuilder() {
+		return new Builder();
+	}
+
+	/**
+	 * Gets the up direction vector of the camera.
+	 * 
+	 * @return The up direction vector.
+	 */
+	public Vector getVup() {
+		return vUp;
+	}
+
+	/**
+	 * Gets the right direction vector of the camera.
+	 * 
+	 * @return The right direction vector.
+	 */
+	public Vector getVright() {
+		return vRight;
+	}
+
+	/**
+	 * Gets the DOF setting.
+	 * 
+	 * @return True if DOF is enabled, otherwise false.
+	 */
+	public boolean getIsDof() {
+		return isDof;
+	}
+
+	/**
+	 * Renders the image.
+	 * 
+	 * @return The camera object.
+	 */
+	public Camera renderImage() {
+		int nX = imageWriter.getNx();
+		int nY = imageWriter.getNy();
+		for (int i = 0; i < nY; ++i) {
+			for (int j = 0; j < nX; ++j) {
+				castRay(nX, nY, j, i);
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Casts a ray from the camera through a specific pixel.
+	 * 
+	 * @param nX The number of pixels in the X direction.
+	 * @param nY The number of pixels in the Y direction.
+	 * @param j  The pixel index in the X direction.
+	 * @param i  The pixel index in the Y direction.
+	 */
+	private void castRay(int nX, int nY, int j, int i) {
 		List<Ray> rays = new ArrayList<>();
 		if (!getIsDof()) {
-			rays.add(constructRay(nX, nY,j, i));}
-		else{
-			Point pij =  findPij( nX,  nY,  j,  i);
-            rays= dof.constructRayWithDOF(pij, this);
-            }
-        Color pixelColor = Color.BLACK;
-        for (Ray ray : rays) {
-            pixelColor = pixelColor.add(rayTracer.traceRay(ray));
-        }
-        pixelColor = pixelColor.reduce(rays.size());
-        imageWriter.writePixel(j, i, pixelColor);
-    }
-    
-    private Point findPij(int nX, int nY, int j, int i) {
-       Point pij = p0.add(vTo.scale(distanceFromCamera));
-        double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
-        double yi = (((nY - 1) / 2.0) - i) * (height / nY);
+			rays.add(constructRay(nX, nY, j, i));
+		} else {
+			Point pij = findPij(nX, nY, j, i);
+			rays = dof.constructRayWithDOF(pij, this);
+		}
+		Color pixelColor = Color.BLACK;
+		for (Ray ray : rays) {
+			pixelColor = pixelColor.add(rayTracer.traceRay(ray));
+		}
+		pixelColor = pixelColor.reduce(rays.size());
+		imageWriter.writePixel(j, i, pixelColor);
+	}
 
-        if (!isZero(xj)) {
-            pij = pij.add(vRight.scale(xj));
-        }
+	/**
+	 * Finds the point on the view plane corresponding to a specific pixel.
+	 * 
+	 * @param nX The number of pixels in the X direction.
+	 * @param nY The number of pixels in the Y direction.
+	 * @param j  The pixel index in the X direction.
+	 * @param i  The pixel index in the Y direction.
+	 * @return The point on the view plane.
+	 */
+	private Point findPij(int nX, int nY, int j, int i) {
+		Point pij = p0.add(vTo.scale(distanceFromCamera));
+		double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
+		double yi = (((nY - 1) / 2.0) - i) * (height / nY);
 
-        if (!isZero(yi)) {
-            pij = pij.add(vUp.scale(yi));
-        }
-        return pij;
-        
-       }
-    /**
-     * Constructs a ray from the camera through a specific pixel on the view plane.
-     *
-     * @param nX the number of pixels in the X direction.
-     * @param nY the number of pixels in the Y direction.
-     * @param j  the pixel index in the X direction.
-     * @param i  the pixel index in the Y direction.
-     * @return the constructed ray.
-     */
-    public Ray constructRay(int nX, int nY, int j, int i) {
-    	Point pij =  findPij( nX,  nY,  j,  i);
-        return  new Ray (p0, pij.subtract(p0));
-    }
-        
-   
-    /**
-     * Constructs a ray from the camera through a specific pixel on the view plane
-     * with depth of field effect.
-     *
-     * @param nX the number of pixels in the X direction.
-     * @param nY the number of pixels in the Y direction.
-     * @param j  the pixel index in the X direction.
-     * @param i  the pixel index in the Y direction.
-     * @return the list of rays for depth of field effect.
-     */
-   
- 
+		if (!isZero(xj)) {
+			pij = pij.add(vRight.scale(xj));
+		}
 
-    
+		if (!isZero(yi)) {
+			pij = pij.add(vUp.scale(yi));
+		}
+		return pij;
+	}
 
-    public Camera printGrid(int interval, Color color) {
-        int nY = imageWriter.getNy();
-        int nX = imageWriter.getNx();
+	/**
+	 * Constructs a ray from the camera through a specific pixel on the view plane.
+	 *
+	 * @param nX The number of pixels in the X direction.
+	 * @param nY The number of pixels in the Y direction.
+	 * @param j  The pixel index in the X direction.
+	 * @param i  The pixel index in the Y direction.
+	 * @return The constructed ray.
+	 */
+	public Ray constructRay(int nX, int nY, int j, int i) {
+		Point pij = findPij(nX, nY, j, i);
+		return new Ray(p0, pij.subtract(p0));
+	}
 
-        for (int i = 0; i < nY; i += interval) {
-            for (int j = 0; j < nX; j += 1) {
-                imageWriter.writePixel(i, j, color);
-            }
-        }
+	/**
+	 * Prints a grid on the image.
+	 * 
+	 * @param interval The interval between grid lines.
+	 * @param color    The color of the grid lines.
+	 * @return The camera object.
+	 */
+	public Camera printGrid(int interval, Color color) {
+		int nY = imageWriter.getNy();
+		int nX = imageWriter.getNx();
 
-        for (int i = 0; i < nY; i += 1) {
-            for (int j = 0; j < nX; j += interval) {
-                imageWriter.writePixel(i, j, color);
-            }
-        }
+		for (int i = 0; i < nY; i += interval) {
+			for (int j = 0; j < nX; j += 1) {
+				imageWriter.writePixel(i, j, color);
+			}
+		}
 
-        return this;
-    }
+		for (int i = 0; i < nY; i += 1) {
+			for (int j = 0; j < nX; j += interval) {
+				imageWriter.writePixel(i, j, color);
+			}
+		}
 
-    public void writeToImage() {
-        imageWriter.writeToImage();
-    }
+		return this;
+	}
 
-    public static class Builder {
-        private final Camera camera = new Camera();
+	/**
+	 * Writes the image to a file.
+	 */
+	public void writeToImage() {
+		imageWriter.writeToImage();
+	}
 
-        public Builder() {}
+	/**
+	 * Builder class for constructing Camera objects.
+	 */
+	public static class Builder {
 
-        public Builder setView(Point position, Point p) {
-            camera.p0 = position;
-            camera.vTo = p.subtract(position).normalize();
-            if (camera.vTo.equals(new Vector(0, 0, -1)) || camera.vTo.equals(new Vector(0, 0, 1))) {
-                camera.vRight = new Vector(0, -1, 0);
-                camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
-            } else {
-                camera.vRight = camera.vTo.crossProduct(new Vector(0, 0, 1)).normalize();
-                camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
-            }
-            return this;
-        }
+		/**
+		 * Create Camera object in Builder class
+		 */
+		private final Camera camera = new Camera();
 
-        public Builder cameraSpin(double angle) {
-            double angleRadians = Math.toRadians(angle);
-            double cos = Math.cos(angleRadians);
-            double sin = Math.sin(angleRadians);
+		// public Builder() {}
 
-            Vector originalVRight = camera.vRight;
-            Vector originalVUp = camera.vUp;
+		/**
+		 * Sets the view for the camera.
+		 * 
+		 * @param position The camera's position.
+		 * @param p        The point the camera is looking at.
+		 * @return The Builder object.
+		 */
+		public Builder setView(Point position, Point p) {
+			camera.p0 = position;
+			camera.vTo = p.subtract(position).normalize();
+			if (camera.vTo.equals(new Vector(0, 0, -1)) || camera.vTo.equals(new Vector(0, 0, 1))) {
+				camera.vRight = new Vector(0, -1, 0);
+				camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+			} else {
+				camera.vRight = camera.vTo.crossProduct(new Vector(0, 0, 1)).normalize();
+				camera.vUp = camera.vRight.crossProduct(camera.vTo).normalize();
+			}
+			return this;
+		}
 
-            camera.vRight = new Vector(
-                cos * originalVRight.getX() + sin * originalVUp.getX(),
-                cos * originalVRight.getY() + sin * originalVUp.getY(),
-                cos * originalVRight.getZ() + sin * originalVUp.getZ()
-            ).normalize();
+		/**
+		 * Rotates the camera around its axis.
+		 * 
+		 * @param angle The angle to rotate the camera by.
+		 * @return The Builder object.
+		 */
+		public Builder cameraSpin(double angle) {
+			double angleRadians = Math.toRadians(angle);
+			double cos = Math.cos(angleRadians);
+			double sin = Math.sin(angleRadians);
 
-            camera.vUp = new Vector(
-                -sin * originalVRight.getX() + cos * originalVUp.getX(),
-                -sin * originalVRight.getY() + cos * originalVUp.getY(),
-                -sin * originalVRight.getZ() + cos * originalVUp.getZ()
-            ).normalize();
+			Vector originalVRight = camera.vRight;
+			Vector originalVUp = camera.vUp;
 
-            return this;
-        }
-        
-        public Builder setLocation(Point p) {
-            camera.p0 = p;
-            return this;
-        }
-        
-        public Builder setDirection(Vector vTo, Vector vUp) {
-            if (!isZero(vUp.dotProduct(vTo)))
-                throw new IllegalArgumentException("vUp and vTo must be orthogonal");
+			camera.vRight = new Vector(cos * originalVRight.getX() + sin * originalVUp.getX(),
+					cos * originalVRight.getY() + sin * originalVUp.getY(),
+					cos * originalVRight.getZ() + sin * originalVUp.getZ()).normalize();
 
-            camera.vTo = vTo.normalize();
-            camera.vUp = vUp.normalize();
-            camera.vRight = camera.vTo.crossProduct(camera.vUp);
-            return this;
-        }
+			camera.vUp = new Vector(-sin * originalVRight.getX() + cos * originalVUp.getX(),
+					-sin * originalVRight.getY() + cos * originalVUp.getY(),
+					-sin * originalVRight.getZ() + cos * originalVUp.getZ()).normalize();
 
-        public Builder setVpSize(double width, double height) {
-            if (alignZero(width) <= 0 || alignZero(height) <= 0) {
-                throw new IllegalArgumentException("width and height must be greater than 0");
-            }
-            camera.width = width;
-            camera.height = height;
-            return this;
-        }
+			return this;
+		}
 
-        public Builder setVpDistance(double distanceFromCamera) {
-            if (distanceFromCamera < 0) {
-                throw new IllegalArgumentException("distanceFromCamera must be greater than 0");
-            }
-            camera.distanceFromCamera = distanceFromCamera;
-            return this;
-        }
+		/**
+		 * Sets the location of the camera.
+		 * 
+		 * @param p The new location of the camera.
+		 * @return The Builder object.
+		 */
+		public Builder setLocation(Point p) {
+			camera.p0 = p;
+			return this;
+		}
 
-        public Builder setImageWriter(ImageWriter imageWriter) {
-            camera.imageWriter = imageWriter;
-            return this;
-        }
-        
-        public Builder setIsDof(boolean isDof) {
-            camera.isDof = isDof;
-            return this;
-        }
-        
-        /**
-         * Sets the ray tracer for the camera configuration.
-         * 
-         * @param rayTracer The ray tracer to be set.
-         * @return This Builder object.
-         */
-        public Builder setRayTracer(RayTracerBase rayTracer) {
-            camera.rayTracer = rayTracer;
-            return this;
-        }
-        
-        public Builder setDOF(double aperture, double focalDistance) {
-            camera.dof.setAperture(aperture);
-            camera.dof.setFocalDistance(focalDistance);
-            return this;
-        }
+		/**
+		 * Sets the direction vectors of the camera.
+		 * 
+		 * @param vTo The forward direction vector.
+		 * @param vUp The up direction vector.
+		 * @return The Builder object.
+		 * @throws IllegalArgumentException if vUp and vTo are not orthogonal.
+		 */
+		public Builder setDirection(Vector vTo, Vector vUp) {
+			if (!isZero(vUp.dotProduct(vTo)))
+				throw new IllegalArgumentException("vUp and vTo must be orthogonal");
 
-        public Camera build() {
+			camera.vTo = vTo.normalize();
+			camera.vUp = vUp.normalize();
+			camera.vRight = camera.vTo.crossProduct(camera.vUp);
+			return this;
+		}
 
-            final String MISSING_RENDERING_DATA = "Missing rendering data";
+		/**
+		 * Sets the size of the view plane.
+		 * 
+		 * @param width  The width of the view plane.
+		 * @param height The height of the view plane.
+		 * @return The Builder object.
+		 * @throws IllegalArgumentException if width or height is less than or equal to
+		 *                                  0.
+		 */
+		public Builder setVpSize(double width, double height) {
+			if (alignZero(width) <= 0 || alignZero(height) <= 0) {
+				throw new IllegalArgumentException("width and height must be greater than 0");
+			}
+			camera.width = width;
+			camera.height = height;
+			return this;
+		}
 
-            if (camera.p0 == null)
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "Location (Point p)");
-            if (camera.vTo == null)
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vTo vector");
-            if (camera.vUp == null)
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vUp vector");
-            if (isZero(camera.vTo.dotProduct(camera.vTo)))
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vTo vector and vUp vectore");
-            if (camera.vRight == null)
-                camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+		/**
+		 * Sets the distance from the camera to the view plane.
+		 * 
+		 * @param distanceFromCamera The distance from the camera to the view plane.
+		 * @return The Builder object.
+		 * @throws IllegalArgumentException if distanceFromCamera is less than 0.
+		 */
+		public Builder setVpDistance(double distanceFromCamera) {
+			if (distanceFromCamera < 0) {
+				throw new IllegalArgumentException("distanceFromCamera must be greater than 0");
+			}
+			camera.distanceFromCamera = distanceFromCamera;
+			return this;
+		}
 
-            if (isZero(camera.width))
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane width");
-            if (isZero(camera.height))
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane height");
-            if (camera.width < 0 || camera.height < 0)
-                throw new IllegalStateException("Invalid view plane size. Width and height must be greater than zero.");
-            if (isZero(camera.distanceFromCamera))
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "Distance from camera");
-            if (camera.distanceFromCamera < 0)
-                throw new IllegalStateException("Invalid distance from camera. Must be greater than zero.");
-            if (camera.imageWriter == null)
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane imageWriter");
-            if (camera.rayTracer == null)
-                throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane rayTracer");
+		/**
+		 * Sets the image writer for the camera.
+		 * 
+		 * @param imageWriter The image writer.
+		 * @return The Builder object.
+		 */
+		public Builder setImageWriter(ImageWriter imageWriter) {
+			camera.imageWriter = imageWriter;
+			return this;
+		}
 
-            try {
-                return (Camera) camera.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new AssertionError();
-            }
-        }
-    }
+		/**
+		 * Sets the DOF setting.
+		 * 
+		 * @param isDof True to enable DOF, otherwise false.
+		 * @return The Builder object.
+		 */
+		public Builder setIsDof(boolean isDof) {
+			camera.isDof = isDof;
+			return this;
+		}
+
+		/**
+		 * Sets the ray tracer for the camera.
+		 * 
+		 * @param rayTracer The ray tracer.
+		 * @return The Builder object.
+		 */
+		public Builder setRayTracer(RayTracerBase rayTracer) {
+			camera.rayTracer = rayTracer;
+			return this;
+		}
+
+		/**
+		 * Sets the Depth of Field settings.
+		 * 
+		 * @param aperture      The aperture size.
+		 * @param focalDistance The focal distance.
+		 * @return The Builder object.
+		 */
+		public Builder setDOF(double aperture, double focalDistance) {
+			camera.dof.setAperture(aperture);
+			camera.dof.setFocalDistance(focalDistance);
+			return this;
+		}
+
+		/**
+		 * Builds the Camera object.
+		 * 
+		 * @return The constructed Camera object.
+		 * @throws MissingResourceException if any required field is missing.
+		 * @throws IllegalStateException    if the view plane size or distance from the
+		 *                                  camera is invalid.
+		 */
+		public Camera build() {
+			final String MISSING_RENDERING_DATA = "Missing rendering data";
+
+			if (camera.p0 == null)
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"Location (Point p)");
+			if (camera.vTo == null)
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vTo vector");
+			if (camera.vUp == null)
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "vUp vector");
+			if (isZero(camera.vTo.dotProduct(camera.vTo)))
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"vTo vector and vUp vector");
+			if (camera.vRight == null)
+				camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+
+			if (isZero(camera.width))
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane width");
+			if (isZero(camera.height))
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(), "View plane height");
+			if (camera.width < 0 || camera.height < 0)
+				throw new IllegalStateException("Invalid view plane size. Width and height must be greater than zero.");
+			if (isZero(camera.distanceFromCamera))
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"Distance from camera");
+			if (camera.distanceFromCamera < 0)
+				throw new IllegalStateException("Invalid distance from camera. Must be greater than zero.");
+			if (camera.imageWriter == null)
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"View plane imageWriter");
+			if (camera.rayTracer == null)
+				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
+						"View plane rayTracer");
+
+			try {
+				return (Camera) camera.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new AssertionError();
+			}
+		}
+	}
 }
