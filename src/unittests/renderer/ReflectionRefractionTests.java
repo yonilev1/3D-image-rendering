@@ -212,7 +212,7 @@ public class ReflectionRefractionTests {
 				.renderImage().writeToImage();
 		cameraBuilder.setView(new Point(0, 0, 500), new Point(0, 0, -50))//
 				.setVpDistance(200).setVpSize(200, 200)
-				.setImageWriter(new ImageWriter("ColoredCubeDOWN11111", resolution, resolution)) //
+				.setImageWriter(new ImageWriter("ColoredCubeDOWN1111", resolution, resolution)) //
 				.build(). //
 				renderImage() //
 				.writeToImage();
