@@ -23,12 +23,20 @@ public class DOF {
 	 * Distance to the focal plane.
 	 */
 	private double focalDistance;
+	
+	private int numRays;
 
 	/**
 	 * Default constructor.
 	 */
 	public DOF() {
 	}
+	
+	/**
+	 * random number.
+	 */
+	private Random rand = new Random();
+
 
 	/**
 	 * Gets the focal distance.
@@ -36,6 +44,15 @@ public class DOF {
 	 * @return the focal distance
 	 */
 	public double getFocalDistance() {
+		return focalDistance;
+	}
+	
+	/**
+	 * Gets the number of rays.
+	 *
+	 * @return the number of rays
+	 */
+	public double getNumRays() {
 		return focalDistance;
 	}
 
@@ -65,6 +82,15 @@ public class DOF {
 	public void setAperture(double aperture) {
 		this.aperture = aperture;
 	}
+	
+	/**
+	 * Sets the number of rays.
+	 *
+	 * @param numRays the number of rays to set
+	 */
+	public void setNumRays(int numRays) {
+		this.numRays = numRays;
+	}
 
 	/**
 	 * Constructs a list of rays for depth of field effect.
@@ -76,8 +102,6 @@ public class DOF {
 	public List<Ray> constructRayWithDOF(Point pij, Camera thisCamera) {
 		List<Ray> rays = new ArrayList<>();
 		Point focalPoint = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
-		Random rand = new Random();
-		int numRays = 10;
 		for (int k = 0; k < numRays; k++) {
 			double angle = 2 * Math.PI * rand.nextDouble();
 			double radius = aperture * Math.sqrt(rand.nextDouble());

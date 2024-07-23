@@ -89,13 +89,10 @@ public class ReflectionRefractionTests {
 
 		cameraBuilder //
 				.setLocation(new Point(0, 0, 1000)) //
-//				.setLocation(new Point(0, 0, 1000)) //debug
 				.setVpDistance(1000).setVpSize(200, 200) //
 				.setImageWriter(new ImageWriter("refractionShadow", 600, 600)) //
-//				.setImageWriter(new ImageWriter("refractionShadow", 1, 1)) // debug
 				.build() //
 				.renderImage() //
-//				.printGrid(20, new Color(YELLOW)) // debug
 				.writeToImage();
 	}
 
@@ -183,13 +180,13 @@ public class ReflectionRefractionTests {
 				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
 				.setVpDistance(300) //
 				.setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
-				.setIsDof(true).setDOF(7, 450) //
+				.setDOF(10, 450,20)//
 				.build() //
 				.renderImage().writeToImage();
 		cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
 				.setDirection(new Vector(1, 1, -1), new Vector(1, 1, 2)) //
 				.setImageWriter(new ImageWriter("ColoredCubeBACK", resolution, resolution)) //
-				.setIsDof(false)
+				.setDOF(0,0,0)
 				.build() //
 				.renderImage().writeToImage();
 		cameraBuilder.setLocation(new Point(0, 0, 500)) //

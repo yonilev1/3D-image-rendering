@@ -34,10 +34,6 @@ public class Camera implements Cloneable {
 	 */
 	private Vector vRight;
 
-	/**
-	 * Indicates whether Depth of Field (DOF) is enabled.
-	 */
-	private boolean isDof = false;
 
 	/**
 	 * The height of the view plane.
@@ -75,7 +71,6 @@ public class Camera implements Cloneable {
 	private Camera() {
 	}
 
-	// Getters and Setters
 
 	/**
 	 * Gets the location of the camera.
@@ -139,16 +134,7 @@ public class Camera implements Cloneable {
 	public Vector getVright() {
 		return vRight;
 	}
-
-	/**
-	 * Gets the DOF setting.
-	 * 
-	 * @return True if DOF is enabled, otherwise false.
-	 */
-	public boolean getIsDof() {
-		return isDof;
-	}
-
+	
 	/**
 	 * Renders the image.
 	 * 
@@ -175,7 +161,7 @@ public class Camera implements Cloneable {
 	 */
 	private void castRay(int nX, int nY, int j, int i) {
 		List<Ray> rays = new ArrayList<>();
-		if (!getIsDof()) {
+		if (dof.getAperture() == 0 && dof.getFocalDistance() == 0) {
 			rays.add(constructRay(nX, nY, j, i));
 		} else {
 			Point pij = findPij(nX, nY, j, i);
@@ -269,8 +255,6 @@ public class Camera implements Cloneable {
 		 * Create Camera object in Builder class
 		 */
 		private final Camera camera = new Camera();
-
-		// public Builder() {}
 
 		/**
 		 * Sets the view for the camera.
@@ -391,17 +375,6 @@ public class Camera implements Cloneable {
 		}
 
 		/**
-		 * Sets the DOF setting.
-		 * 
-		 * @param isDof True to enable DOF, otherwise false.
-		 * @return The Builder object.
-		 */
-		public Builder setIsDof(boolean isDof) {
-			camera.isDof = isDof;
-			return this;
-		}
-
-		/**
 		 * Sets the ray tracer for the camera.
 		 * 
 		 * @param rayTracer The ray tracer.
@@ -417,11 +390,13 @@ public class Camera implements Cloneable {
 		 * 
 		 * @param aperture      The aperture size.
 		 * @param focalDistance The focal distance.
+		 * @param numRays      The number of rays.
 		 * @return The Builder object.
 		 */
-		public Builder setDOF(double aperture, double focalDistance) {
+		public Builder setDOF(double aperture, double focalDistance, int numRays) {
 			camera.dof.setAperture(aperture);
 			camera.dof.setFocalDistance(focalDistance);
+			camera.dof.setNumRays(numRays);
 			return this;
 		}
 
