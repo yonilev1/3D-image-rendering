@@ -3,7 +3,6 @@ package renderer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -15,105 +14,115 @@ import primitives.Vector;
 public class DOF {
 
 	/**
-	 * Radius of the camera's aperture.
-	 */
-	private double aperture;
+     * random number.
+     */
+    private Random rand = new Random();
 
-	/**
-	 * Distance to the focal plane.
-	 */
-	private double focalDistance;
-	
-	private int numRays;
+    /**
+     * Radius of the camera's aperture.
+     */
+    private double aperture;
 
-	/**
-	 * Default constructor.
-	 */
-	public DOF() {
-	}
-	
-	/**
-	 * random number.
-	 */
-	private Random rand = new Random();
+    /**
+     * Distance to the focal plane.
+     */
+    private double focalDistance;
+    
+    private int numRays;
 
+    /**
+     * Default constructor.
+     */
+    public DOF() {
+    }
 
-	/**
-	 * Gets the focal distance.
-	 *
-	 * @return the focal distance
-	 */
-	public double getFocalDistance() {
-		return focalDistance;
-	}
-	
-	/**
-	 * Gets the number of rays.
-	 *
-	 * @return the number of rays
-	 */
-	public double getNumRays() {
-		return focalDistance;
-	}
+    /**
+     * Gets the focal distance.
+     *
+     * @return the focal distance
+     */
+    public double getFocalDistance() {
+        return focalDistance;
+    }
+    
+    /**
+     * Gets the number of rays.
+     *
+     * @return the number of rays
+     */
+    public int getNumRays() {
+        return numRays;
+    }
 
-	/**
-	 * Gets the aperture size.
-	 *
-	 * @return the aperture size
-	 */
-	public double getAperture() {
-		return aperture;
-	}
+    /**
+     * Gets the aperture size.
+     *
+     * @return the aperture size
+     */
+    public double getAperture() {
+        return aperture;
+    }
 
-	/**
-	 * Sets the focal distance.
-	 *
-	 * @param focalDistance the focal distance to set
-	 */
-	public void setFocalDistance(double focalDistance) {
-		this.focalDistance = focalDistance;
-	}
+    /**
+     * Sets the focal distance.
+     *
+     * @param focalDistance the focal distance to set
+     */
+    public void setFocalDistance(double focalDistance) {
+        this.focalDistance = focalDistance;
+    }
 
-	/**
-	 * Sets the aperture size.
-	 *
-	 * @param aperture the aperture size to set
-	 */
-	public void setAperture(double aperture) {
-		this.aperture = aperture;
-	}
-	
-	/**
-	 * Sets the number of rays.
-	 *
-	 * @param numRays the number of rays to set
-	 */
-	public void setNumRays(int numRays) {
-		this.numRays = numRays;
-	}
+    /**
+     * Sets the aperture size.
+     *
+     * @param aperture the aperture size to set
+     */
+    public void setAperture(double aperture) {
+        this.aperture = aperture;
+    }
+    
+    /**
+     * Sets the number of rays.
+     *
+     * @param numRays the number of rays to set
+     */
+    public void setNumRays(int numRays) {
+        this.numRays = numRays;
+    }
 
-	/**
-	 * Constructs a list of rays for depth of field effect.
-	 *
-	 * @param pij        the point on the view plane
-	 * @param thisCamera the camera object
-	 * @return the list of rays for depth of field effect
-	 */
-	public List<Ray> constructRayWithDOF(Point pij, Camera thisCamera) {
-		List<Ray> rays = new ArrayList<>();
-		Point focalPoint = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
-		for (int k = 0; k < numRays; k++) {
-			double angle = 2 * Math.PI * rand.nextDouble();
-			double radius = aperture * Math.sqrt(rand.nextDouble());
-			double apertureX = radius * Math.cos(angle);
-			double apertureY = radius * Math.sin(angle);
+    /**
+     * Constructs a list of rays for depth of field effect using a grid pattern with jitter.
+     *
+     * @param pij        the point on the view plane
+     * @param thisCamera the camera object
+     * @return the list of rays for depth of field effect
+     */
+    public List<Ray> constructRayWithDOF(Point pij, Camera thisCamera) {
+        List<Ray> rays = new ArrayList<>();
+        Point focalPoint = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
+                int gridSize = (int) Math.sqrt(numRays);
+        if (gridSize * gridSize < numRays) {
+            gridSize++;
+        }
+        double gridSpacing = aperture * 2 / gridSize;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                if (rays.size() >= numRays) break;
 
-			Point randomAperturePoint = thisCamera.getCameraLocation().add(thisCamera.getVright().scale(apertureX))
-					.add(thisCamera.getVup().scale(apertureY));
-			Vector rayDirection = focalPoint.subtract(randomAperturePoint).normalize();
-			rays.add(new Ray(randomAperturePoint, rayDirection));
-		}
+                double apertureX = -aperture + gridSpacing * (i + 0.5);
+                double apertureY = -aperture + gridSpacing * (j + 0.5);
 
-		return rays;
-	}
+                // Add random jitter to the grid points
+                double jitterX = (rand.nextDouble() - 0.5) * gridSpacing;
+                double jitterY = (rand.nextDouble() - 0.5) * gridSpacing;
+
+                Point jitteredAperturePoint = thisCamera.getCameraLocation().add(thisCamera.getVright().scale(apertureX + jitterX))
+                        .add(thisCamera.getVup().scale(apertureY + jitterY));
+                Vector rayDirection = focalPoint.subtract(jitteredAperturePoint).normalize();
+                rays.add(new Ray(jitteredAperturePoint, rayDirection));
+            }
+        }
+
+        return rays;
+    }
 }

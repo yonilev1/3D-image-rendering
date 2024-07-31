@@ -30,3 +30,5 @@ magenta
 cyan
 radians
 pij
+jittered
+jitter

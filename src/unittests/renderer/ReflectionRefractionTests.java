@@ -180,7 +180,7 @@ public class ReflectionRefractionTests {
 				.setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2)) //
 				.setVpDistance(300) //
 				.setImageWriter(new ImageWriter("ColoredCube", resolution, resolution)) //
-				.setDOF(10, 450,20)//
+				.setDOF(10, 450,100)//
 				.build() //
 				.renderImage().writeToImage();
 		cameraBuilder.setLocation(new Point(-500, -500, 500)).setVpDistance(200) //
