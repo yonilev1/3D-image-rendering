@@ -62,7 +62,7 @@ class projectTest {
 		
 		 // Define constants for bounds of the trees
         int xMin = -600, xMax = 600;
-        int yMin = -3000, yMax =-200;
+        int yMin = -3000, yMax =0;
         int zMin = 100, zMax = 200; 
         Random rand = new Random();
 

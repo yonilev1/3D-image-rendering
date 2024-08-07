@@ -109,7 +109,7 @@ public class DOF {
         // Calculate the focal point using the direction vector and the distance to the focal plane
         Point focalPoint = thisCamera.getCameraLocation().add(Vij.scale(dij));
        
-        Point focalPoint1 = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
+        //Point focalPoint1 = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
                 int gridSize = (int) Math.sqrt(numRays);
         if (gridSize * gridSize < numRays) {
             gridSize++;
