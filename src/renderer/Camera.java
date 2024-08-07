@@ -136,6 +136,15 @@ public class Camera implements Cloneable {
 	}
 	
 	/**
+	 * Gets the forward direction vector of the camera.
+	 * 
+	 * @return The forward direction vector.
+	 */
+	public Vector getVto() {
+		return vTo;
+	}
+	
+	/**
 	 * Renders the image.
 	 * 
 	 * @return The camera object.
