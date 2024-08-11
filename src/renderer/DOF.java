@@ -28,6 +28,9 @@ public class DOF {
      */
     private double focalDistance;
     
+    /**
+     * number of rays for aperture
+     */
     private int numRays;
 
     /**

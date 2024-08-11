@@ -32,5 +32,10 @@ public abstract class RayTracerBase {
 	 */
 	public abstract Color traceRay(Ray ray);
 	
+	/**
+	 * Calculates the average color from a list of rays.
+	 * @param rays the list of rays
+	 * @return the average color
+	 */
 	public abstract Color average_color_calculator(List<Ray> rays);
 }

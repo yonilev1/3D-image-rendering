@@ -19,7 +19,13 @@ import renderer.SimpleRayTracer;
 import scene.Scene;
 import java.util.Random;
 
-
+/**
+ * Unit test for rendering a scene with a snowman, trees, and various lights.
+ * <p>
+ * Configures and renders a scene with a snowman, random trees, and spheres,
+ * including different types of lights.
+ * @author Yoni and adiel
+ */
 class projectTest {
 
 	/** Scene for the tests */

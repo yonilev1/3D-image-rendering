@@ -9,7 +9,10 @@ package renderer;
  * @author Dan Zilberstein */
 class PixelManager {
     /** Immutable class for object containing allocated pixel (with its row and
-     * column numbers) */
+     * column numbers)
+     * @param col the column
+     * @param row the row
+     *  */
     record Pixel(int col, int row) {
     }
 

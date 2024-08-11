@@ -59,9 +59,21 @@ public class Camera implements Cloneable {
 	 * The ray tracer responsible for tracing rays and computing colors.
 	 */
 	private RayTracerBase rayTracer;
+	/**
+	 * The pixel manager
+	 */
     private PixelManager pixelManager;
+    /**
+	 * The threads Count
+	 */
     private int threadsCount = 0;
+    /**
+	 * The adaptive bool.
+	 */
     private boolean adaptive;
+    /**
+	 * The number or rays for rendering.
+	 */
     private int numberOfRays = 1;
 
 	/**
@@ -148,37 +160,38 @@ public class Camera implements Cloneable {
 		return vTo;
 	}
 	
-	public boolean getAdaptive() {
-		return adaptive;
-	}
-	
 	/**
-	 * Renders the image.
+	 * Checks if Adaptive Super Sampling (ASS) is enabled.
 	 * 
-	 * @return The camera object.
+	 * @return {@code true} if ASS is enabled, {@code false} otherwise.
 	 */
-	/*public Camera renderImage() {
-		int nX = imageWriter.getNx();
-		int nY = imageWriter.getNy();
-		for (int i = 0; i < nY; ++i) {
-			for (int j = 0; j < nX; ++j) {
-				castRay(nX, nY, j, i);
-			}
-		}
-		return this;
-	}*/
+	public boolean getAdaptive() {
+	    return adaptive;
+	}
+
 	
 	/**
-     * Method to render an image
-     * @return the Camera object
-     */
+	 * Renders the image based on the current settings and threading configuration.
+	 * <p>
+	 * If single-threaded, the image is rendered by iterating over each pixel.
+	 * If multi-threaded, rendering is done using multiple threads to enhance performance.
+	 * <p>
+	 * Depending on the settings:
+	 * <ul>
+	 *   <li>One ray per pixel if {@link #numberOfRays} is 1.</li>
+	 *   <li>Multiple rays with Depth of Field (DOF) if {@link #numberOfRays} > 1 and {@link #adaptive} is false.</li>
+	 *   <li>Adaptive Super Sampling (ASS) with DOF if {@link #numberOfRays} > 1 and {@link #adaptive} is true.</li>
+	 * </ul>
+	 * 
+	 * @return The current {@link Camera} instance.
+	 */
 	public Camera renderImage() {
 	    int nX = imageWriter.getNx();
 	    int nY = imageWriter.getNy();
 	    pixelManager = new PixelManager(nY, nX, 100l);
-	    
+
 	    // Single-threaded processing
-	    if(threadsCount == 0) {
+	    if (threadsCount == 0) {
 	        for (int i = 0; i < nY; i++) {
 	            for (int j = 0; j < nX; j++) {
 	                if (numberOfRays == 1) {
@@ -195,8 +208,7 @@ public class Camera implements Cloneable {
 	            }
 	        }
 	        return this;
-	    }
-	    else {
+	    } else {
 	        // Multi-threaded processing
 	        var threads = new LinkedList<Thread>(); // list of threads
 	        while (threadsCount-- > 0) {
@@ -220,7 +232,7 @@ public class Camera implements Cloneable {
 	                }
 	            }));
 	        }
-	        
+
 	        // Start all threads
 	        for (var thread : threads) thread.start();
 	        // Wait for all threads to finish
@@ -231,6 +243,15 @@ public class Camera implements Cloneable {
 	    return this;
 	}
 
+	/**
+	 * Computes the 3D point in world coordinates corresponding to the pixel at (j, i).
+	 * 
+	 * @param nX Number of horizontal pixels in the image.
+	 * @param nY Number of vertical pixels in the image.
+	 * @param j Horizontal index of the pixel.
+	 * @param i Vertical index of the pixel.
+	 * @return The 3D point in world coordinates for the given pixel.
+	 */
     private Point findPIJ(int nX, int nY, double j, double i) {
         Point pIJ = p0.add(vTo.scale(distanceFromCamera));
 
@@ -262,30 +283,6 @@ public class Camera implements Cloneable {
         return new Ray(p0, vIJ);
 
     }
-    
-	/**
-	 * Casts a ray from the camera through a specific pixel.
-	 * 
-	 * @param nX The number of pixels in the X direction.
-	 * @param nY The number of pixels in the Y direction.
-	 * @param j  The pixel index in the X direction.
-	 * @param i  The pixel index in the Y direction.
-	 */
-	/*private void castRay(int nX, int nY, int j, int i) {
-		List<Ray> rays = new ArrayList<>();
-		if (dof.getAperture() == 0 && dof.getFocalDistance() == 0) {
-			rays.add(constructRay(nX, nY, j, i));
-		} else {
-			Point pij = findPij(nX, nY, j, i);
-			rays = dof.constructRayWithDOF(pij, this);
-		}
-		Color pixelColor = Color.BLACK;
-		for (Ray ray : rays) {
-			pixelColor = pixelColor.add(rayTracer.traceRay(ray));
-		}
-		pixelColor = pixelColor.reduce(rays.size());
-		imageWriter.writePixel(j, i, pixelColor);
-	}*/
 	
 	/**
     *
@@ -310,6 +307,16 @@ public class Camera implements Cloneable {
        return this;
    }
    
+   /**
+    * Performs Adaptive Super Sampling (ASS) to compute the color for a given pixel with Depth of Field (DOF).
+    * 
+    * @param nX Number of horizontal pixels in the image.
+    * @param nY Number of vertical pixels in the image.
+    * @param j Horizontal index of the pixel.
+    * @param i Vertical index of the pixel.
+    * @param numOfRays Number of rays to be used for sampling.
+    * @return The computed color after performing ASS.
+    */
    private Color AdaptiveSuperSampling(int nX, int nY, int j, int i, int numOfRays) {
 	    int numOfRaysInRowCol = (int) Math.floor(Math.sqrt(numOfRays));
 	    if (numOfRaysInRowCol == 1) return castRay(nX, nY, j, i);
@@ -386,7 +393,13 @@ public class Camera implements Cloneable {
 
 
 
-
+	/**
+	 * Checks if a given point is present in the provided list of points.
+	 * 
+	 * @param pointsList List of points to search within.
+	 * @param point The point to be checked.
+	 * @return {@code true} if the point is found in the list, {@code false} otherwise.
+	 */
    private boolean isInList(List<Point> pointsList, Point point) {
        for (Point tempPoint : pointsList) {
            if(point.equals(tempPoint))
@@ -394,6 +407,18 @@ public class Camera implements Cloneable {
        }
        return false;
    }
+   
+   /**
+    * Calculates the center point of a pixel in the image plane.
+    * 
+    * @param i Vertical index of the pixel.
+    * @param j Horizontal index of the pixel.
+    * @param nX Number of horizontal pixels in the image.
+    * @param nY Number of vertical pixels in the image.
+    * @param pixelHeight Height of a single pixel.
+    * @param pixelWidth Width of a single pixel.
+    * @return The center point of the specified pixel.
+    */
    public Point getCenterOfPixel(int i, int j, int nX,int nY,double pixelHeight,double pixelWidth)
    {
        Point center = this.p0.add(this.vTo.scale(distanceFromCamera));
@@ -403,46 +428,6 @@ public class Camera implements Cloneable {
        if (xj !=0 ) center = center.add(this.vRight.scale(xj));
        return center;
    }
-
-	/**
-	 * Constructs a ray from the camera through a specific pixel on the view plane.
-	 *
-	 * @param nX The number of pixels in the X direction.
-	 * @param nY The number of pixels in the Y direction.
-	 * @param j  The pixel index in the X direction.
-	 * @param i  The pixel index in the Y direction.
-	 * @return The constructed ray.
-	 */
-	/*public Ray constructRay(int nX, int nY, int j, int i) {
-		Point pij = findPij(nX, nY, j, i);
-		return new Ray(p0, pij.subtract(p0));
-	}*/
-
-	/**
-	 * Prints a grid on the image.
-	 * 
-	 * @param interval The interval between grid lines.
-	 * @param color    The color of the grid lines.
-	 * @return The camera object.
-	 */
-	/*public Camera printGrid(int interval, Color color) {
-		int nY = imageWriter.getNy();
-		int nX = imageWriter.getNx();
-
-		for (int i = 0; i < nY; i += interval) {
-			for (int j = 0; j < nX; j += 1) {
-				imageWriter.writePixel(i, j, color);
-			}
-		}
-
-		for (int i = 0; i < nY; i += 1) {
-			for (int j = 0; j < nX; j += interval) {
-				imageWriter.writePixel(i, j, color);
-			}
-		}
-
-		return this;
-	}*/
    
    /**
     * Method to cast a ray through a pixel
@@ -450,6 +435,7 @@ public class Camera implements Cloneable {
     * @param nY the number of pixels in the y direction
     * @param i the y index of the pixel
     * @param j the x index of the pixel
+    * @return the color resulting from tracing the ray through the pixel
     */
    private Color castRay(int nX, int nY, int i, int j) {
        return rayTracer.traceRay(constructRay(nX, nY, i, j));
@@ -618,14 +604,28 @@ public class Camera implements Cloneable {
 			return this;
 		}
         
-        public Builder setMultithreading(int threadsCount) {
-            this.camera.threadsCount = threadsCount;
-            return this;
-        }
-        public Builder setAdaptive(boolean adaptive) {
-            this.camera.adaptive = adaptive;
-            return this;
-        }
+		/**
+		 * Sets the number of threads to be used for rendering.
+		 *
+		 * @param threadsCount the number of threads to use
+		 * @return the builder instance for method chaining
+		 */
+		public Builder setMultithreading(int threadsCount) {
+		    this.camera.threadsCount = threadsCount;
+		    return this;
+		}
+
+		/**
+		 * Sets whether adaptive sampling should be used for rendering.
+		 *
+		 * @param adaptive true to enable adaptive sampling, false otherwise
+		 * @return the builder instance for method chaining
+		 */
+		public Builder setAdaptive(boolean adaptive) {
+		    this.camera.adaptive = adaptive;
+		    return this;
+		}
+
         
         
 		/**

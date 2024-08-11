@@ -15,6 +15,9 @@ public class Color {
 	 */
 	private final Double3 rgb;
 	
+	/**
+	 * threshold
+	 */
 	private int threshold = 1;
 
 	/** Black color = (0,0,0) */
@@ -131,47 +134,55 @@ public class Color {
 	public String toString() {
 		return "rgb:" + rgb;
 	}
-	
+	/**
+	 * Checks if the given colors are almost equal by comparing their RGB components.
+	 * The colors are considered almost equal if the maximum difference between the
+	 * corresponding RGB components is less than or equal to 2.
+	 *
+	 * @param colors the colors to compare
+	 * @return true if all the colors are almost equal, false otherwise
+	 */
 	public boolean isAlmostEquals(Color... colors) {
+	    double maxRed = colors[0].rgb.d1;
+	    double maxGreen = colors[0].rgb.d2;
+	    double maxBlue = colors[0].rgb.d3;
 
-	      double maxRed=colors[0].rgb.d1;
-	      double maxGreen=colors[0].rgb.d2;
-	      double maxBlue=colors[0].rgb.d3;
+	    double minRed = colors[0].rgb.d1;
+	    double minGreen = colors[0].rgb.d2;
+	    double minBlue = colors[0].rgb.d3;
 
-	      double minRed=colors[0].rgb.d1;
-	      double minGreen=colors[0].rgb.d2;
-	      double minBlue=colors[0].rgb.d3;
+	    for (Color c : colors) {
+	        if (c.rgb.d1 > maxRed)
+	            maxRed = c.rgb.d1;
+	        if (c.rgb.d1 < minRed)
+	            minRed = c.rgb.d1;
+	        if (c.rgb.d2 > maxGreen)
+	            maxGreen = c.rgb.d2;
+	        if (c.rgb.d2 < minGreen)
+	            minGreen = c.rgb.d2;
+	        if (c.rgb.d3 > maxBlue)
+	            maxBlue = c.rgb.d3;
+	        if (c.rgb.d3 < minBlue)
+	            minBlue = c.rgb.d3;
+	    }
 
-	      for (Color c : colors) {
-	         if (c.rgb.d1>maxRed)
-	            maxRed=c.rgb.d1;
+	    return (maxRed - minRed <= 2 && maxGreen - minGreen <= 2 && maxBlue - minBlue <= 2);
+	}
 
-	         if(c.rgb.d1<minRed)
-	            minRed=c.rgb.d1;
+	/**
+	 * Determines if the color difference between this color and another color is significant.
+	 * The difference is considered crucial if any of the RGB component differences exceed
+	 * a predefined threshold.
+	 *
+	 * @param other the color to compare with
+	 * @return true if the difference is crucial, false otherwise
+	 */
+	public boolean isDifferenceCrucial(Color other) {
+	    double redDifference = Math.abs(this.rgb.d1 - other.rgb.d1);
+	    double greenDifference = Math.abs(this.rgb.d2 - other.rgb.d2);
+	    double blueDifference = Math.abs(this.rgb.d3 - other.rgb.d3);
 
-	         if (c.rgb.d2>maxGreen)
-	            maxGreen=c.rgb.d2;
+	    return (redDifference > threshold || greenDifference > threshold || blueDifference > threshold);
+	}
 
-	         if (c.rgb.d2<minGreen)
-	            minGreen=c.rgb.d2;
-
-	         if (c.rgb.d3>maxBlue)
-	            maxBlue=c.rgb.d3;
-	         if (c.rgb.d3<minBlue)
-	            minBlue=c.rgb.d3;
-	      }
-
-	      if ( maxRed-minRed<=2 && maxGreen-minGreen<=2 &&maxBlue-minBlue<=2)//checks if the diiference between the colors is less than 2
-	         return true;
-
-	      return false;
-	   }
-	
-	   public boolean isDifferenceCrucial(Color other) {
-	      double redDifference = Math.abs(this.rgb.d1 - other.rgb.d1);
-	      double greenDifference = Math.abs(this.rgb.d2 - other.rgb.d2);
-	      double blueDifference = Math.abs(this.rgb.d3 - other.rgb.d3);
-
-	      return (redDifference > threshold || greenDifference > threshold || blueDifference > threshold);
-}
 }
