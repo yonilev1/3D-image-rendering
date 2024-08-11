@@ -5,6 +5,8 @@ import lighting.*;
 import primitives.*;
 import static primitives.Util.*;
 
+import java.util.List;
+
 import scene.Scene;
 
 /**
@@ -246,4 +248,24 @@ public class SimpleRayTracer extends RayTracerBase {
 		double mminusRV = alignZero(-r.dotProduct(v));
 		return mminusRV <= 0 ? Double3.ZERO : material.kS.scale(Math.pow(mminusRV, material.shininess));
 	}
+	
+	public Color average_color_calculator(List<Ray> rays) {
+        Color aver = Color.BLACK;
+        if (rays.size() == 0)
+            return aver;
+
+        for (Ray ray : rays) {
+            GeoPoint point = findClosestIntersection(ray);
+
+            // If no intersections are found, add the background color of the scene
+            if (point == null)
+                aver = aver.add(scene.background);
+            else {
+                Color c = calcColor(point, ray);
+                aver = aver.add(c);
+            }
+        }
+
+        return aver.reduce(rays.size());
+    }
 }

@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import primitives.*;
-import renderer.*;
+import renderer.Camera;
+import renderer.ImageWriter;
+import renderer.SimpleRayTracer;
 import scene.Scene;
 import geometries.*;
 

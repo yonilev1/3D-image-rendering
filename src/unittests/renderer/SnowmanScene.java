@@ -1,5 +1,7 @@
 package unittests.renderer;
-import renderer.*;
+import renderer.Camera;
+import renderer.ImageWriter;
+import renderer.SimpleRayTracer;
 import scene.*;
 import geometries.*;
 import lighting.*;
@@ -61,6 +63,11 @@ public class SnowmanScene {
         // Add lights
         scene.lights.add(new PointLight(new Color(250, 250, 250), new Point(100, 200, 200)).setKL(0.001).setKQ(0.00001));
         scene.lights.add(new DirectionalLight(new Color(155, 155, 155), new Vector(-1, -1, -1)));
+        scene.lights.add(new SpotLight(new Color(255, 100, 100), new Vector(-1, -1, -2), new Point(200, 150, 100))
+                .setKL(0.0005).setKQ(0.00005));  // Red tint spot light from the side
+        scene.lights.add(new PointLight(new Color(100, 255, 100), new Point(-100, 200, 100))
+                .setKL(0.0005).setKQ(0.00005));  // Green tint point light from the left
+        scene.lights.add(new DirectionalLight(new Color(100, 100, 255), new Vector(1, -1, -1)));  // Blue tint directional light from the opposite direction
 
         // Configure and render the camera
         Camera.Builder cameraBuilder = Camera.getBuilder().setRayTracer(new SimpleRayTracer(scene))
@@ -71,7 +78,7 @@ public class SnowmanScene {
                 .setDirection(new Vector(-1, -1, -1), new Vector(-1, -1, 2))
                 .setVpDistance(1000)
                 .setImageWriter(new ImageWriter("SnowmanScene", 1000, 1000))
-                //.setDOF(10, 450, 20)
+                .setDOF(10, 450, 20)
                 .build()
                 .renderImage().writeToImage();
     }

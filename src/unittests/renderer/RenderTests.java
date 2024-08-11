@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import geometries.*;
 import lighting.AmbientLight;
 import primitives.*;
-import renderer.*;
+import renderer.Camera;
+import renderer.ImageWriter;
+import renderer.SimpleRayTracer;
 import scene.Scene;
 
 /**

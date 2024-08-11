@@ -6,7 +6,7 @@ import geometries.Plane;
 import geometries.Polygon;
 import geometries.Sphere;
 import geometries.Triangle;
-import lighting.AmbientLight;
+import lighting.*;
 import lighting.PointLight;
 import lighting.SpotLight;
 import primitives.Color;
@@ -66,7 +66,7 @@ class projectTest {
         int zMin = 100, zMax = 200; 
         Random rand = new Random();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 30; i++) {
             // Generate random positions within bounds
         	int x=0;
         	
@@ -189,8 +189,23 @@ class projectTest {
                  .setEmission(new Color(250,250,250))
                .setMaterial(sphereMaterial));
 	}
-     	scene.lights.add(new SpotLight(new Color(400, 400, 400), new Vector(0, -1, 0), new Point(0, 250, 300)).setKL(4E-5)
-			.setKQ(2E-7));
+	// Add the existing SpotLight (already included in your code)
+	scene.lights.add(new SpotLight(new Color(400, 400, 400), new Vector(0, -1, 0), new Point(0, 250, 300)).setKL(4E-5)
+	    .setKQ(2E-7));
+
+	// Add an additional PointLight
+	scene.lights.add(new PointLight(new Color(255, 220, 180), new Point(200, 200, 150)).setKL(0.0005).setKQ(0.0002));
+
+	// Add a second SpotLight
+	scene.lights.add(new SpotLight(new Color(250, 250, 250), new Vector(-1, -1, -1), new Point(-200, 200, 200)).setKL(4E-5)
+	    .setKQ(2E-7));
+
+	// Add a DirectionalLight
+	scene.lights.add(new DirectionalLight(new Color(255, 255, 255), new Vector(-1, -1, -1)));
+
+	// Add another PointLight for soft ambient lighting
+	scene.lights.add(new PointLight(new Color(150, 150, 250), new Point(0, 300, 100)).setKL(0.0001).setKQ(0.0001));
+
 	    int resolution = 1000;
 		Camera.Builder cameraBuilder = Camera.getBuilder().setRayTracer(new SimpleRayTracer(scene)) //
 				.setVpSize(180, 180);
@@ -199,7 +214,9 @@ class projectTest {
 		cameraBuilder.setView(new Point(0, 1300, 150), new Point(0, 0, 100))
 				     .setVpDistance(250) //
 				     .setImageWriter(new ImageWriter("SnowMan", resolution, resolution)) //
-				     .setDOF(15, 1250 ,3)//
+				     .setDOF(15, 1250 ,5)
+				     .setMultithreading(12)
+				     .setAdaptive(true)//
 			         .build() //
 				     .renderImage().writeToImage();
 	

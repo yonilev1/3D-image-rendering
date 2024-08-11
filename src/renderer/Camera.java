@@ -3,7 +3,7 @@ package renderer;
 import primitives.*;
 import primitives.Vector;
 import static primitives.Util.*;
-
+//import renderer.PixelManager;
 import java.util.*;
 
 /**
@@ -59,6 +59,10 @@ public class Camera implements Cloneable {
 	 * The ray tracer responsible for tracing rays and computing colors.
 	 */
 	private RayTracerBase rayTracer;
+    private PixelManager pixelManager;
+    private int threadsCount = 0;
+    private boolean adaptive;
+    private int numberOfRays = 1;
 
 	/**
 	 * Depth of Field settings.
@@ -144,12 +148,16 @@ public class Camera implements Cloneable {
 		return vTo;
 	}
 	
+	public boolean getAdaptive() {
+		return adaptive;
+	}
+	
 	/**
 	 * Renders the image.
 	 * 
 	 * @return The camera object.
 	 */
-	public Camera renderImage() {
+	/*public Camera renderImage() {
 		int nX = imageWriter.getNx();
 		int nY = imageWriter.getNy();
 		for (int i = 0; i < nY; ++i) {
@@ -158,8 +166,103 @@ public class Camera implements Cloneable {
 			}
 		}
 		return this;
+	}*/
+	
+	/**
+     * Method to render an image
+     * @return the Camera object
+     */
+	public Camera renderImage() {
+	    int nX = imageWriter.getNx();
+	    int nY = imageWriter.getNy();
+	    pixelManager = new PixelManager(nY, nX, 100l);
+	    
+	    // Single-threaded processing
+	    if(threadsCount == 0) {
+	        for (int i = 0; i < nY; i++) {
+	            for (int j = 0; j < nX; j++) {
+	                if (numberOfRays == 1) {
+	                    // Single ray without DOF
+	                    castRay(nX, nY, j, i);
+	                } else if (!adaptive) {
+	                    // Generate rays with DOF
+	                    List<Ray> rays = dof.constructRayWithDOF(findPIJ(nX, nY, j, i), this);
+	                    imageWriter.writePixel(j, i, rayTracer.average_color_calculator(rays));
+	                } else {
+	                    // Adaptive Super Sampling with DOF
+	                    imageWriter.writePixel(j, i, AdaptiveSuperSampling(imageWriter.getNx(), imageWriter.getNy(), j, i, numberOfRays));
+	                }
+	            }
+	        }
+	        return this;
+	    }
+	    else {
+	        // Multi-threaded processing
+	        var threads = new LinkedList<Thread>(); // list of threads
+	        while (threadsCount-- > 0) {
+	            threads.add(new Thread(() -> {
+	                PixelManager.Pixel pixel; // current pixel(row,col)
+	                while ((pixel = pixelManager.nextPixel()) != null) {
+	                    if (numberOfRays == 1) {
+	                        // Single ray without DOF
+	                        imageWriter.writePixel(pixel.col(), pixel.row(), castRay(nX, nY, pixel.col(), pixel.row()));
+	                        pixelManager.pixelDone();
+	                    } else if (!adaptive) {
+	                        // Generate rays with DOF
+	                        List<Ray> rays = dof.constructRayWithDOF(findPIJ(nX, nY, pixel.col(), pixel.row()), this);
+	                        imageWriter.writePixel(pixel.col(), pixel.row(), rayTracer.average_color_calculator(rays));
+	                        pixelManager.pixelDone();
+	                    } else {
+	                        // Adaptive Super Sampling with DOF
+	                        imageWriter.writePixel(pixel.col(), pixel.row(), AdaptiveSuperSampling(imageWriter.getNx(), imageWriter.getNy(), pixel.col(), pixel.row(), numberOfRays));
+	                        pixelManager.pixelDone();
+	                    }
+	                }
+	            }));
+	        }
+	        
+	        // Start all threads
+	        for (var thread : threads) thread.start();
+	        // Wait for all threads to finish
+	        try { 
+	            for (var thread : threads) thread.join(); 
+	        } catch (InterruptedException ignore) {}
+	    }
+	    return this;
 	}
 
+    private Point findPIJ(int nX, int nY, double j, double i) {
+        Point pIJ = p0.add(vTo.scale(distanceFromCamera));
+
+        double rY = height / nY;
+        double rX = width / nX;
+
+        double yI = alignZero(-(i - (nY - 1) / 2d) * (rY));
+        double xJ = alignZero((j - (nX - 1) / 2d) * (rX));
+
+        if (!isZero(xJ)) pIJ = pIJ.add(vRight.scale(xJ));
+        if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
+        return pIJ;
+
+    }
+    
+
+    /**
+     * Construct a ray through a pixel in the view plane
+     *
+     * @param nX the number of pixels in the x direction
+     * @param nY the number of pixels in the y direction
+     * @param j  the x index of the pixel
+     * @param i  the y index of the pixel
+     * @return the ray through the pixel
+     */
+    public Ray constructRay(int nX, int nY, double j, double i) {
+        Point imgCenter = findPIJ(nX, nY, j, i);
+        Vector vIJ = imgCenter.subtract(p0);
+        return new Ray(p0, vIJ);
+
+    }
+    
 	/**
 	 * Casts a ray from the camera through a specific pixel.
 	 * 
@@ -168,7 +271,7 @@ public class Camera implements Cloneable {
 	 * @param j  The pixel index in the X direction.
 	 * @param i  The pixel index in the Y direction.
 	 */
-	private void castRay(int nX, int nY, int j, int i) {
+	/*private void castRay(int nX, int nY, int j, int i) {
 		List<Ray> rays = new ArrayList<>();
 		if (dof.getAperture() == 0 && dof.getFocalDistance() == 0) {
 			rays.add(constructRay(nX, nY, j, i));
@@ -182,31 +285,124 @@ public class Camera implements Cloneable {
 		}
 		pixelColor = pixelColor.reduce(rays.size());
 		imageWriter.writePixel(j, i, pixelColor);
+	}*/
+	
+	/**
+    *
+    * Method to print a grid on the view plane
+    *
+    * @param interval the interval between the lines of the grid
+    * @param color    the color of the grid
+    * @return the Camera object
+    */
+   public Camera printGrid(int interval, Color color) {
+       if (imageWriter == null)
+           throw new MissingResourceException("Image writer was null", getClass().getName(), "");
+       int nY = imageWriter.getNy();
+       int nX = imageWriter.getNx();
+       for (int i = 0; i < nY; i += interval)
+           for (int j = 0; j < nX; j += 1)
+               imageWriter.writePixel(i, j, color);
+       for (int i = 0; i < nY; i += 1)
+           for (int j = 0; j < nX; j += interval)
+               imageWriter.writePixel(i, j, color);
+       imageWriter.writeToImage();
+       return this;
+   }
+   
+   private Color AdaptiveSuperSampling(int nX, int nY, int j, int i, int numOfRays) {
+	    int numOfRaysInRowCol = (int) Math.floor(Math.sqrt(numOfRays));
+	    if (numOfRaysInRowCol == 1) return castRay(nX, nY, j, i);
+
+	    double rY = alignZero(height / nY);
+	    double rX = alignZero(width / nX);
+	    Point pIJ = getCenterOfPixel(i, j, nX, nY, rY, rX);
+
+	    double PRy = rY / numOfRaysInRowCol;
+	    double PRx = rX / numOfRaysInRowCol;
+	    return AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy, null);
 	}
 
 	/**
-	 * Finds the point on the view plane corresponding to a specific pixel.
+	 * Recursive function to calculate the color of a pixel using adaptive super sampling
+	 * with Depth of Field (DOF).
 	 * 
-	 * @param nX The number of pixels in the X direction.
-	 * @param nY The number of pixels in the Y direction.
-	 * @param j  The pixel index in the X direction.
-	 * @param i  The pixel index in the Y direction.
-	 * @return The point on the view plane.
+	 * @param centerP    the center of the pixel
+	 * @param Width      the width of the pixel
+	 * @param Height     the height of the pixel
+	 * @param minWidth   the minimum width of the pixel
+	 * @param minHeight  the minimum height of the pixel
+	 * @param prePoints  the list of points that were already calculated
+	 * @return the color of the pixel
 	 */
-	private Point findPij(int nX, int nY, int j, int i) {
-		Point pij = p0.add(vTo.scale(distanceFromCamera));
-		double xj = (j - ((nX - 1) / 2.0)) * (width / nX);
-		double yi = (((nY - 1) / 2.0) - i) * (height / nY);
+	private Color AdaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, List<Point> prePoints) {
 
-		if (!isZero(xj)) {
-			pij = pij.add(vRight.scale(xj));
-		}
+	    // If the current pixel area is smaller than the minimum width or height, return the DOF-affected color of the center point.
+	    if (Width < minWidth || Height < minHeight) {
+	        List<Ray> rays = dof.constructRayWithDOF(centerP, this);
+	        return rayTracer.average_color_calculator(rays);
+	    }
 
-		if (!isZero(yi)) {
-			pij = pij.add(vUp.scale(yi));
-		}
-		return pij;
+	    List<Point> nextCenterPList = new LinkedList<>();
+	    List<Color> colorList = new LinkedList<>();
+
+	    for (int i = -1; i <= 1; i += 2) {
+	        for (int j = -1; j <= 1; j += 2) {
+	            // Calculate the corner point.
+	            Point tempCorner = centerP.add(vRight.scale(i * Width / 2)).add(vUp.scale(j * Height / 2));
+
+	            // If the corner has not been processed before, process it now.
+	            if (prePoints == null || !isInList(prePoints, tempCorner)) {
+	                // Add the mid-point for the next recursion level.
+	                nextCenterPList.add(centerP.add(vRight.scale(i * Width / 4)).add(vUp.scale(j * Height / 4)));
+
+	                // Generate rays using DOF for the current corner point and trace them.
+	                List<Ray> rays = dof.constructRayWithDOF(tempCorner, this);
+	                colorList.add(rayTracer.average_color_calculator(rays));
+	            }
+	        }
+	    }
+
+	    if (nextCenterPList.isEmpty()) {
+	        return Color.BLACK;
+	    }
+
+	    // Check if all the colors in the color list are almost equal.
+	    boolean isAllEquals = colorList.stream().distinct().count() == 1;
+
+	    if (isAllEquals) {
+	        return colorList.get(0);
+	    }
+
+	    // Combine colors from recursive calls to the corners.
+	    Color tempColor = Color.BLACK;
+
+	    for (Point center : nextCenterPList) {
+	        tempColor = tempColor.add(AdaptiveSuperSamplingRec(center, Width / 2, Height / 2, minWidth, minHeight, nextCenterPList));
+	    }
+
+	    return tempColor.reduce(nextCenterPList.size());
 	}
+
+
+
+
+   private boolean isInList(List<Point> pointsList, Point point) {
+       for (Point tempPoint : pointsList) {
+           if(point.equals(tempPoint))
+               return true;
+       }
+       return false;
+   }
+   public Point getCenterOfPixel(int i, int j, int nX,int nY,double pixelHeight,double pixelWidth)
+   {
+       Point center = this.p0.add(this.vTo.scale(distanceFromCamera));
+       double yi = -(i - ((double)nY - 1) / 2) * pixelHeight;
+       if (yi !=0 ) center = center.add(this.vUp.scale(yi));
+       double xj = (j - ((double)nX - 1) / 2) * pixelWidth;
+       if (xj !=0 ) center = center.add(this.vRight.scale(xj));
+       return center;
+   }
 
 	/**
 	 * Constructs a ray from the camera through a specific pixel on the view plane.
@@ -217,10 +413,10 @@ public class Camera implements Cloneable {
 	 * @param i  The pixel index in the Y direction.
 	 * @return The constructed ray.
 	 */
-	public Ray constructRay(int nX, int nY, int j, int i) {
+	/*public Ray constructRay(int nX, int nY, int j, int i) {
 		Point pij = findPij(nX, nY, j, i);
 		return new Ray(p0, pij.subtract(p0));
-	}
+	}*/
 
 	/**
 	 * Prints a grid on the image.
@@ -229,7 +425,7 @@ public class Camera implements Cloneable {
 	 * @param color    The color of the grid lines.
 	 * @return The camera object.
 	 */
-	public Camera printGrid(int interval, Color color) {
+	/*public Camera printGrid(int interval, Color color) {
 		int nY = imageWriter.getNy();
 		int nX = imageWriter.getNx();
 
@@ -246,7 +442,18 @@ public class Camera implements Cloneable {
 		}
 
 		return this;
-	}
+	}*/
+   
+   /**
+    * Method to cast a ray through a pixel
+    * @param nX the number of pixels in the x direction
+    * @param nY the number of pixels in the y direction
+    * @param i the y index of the pixel
+    * @param j the x index of the pixel
+    */
+   private Color castRay(int nX, int nY, int i, int j) {
+       return rayTracer.traceRay(constructRay(nX, nY, i, j));
+   }
 
 	/**
 	 * Writes the image to a file.
@@ -406,9 +613,21 @@ public class Camera implements Cloneable {
 			camera.dof.setAperture(aperture);
 			camera.dof.setFocalDistance(focalDistance);
 			camera.dof.setNumRays(numRays);
+            this.camera.numberOfRays = numRays;
+
 			return this;
 		}
-
+        
+        public Builder setMultithreading(int threadsCount) {
+            this.camera.threadsCount = threadsCount;
+            return this;
+        }
+        public Builder setAdaptive(boolean adaptive) {
+            this.camera.adaptive = adaptive;
+            return this;
+        }
+        
+        
 		/**
 		 * Builds the Camera object.
 		 * 

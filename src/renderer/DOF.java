@@ -99,6 +99,8 @@ public class DOF {
      */
     public List<Ray> constructRayWithDOF(Point pij, Camera thisCamera) {
         List<Ray> rays = new ArrayList<>();
+        
+        
         // Calculate the direction from the camera to the point on the view plane
         Vector Vij = pij.subtract(thisCamera.getCameraLocation()).normalize();
         
@@ -108,9 +110,14 @@ public class DOF {
         
         // Calculate the focal point using the direction vector and the distance to the focal plane
         Point focalPoint = thisCamera.getCameraLocation().add(Vij.scale(dij));
-       
-        //Point focalPoint1 = pij.add(pij.subtract(thisCamera.getCameraLocation()).normalize().scale(focalDistance));
-                int gridSize = (int) Math.sqrt(numRays);
+        
+        if (thisCamera.getAdaptive() == true) {
+        	Vector dir = focalPoint.subtract(pij).normalize();
+        	rays.add(new Ray(pij,dir));
+        	return rays;
+        }
+        
+        int gridSize = (int) Math.sqrt(numRays);
         if (gridSize * gridSize < numRays) {
             gridSize++;
         }
