@@ -13,6 +13,8 @@ import java.util.*;
  * camera.
  */
 public class Camera implements Cloneable {
+	
+	 public int   ppp= 0;
 
 	/**
 	 * The location of the camera.
@@ -74,7 +76,7 @@ public class Camera implements Cloneable {
     /**
 	 * The number or rays for rendering.
 	 */
-    private int numberOfRays = 1;
+    private int numberOfRays = 0;
 
 	/**
 	 * Depth of Field settings.
@@ -194,6 +196,9 @@ public class Camera implements Cloneable {
 	    if (threadsCount == 0) {
 	        for (int i = 0; i < nY; i++) {
 	            for (int j = 0; j < nX; j++) {
+	            	castRay(nX, nY, j, i);
+	            }
+	            /*
 	                if (numberOfRays == 0) {
 	                    // Single ray without DOF
 	                    castRay(nX, nY, j, i);
@@ -205,7 +210,7 @@ public class Camera implements Cloneable {
 	                    // Adaptive Super Sampling with DOF
 	                    imageWriter.writePixel(j, i, AdaptiveSuperSampling(imageWriter.getNx(), imageWriter.getNy(), j, i, numberOfRays));
 	                }
-	            }
+	            }*/
 	        }
 	        return this;
 	    } else {
@@ -215,10 +220,12 @@ public class Camera implements Cloneable {
 	            threads.add(new Thread(() -> {
 	                PixelManager.Pixel pixel; // current pixel(row,col)
 	                while ((pixel = pixelManager.nextPixel()) != null) {
-	                    if (numberOfRays == 0) {
+	                	castRay(nX, nY, pixel.col(), pixel.row());
+	                	pixelManager.pixelDone();
+	               /*     if (numberOfRays == 0) {
 	                        // Single ray without DOF
-	                        imageWriter.writePixel(pixel.col(), pixel.row(), castRay(nX, nY, pixel.col(), pixel.row()));
-	                        pixelManager.pixelDone();
+	                        
+	                   
 	                    } else if (!adaptive) {
 	                        // Generate rays with DOF
 	                        List<Ray> rays = dof.constructRayWithDOF(findPIJ(nX, nY, pixel.col(), pixel.row()), this);
@@ -228,7 +235,7 @@ public class Camera implements Cloneable {
 	                        // Adaptive Super Sampling with DOF
 	                        imageWriter.writePixel(pixel.col(), pixel.row(), AdaptiveSuperSampling(imageWriter.getNx(), imageWriter.getNy(), pixel.col(), pixel.row(), numberOfRays));
 	                        pixelManager.pixelDone();
-	                    }
+	                    }*/
 	                }
 	            }));
 	        }
@@ -241,6 +248,34 @@ public class Camera implements Cloneable {
 	        } catch (InterruptedException ignore) {}
 	    }
 	    return this;
+	}
+	
+	/**
+	 * Casts a ray from the camera through a specific pixel.
+	 * 
+	 * @param nX The number of pixels in the X direction.
+	 * @param nY The number of pixels in the Y direction.
+	 * @param j  The pixel index in the X direction.
+	 * @param i  The pixel index in the Y direction.
+	 */
+	private void castRay(int nX, int nY, int j, int i) {
+		List<Ray> rays = new ArrayList<>();
+		if (numberOfRays == 0) {
+			imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(nX, nY, j, i)));
+		} else if (!adaptive){
+			Point pij = findPIJ(nX, nY, j, i);
+			rays = dof.constructRayWithDOF(pij, this);
+		Color pixelColor = Color.BLACK;
+		for (Ray ray : rays) {
+			pixelColor = pixelColor.add(rayTracer.traceRay(ray));
+		}
+		pixelColor = pixelColor.reduce(rays.size());
+		imageWriter.writePixel(j, i, pixelColor);
+		}
+		else {
+            // Adaptive Super Sampling with DOF
+			imageWriter.writePixel(j, i,adaptiveSuperSampling(imageWriter.getNx(), imageWriter.getNy(), j, i, numberOfRays)); 
+		}
 	}
 
 	/**
@@ -317,17 +352,17 @@ public class Camera implements Cloneable {
     * @param numOfRays Number of rays to be used for sampling.
     * @return The computed color after performing ASS.
     */
-   private Color AdaptiveSuperSampling(int nX, int nY, int j, int i, int numOfRays) {
+   private Color adaptiveSuperSampling(int nX, int nY, int j, int i, int numOfRays) {
 	    int numOfRaysInRowCol = (int) Math.floor(Math.sqrt(numOfRays));
-	    if (numOfRaysInRowCol == 1) return castRay(nX, nY, j, i);
-
+	
 	    double rY = alignZero(height / nY);
-	    double rX = alignZero(width / nX);
+	    double rX  = alignZero(width / nX);
 	    Point pIJ = getCenterOfPixel(i, j, nX, nY, rY, rX);
 
-	    double PRy = rY / numOfRaysInRowCol;
-	    double PRx = rX / numOfRaysInRowCol;
-	    return AdaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy, null);
+	    double PRy = alignZero(rY / numOfRaysInRowCol);
+	    double PRx = alignZero(rX / numOfRaysInRowCol);
+	    return adaptiveSuperSamplingRec(pIJ, rX, rY, PRx, PRy, null, 0);
+	    
 	}
 
 	/**
@@ -342,54 +377,103 @@ public class Camera implements Cloneable {
 	 * @param prePoints  the list of points that were already calculated
 	 * @return the color of the pixel
 	 */
-	private Color AdaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, List<Point> prePoints) {
+// Example: Add a max recursion depth to limit the subdivisions
+private static final int MAX_RECURSION_DEPTH = 5;
 
-	    // If the current pixel area is smaller than the minimum width or height, return the DOF-affected color of the center point.
-	    if (Width < minWidth || Height < minHeight) {
-	        List<Ray> rays = dof.constructRayWithDOF(centerP, this);
-	        return rayTracer.average_color_calculator(rays);
-	    }
+   private Color adaptiveSuperSamplingRec(Point centerP, double Width, double Height, double minWidth, double minHeight, List<Point> prePoints, int depth) {
 
-	    List<Point> nextCenterPList = new LinkedList<>();
-	    List<Color> colorList = new LinkedList<>();
+       // If the current pixel area is smaller than the minimum width or height, return the color of the center point.
+       if (Width < minWidth || Height < minHeight || depth > MAX_RECURSION_DEPTH) {
+    	   List<Ray> rays = dof.constructRayWithDOF(centerP, this);
+    	   System.out.println("00000000000000000000000000000000000000000000000000000000000000000000000000000000");
+           return rayTracer.traceRay(rays.getFirst());
+       }
 
-	    for (int i = -1; i <= 1; i += 2) {
-	        for (int j = -1; j <= 1; j += 2) {
-	            // Calculate the corner point.
-	            Point tempCorner = centerP.add(vRight.scale(i * Width / 2)).add(vUp.scale(j * Height / 2));
+       // Lists to store next center points, corner points of the current area, and the corresponding colors.
+       List<Point> nextCenterPList = new LinkedList<>();
+       List<Point> cornersList = new LinkedList<>();
+       List<primitives.Color> colorList = new LinkedList<>();
 
-	            // If the corner has not been processed before, process it now.
-	            if (prePoints == null || !isInList(prePoints, tempCorner)) {
-	                // Add the mid-point for the next recursion level.
-	                nextCenterPList.add(centerP.add(vRight.scale(i * Width / 4)).add(vUp.scale(j * Height / 4)));
+       Point tempCorner;
+       Ray tempRay;
 
-	                // Generate rays using DOF for the current corner point and trace them.
-	                List<Ray> rays = dof.constructRayWithDOF(tempCorner, this);
-	                colorList.add(rayTracer.average_color_calculator(rays));
-	            }
-	        }
-	    }
+       // Iterate over the four corners of the current area.
+       for (int i = -1; i <= 1; i += 2) {
+           for (int j = -1; j <= 1; j += 2) {
+               // Calculate the corner point.
+               tempCorner = centerP.add(vRight.scale(i * Width / 2)).add(vUp.scale(j * Height / 2));
+               cornersList.add(tempCorner);
+                //System.out.println(centerP);
+              // System.out.println(tempCorner);
+               System.out.print("j:");
+              // System.out.println(minHeight);
+               System.out.println(j);
+             //  System.out.println(minWidth);
+               System.out.print("i:");
+               //System.out.println(minHeight);
+               System.out.println(i);
 
-	    if (nextCenterPList.isEmpty()) {
-	        return Color.BLACK;
-	    }
+               // If the current corner point is not in the list of previously processed points, trace a ray through it.
+               if (prePoints == null || !isInList(prePoints, tempCorner)) {
+                   tempRay = dof.constructRayWithDOF(tempCorner, this).getFirst();
 
-	    // Check if all the colors in the color list are almost equal.
-	    boolean isAllEquals = colorList.stream().distinct().count() == 1;
+                   // Calculate the next center point for the recursive call.
+                   nextCenterPList.add(centerP.add(vRight.scale(i * Width / 4)).add(vUp.scale(j * Height / 4)));
 
-	    if (isAllEquals) {
-	        return colorList.get(0);
-	    }
+                   // Trace the ray and store the color.
+                   colorList.add(rayTracer.traceRay(tempRay));
+                //   System.out.println(ppp++);
+                  // System.out.println(colorList);
+                   //System.out.println(rayTracer.traceRay(tempRay));
+               }
+           }
+       }
 
-	    // Combine colors from recursive calls to the corners.
-	    Color tempColor = Color.BLACK;
+       // If no new center points were added, return black color.
+      // if (nextCenterPList == null || nextCenterPList.size() == 0) {
+       //    return primitives.Color.BLACK;
+     //  }
 
-	    for (Point center : nextCenterPList) {
-	        tempColor = tempColor.add(AdaptiveSuperSamplingRec(center, Width / 2, Height / 2, minWidth, minHeight, nextCenterPList));
-	    }
+       // Check if all the colors in the color list are almost equal.
+       /*boolean isAllEquals = true;
+       primitives.Color tempColor = colorList.get(0);
+         for (primitives.Color color : colorList) { 
+        	 System.out.println(tempColor);
+           if (!tempColor.isAlmostEquals(color)) {
+               isAllEquals = false;
+           }
+       }*/
+       boolean isAllEquals = true;
 
-	    return tempColor.reduce(nextCenterPList.size());
-	}
+       for (int i = 0; i < colorList.size(); i++) { 
+    	   System.out.println(colorList.get(i));
+           if (!colorList.get(0).isAlmostEquals(colorList.get(i))) {
+               isAllEquals = false;
+               break;
+           }
+       }
+
+       // If all colors are equal and there is more than one color, return the first color.
+       if (isAllEquals && colorList.size() > 1) {
+           return colorList.get(0);
+       }
+      
+       System.out.println(ppp++);
+       primitives.Color tempColor = colorList.get(0);
+       
+
+       // Initialize the temporary color to black.
+       tempColor = primitives.Color.BLACK;
+
+       // Recursively call AdaptiveSuperSamplingRec for each next center point and add the resulting color.
+       for (Point center : nextCenterPList) {
+    	   System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+           tempColor = tempColor.add(adaptiveSuperSamplingRec(center, Width / 2, Height / 2, minWidth, minHeight, cornersList, depth + 1));
+       }
+
+       // Reduce the accumulated color by the number of next center points and return the result.
+       return tempColor.reduce(nextCenterPList.size());
+   }
 
 
 
@@ -437,10 +521,11 @@ public class Camera implements Cloneable {
     * @param j the x index of the pixel
     * @return the color resulting from tracing the ray through the pixel
     */
+   /*
    private Color castRay(int nX, int nY, int i, int j) {
        return rayTracer.traceRay(constructRay(nX, nY, i, j));
    }
-
+   */
 	/**
 	 * Writes the image to a file.
 	 */
@@ -669,6 +754,8 @@ public class Camera implements Cloneable {
 			if (camera.rayTracer == null)
 				throw new MissingResourceException(MISSING_RENDERING_DATA, Camera.class.getName(),
 						"View plane rayTracer");
+			if (camera.adaptive && camera.numberOfRays==0)
+				throw new IllegalStateException("Adaptive Super Sampling must work whit DOF (nunumberOfRays=0).");
 
 			try {
 				return (Camera) camera.clone();

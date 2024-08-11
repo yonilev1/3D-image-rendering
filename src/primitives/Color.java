@@ -142,31 +142,11 @@ public class Color {
 	 * @param colors the colors to compare
 	 * @return true if all the colors are almost equal, false otherwise
 	 */
-	public boolean isAlmostEquals(Color... colors) {
-	    double maxRed = colors[0].rgb.d1;
-	    double maxGreen = colors[0].rgb.d2;
-	    double maxBlue = colors[0].rgb.d3;
-
-	    double minRed = colors[0].rgb.d1;
-	    double minGreen = colors[0].rgb.d2;
-	    double minBlue = colors[0].rgb.d3;
-
-	    for (Color c : colors) {
-	        if (c.rgb.d1 > maxRed)
-	            maxRed = c.rgb.d1;
-	        if (c.rgb.d1 < minRed)
-	            minRed = c.rgb.d1;
-	        if (c.rgb.d2 > maxGreen)
-	            maxGreen = c.rgb.d2;
-	        if (c.rgb.d2 < minGreen)
-	            minGreen = c.rgb.d2;
-	        if (c.rgb.d3 > maxBlue)
-	            maxBlue = c.rgb.d3;
-	        if (c.rgb.d3 < minBlue)
-	            minBlue = c.rgb.d3;
-	    }
-
-	    return (maxRed - minRed <= 2 && maxGreen - minGreen <= 2 && maxBlue - minBlue <= 2);
+	public boolean isAlmostEquals(Color color) {
+	  
+	   return ((Math.abs(this.rgb.d1 - color.rgb.d1) <= 2)|| 
+	    		(Math.abs(this.rgb.d2 - color.rgb.d2)<= 2)|| 
+	    		(Math.abs(this.rgb.d3 - color.rgb.d3)<= 2));
 	}
 
 	/**
