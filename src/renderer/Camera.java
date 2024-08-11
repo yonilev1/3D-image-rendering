@@ -194,7 +194,7 @@ public class Camera implements Cloneable {
 	    if (threadsCount == 0) {
 	        for (int i = 0; i < nY; i++) {
 	            for (int j = 0; j < nX; j++) {
-	                if (numberOfRays == 1) {
+	                if (numberOfRays == 0) {
 	                    // Single ray without DOF
 	                    castRay(nX, nY, j, i);
 	                } else if (!adaptive) {
@@ -215,7 +215,7 @@ public class Camera implements Cloneable {
 	            threads.add(new Thread(() -> {
 	                PixelManager.Pixel pixel; // current pixel(row,col)
 	                while ((pixel = pixelManager.nextPixel()) != null) {
-	                    if (numberOfRays == 1) {
+	                    if (numberOfRays == 0) {
 	                        // Single ray without DOF
 	                        imageWriter.writePixel(pixel.col(), pixel.row(), castRay(nX, nY, pixel.col(), pixel.row()));
 	                        pixelManager.pixelDone();
